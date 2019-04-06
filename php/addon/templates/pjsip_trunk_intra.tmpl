@@ -1,0 +1,36 @@
+;トランク設定(イントラ:対向情報)
+;レジストなしのIPアドレス固定ピア
+
+[##TRUNKNAME##]
+type = aor
+contact = sip:##IPADDR####PORT##
+qualify_frequency = 30
+authenticate_qualify = no
+
+[##TRUNKNAME##]
+type = identify
+endpoint = ##TRUNKNAME##
+match = ##IPADDR##
+
+[##TRUNKNAME##]
+type = auth
+auth_type = userpass
+username = ##USERNAME##
+password = ##PASSWORD##
+
+[##TRUNKNAME##]
+type = endpoint
+context = intra-incoming
+transport = transport-udp
+disallow = all
+allow = ulaw
+rtp_symmetric = yes
+force_rport = yes
+rewrite_contact = yes
+direct_media = no
+send_pai = yes
+inband_progress = yes
+language = ja
+auth = ##HEREAUTH##
+outbound_auth = ##TRUNKNAME##
+aors = ##TRUNKNAME##
