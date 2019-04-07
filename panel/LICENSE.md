@@ -1,4 +1,9 @@
+ABS Panel Conpyright 2019 Takao Takahashi.
+
+
 This product(ABS Panel) using pure css (https://purecss.io/).
+Pure CSS's copyright notice as follows.
+CAUTION: This(pure-css) copyright do not cover ABS Panel itself.
 
 Software License Agreement (BSD License)
 ========================================
