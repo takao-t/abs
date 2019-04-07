@@ -1,7 +1,7 @@
 <?php
 
 //ブラウザUIで扱う最大値
-$max_keys = 24;
+$max_keys = 16;
 $max_sip_phones = 32;
 $max_group = 16;
 $max_pgroup = 8;
