@@ -28,6 +28,9 @@ echo "endpoint/send_rpid = yes"
 echo "endpoint/rewrite_contact = yes"
 echo "endpoint/inband_progress = yes"
 echo "endpoint/allow_subscribe = yes"
+echo "aor/max_contacts = 2"
+echo "aor/qualify_frequency = 30"
+echo "aor/authenticate_qualify = no"
 echo ""
 
 
