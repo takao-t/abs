@@ -60,6 +60,7 @@ rm /var/www/html/index.html
 cp /var/www/html/icons/* /usr/share/apache2/icons/.
 echo "DirectoryIndex index.php" > /var/www/html/.htaccess
 chown -R www-data:www-data /var/www/html
+chown -R www-data:www-data /var/www/absp
 
 #
 echo "起動中"
