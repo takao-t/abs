@@ -36,6 +36,11 @@ systemctl stop asterisk
 echo "ABSダウンロード中"
 git clone https://github.com/takao-t/abs.git abs
 
+# サウンドファイル展開
+tar zxvf abs/sound/sounds-ja.tar.z -C /var/lib/asterisk/sounds/
+mkdir /var/spool/asterisk/recording
+cp /var/lib/asterisk/sounds/ja/abs-tc*.wav /var/spool/asterisk/recording/.
+
 #
 echo "ユーザ情報設定"
 groupadd -g 5060 asterisk
