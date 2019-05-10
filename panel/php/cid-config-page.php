@@ -35,8 +35,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 
 //新規追加
-$pnam = '';
-$pname = '';
+if(isset($_POST['post_pnum'])){
+    $pnum = trim($_POST['post_pnum']);
+    $pname = AbspFunctions\get_db_item('cidname', $pnum);
+    $ret = AbspFunctions\get_db_item('ABS/blacklist', $pnum);
+    if($ret == '1'){
+        $pname = '着信拒否中';
+    }
+} else {
+    $pnum = '';
+    $pname = '';
+}
+
 echo <<<EOT
 <form action="" method="POST">
   <input type="hidden" name="function" value="newadd">
@@ -51,7 +61,7 @@ echo <<<EOT
   </tr>
   <tr>
     <td nowrap>
-      <input type="txt" size="12" name="cidnumber" value="$pnam">
+      <input type="txt" size="12" name="cidnumber" value="$pnum">
     </td>
     <td>
       <input type="txt" size="16" name="cidname" value="$pname">
@@ -91,8 +101,8 @@ $entry = AbspFunctions\get_db_family('cidname');
 
 foreach($entry as $line){
 
-    list($pnam, $pname) = explode(' : ', $line, 2);
-    $pnam = trim($pnam);
+    list($pnum, $pname) = explode(' : ', $line, 2);
+    $puam = trim($pnum);
     $pname = trim($pname);
     $num_ents = $num_ents + 1;
 
@@ -105,13 +115,13 @@ foreach($entry as $line){
 echo <<<EOT
   <tr $tr_odd_class>
     <td nowrap>
-      <input type="txt" size="12" name="pnam_$num_ents" value="$pnam" readonly>
+      <input type="txt" size="12" name="pnum_$num_ents" value="$pnum" readonly>
     </td>
     <td>
       <input type="txt" size="16" name="pname_$num_ents" value="$pname" readonly>
     </td>
     <td>
-      <input type="checkbox" name="delcb_$num_ents" value="$pnam">
+      <input type="checkbox" name="delcb_$num_ents" value="$pnum">
     </td>
     <td>
     </td>
