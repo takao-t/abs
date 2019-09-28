@@ -143,6 +143,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             if($ck_peer != ''){
                 $lr_msg = '内線重複';
             } else {
+                AbspFunctions\del_db_item('ABS/EXT', $c_lr_ext);
                 AbspFunctions\put_db_item('ABS/EXT', $p_lr_ext, 'localring');
                 AbspFunctions\put_db_item('ABS/ERV', 'localring', $p_lr_ext);
                 $lr_msg = '設定完了';
