@@ -4,6 +4,7 @@
 $msg = "";
 $p_msg = array();
 $n_msg = "";
+$lr_msg = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -126,7 +127,29 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($_POST['function'] == 'anonupdate'){
     }
-   
+
+    if($_POST['function'] == 'localring'){
+        $p_lr_ext = $_POST['extnum'];
+        $c_lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
+        AbspFunctions\put_db_item('ABS/LOCALTECH', 'localring', 'Local');
+        if($p_lr_ext == ''){
+            if($c_lr_ext != ''){
+                AbspFunctions\del_db_item('ABS/EXT', $c_lr_ext);
+                AbspFunctions\del_db_item('ABS/ERV', 'localring');
+                $lr_msg = '削除';
+            } 
+        } else {
+            $ck_peer = AbspFunctions\get_db_item('ABS/EXT', $p_lr_ext);
+            if($ck_peer != ''){
+                $lr_msg = '内線重複';
+            } else {
+                AbspFunctions\put_db_item('ABS/EXT', $p_lr_ext, 'localring');
+                AbspFunctions\put_db_item('ABS/ERV', 'localring', $p_lr_ext);
+                $lr_msg = '設定完了';
+            }
+        }
+    }
+
     if($_POST['function'] == 'licset'){ //ライセンスキー設定
         if(isset($_POST['lickey'])){
             $p_lickey = $_POST['lickey'];
@@ -254,6 +277,7 @@ echo <<<EOT
 </table>
 <hr>
 EOT;
+
 //内線テクノロジ
 
     $tech_selected = array('SIP'=>'', 'PJSIP'=>'');
@@ -272,6 +296,41 @@ echo <<<EOT
   <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <br>
+EOT;
+
+    $lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
+
+echo <<<EOT
+</table>
+<h4>特殊内線(鳴動内線)設定</h4>
+<table border=0 class="pure-table">
+  <tr>
+    <thead>
+      <th>内線名</th>
+      <th>内線番号</th>
+      <th>操作</th>
+      <th></th>
+    </thead>
+  </tr>
+  <tr>
+    <form action="" method="post">
+    <input type="hidden" name="function" value="localring">
+    <td>
+      localring
+    </td>
+    <td>
+      <input type="text" size="8" name="extnum" value=$lr_ext>
+    </td>
+    <td>
+      <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+    </td>
+    </form>
+    <td>
+      $lr_msg
+    </td>
+  </tr>
+</table>
+<hr>
 EOT;
 
 //エリア管理
