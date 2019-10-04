@@ -23,7 +23,7 @@ define('PROV_PANA', 'prov/pana');
 //Asterisk設定ファイルロケーション
 define('ASTDIR', '/etc/asterisk');
 //バックアップファイルの作成箇所
-define('BACKUPDIR', '/var/www/html/absp2/backup');
+define('BACKUPDIR', '/var/www/html/backup');
 
 //以下は修正しないこと
 $_ = function($str){return $str;};
