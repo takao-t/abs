@@ -24,6 +24,8 @@ define('PROV_PANA', 'prov/pana');
 define('ASTDIR', '/etc/asterisk');
 //バックアップファイルの作成箇所
 define('BACKUPDIR', '/var/www/html/backup');
+//ログファイルの作成箇所
+define('LOGDIR', '/var/log/asterisk');
 
 //以下は修正しないこと
 $_ = function($str){return $str;};
