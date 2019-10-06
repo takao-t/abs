@@ -3,6 +3,8 @@
 <?php
 
 $msg = '';
+$bnl_selected = array('0'=>'', '1'=>'');
+$ovr_selected = array('0'=>'', '1'=>'');
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if(isset($_POST['section'])){

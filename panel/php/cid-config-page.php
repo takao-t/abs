@@ -99,7 +99,8 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('cidname');
 
-foreach($entry as $line){
+if($entry != ""){
+  foreach($entry as $line){
 
     list($pnum, $pname) = explode(' : ', $line, 2);
     $puam = trim($pnum);
@@ -127,7 +128,7 @@ echo <<<EOT
     </td>
   </tr>
 EOT;
-
+  }
 } /* end of for */
 
 echo "</table>";

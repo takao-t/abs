@@ -3,6 +3,7 @@
 <?php
 
 $msg = "";
+$ogp_selected = array('NKS'=>'', 'KEY'=>'');
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -361,7 +362,7 @@ EOT;
 
 $tssw_list = AbspFunctions\create_tssw_list();
 
-if(count($tssw_list) != 0){
+if(@count($tssw_list) != 0){
     foreach($tssw_list as $line){
         $tssw_cid = $line;
         $tssw_trunk = AbspFunctions\get_db_item("ABS/TSSW", $tssw_cid);

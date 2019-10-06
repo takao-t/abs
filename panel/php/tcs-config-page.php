@@ -129,8 +129,14 @@ EOT;
     $swd_selected = array('sun'=>'','mon'=>'','tue'=>'','wed'=>'','thu'=>'','fri'=>'','sat'=>'');
     $ewd_selected = array('sun'=>'','mon'=>'','tue'=>'','wed'=>'','thu'=>'','fri'=>'','sat'=>'');
     $tcspec = AbspFunctions\get_db_item('ABS', 'TCSPEC');
-    list($ttime, $twday, $dummy) = explode(',', $tcspec, 3);
-    list($stime, $etime) = explode('-', $ttime, 2);
+    if($tcspec != ""){
+      list($ttime, $twday, $dummy) = explode(',', $tcspec, 3);
+      list($stime, $etime) = explode('-', $ttime, 2);
+    } else {
+      $etime = '';
+      $stime = '';
+      $twday = '';
+    }
 
     $sunchecked=""; 
     $monchecked=""; 

@@ -108,7 +108,8 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/DID');
 
-foreach($entry as $line){
+if($entry != ""){
+  foreach($entry as $line){
 
     list($pnam, $target) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
@@ -139,8 +140,8 @@ echo <<<EOT
       </td>
     </tr>
 EOT;
-
-} /* end of for */
+  }
+}
 
 echo "</table>";
 echo "<br>";

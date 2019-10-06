@@ -2,6 +2,7 @@
 
 <?php
 $msg = "";
+$logckd = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -119,7 +120,8 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/blacklist');
 
-foreach($entry as $line){
+if($entry != ""){
+  foreach($entry as $line){
 
     list($pnam, $pname) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
@@ -145,7 +147,7 @@ echo <<<EOT
     </td>
   </tr>
 EOT;
-
+  }
 } /* end of for */
 
 echo "</table>";
