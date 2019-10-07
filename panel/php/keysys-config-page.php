@@ -54,10 +54,10 @@ echo <<<EOT
       <th>番号</th>
       <th>ラベル</th>
       <th>TECH</th>
-      <th nowrap><font color="red">*</font>トランク</th>
+      <th nowrap>トランク</th>
       <th>種別</th>
       <th>発信CID</th>
-      <th nowrap><font color="red">*</font>着信</th>
+      <th nowrap>着信</th>
       <th>RING</th>
       <th>割込PIN</th>
       <th nowrap>割込MD</th>

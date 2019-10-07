@@ -324,28 +324,15 @@ function get_key_info($key){
     $trunk = $astman->GetDB("KEYTEL/KEYSYS$key", "TRUNK");
     $rgrp  = $astman->GetDB("KEYTEL/KEYSYS$key", "RING");
 
-    // トランクが割り当てられてておらず着信先がないキーは処理しない
-    if(($trunk == '') && ($rgrp == '')){
-        $key_info['label'] = "";
-        $key_info['tech'] = "";
-        $key_info['trunk'] = "";
-        $key_info['type'] = "";
-        $key_info['ogcid'] = "";
-        $key_info['rgrp'] = "";
-        $key_info['bpin'] = "";
-        $key_info['rgpt'] = "";
-        $key_info['mmd'] = "";
-    } else {
-        $key_info['trunk'] = $trunk;
-        $key_info['label'] = $astman->GetDB("KEYTEL/KEYSYS$key", "LABEL");
-        $key_info['tech']  = $astman->GetDB("KEYTEL/KEYSYS$key", "TECH");
-        $key_info['type']  = $astman->GetDB("KEYTEL/KEYSYS$key", "TYP");
-        $key_info['ogcid'] = $astman->GetDB("KEYTEL/KEYSYS$key", "OGCID");
-        $key_info['rgrp']  = $rgrp;
-        $key_info['bpin']  = $astman->GetDB("KEYTEL/KEYSYS$key", "BPIN");
-        $key_info['rgpt']  = $astman->GetDB("KEYTEL/KEYSYS$key", "RGPT");
-        $key_info['mmd']  = $astman->GetDB("KEYTEL/KEYSYS$key", "MMD");
-    }
+    $key_info['trunk'] = $trunk;
+    $key_info['label'] = $astman->GetDB("KEYTEL/KEYSYS$key", "LABEL");
+    $key_info['tech']  = $astman->GetDB("KEYTEL/KEYSYS$key", "TECH");
+    $key_info['type']  = $astman->GetDB("KEYTEL/KEYSYS$key", "TYP");
+    $key_info['ogcid'] = $astman->GetDB("KEYTEL/KEYSYS$key", "OGCID");
+    $key_info['rgrp']  = $rgrp;
+    $key_info['bpin']  = $astman->GetDB("KEYTEL/KEYSYS$key", "BPIN");
+    $key_info['rgpt']  = $astman->GetDB("KEYTEL/KEYSYS$key", "RGPT");
+    $key_info['mmd']  = $astman->GetDB("KEYTEL/KEYSYS$key", "MMD");
 
     $astman->Logout();
     return $key_info;
@@ -372,44 +359,31 @@ function set_key_info($key_info){
     $bpin = $key_info['bpin'];
     $mmd = $key_info['mmd'];
 
-    // トランクが割り当てられてておらず着信先がないキーはデータ削除
-    if(($trunk == '') && ($rgrp == '')){
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'LABEL');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TECH');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TRUNK');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TYP');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'OGCID');
-	$astman->DelDB("KEYTEL/KEYSYS$key", 'RING');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'RGPT');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'BPIN');
-        $retval = '削除完了';
-    } else {
-        //登録前に情報削除
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'LABEL');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TECH');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TRUNK');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'TYP');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'OGCID');
-	$astman->DelDB("KEYTEL/KEYSYS$key", 'RGRP');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'RGPT');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'BPIN');
-        $astman->DelDB("KEYTEL/KEYSYS$key", 'MMD');
+    //登録前に情報削除
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'LABEL');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'TECH');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'TRUNK');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'TYP');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'OGCID');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'RGRP');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'RGPT');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'BPIN');
+    $astman->DelDB("KEYTEL/KEYSYS$key", 'MMD');
 
-        $astman->PutDB("KEYTEL/KEYSYS$key", "LABEL", $label);
-        $astman->PutDB("KEYTEL/KEYSYS$key", "TECH", $tech);
-        $astman->PutDB("KEYTEL/KEYSYS$key", "TRUNK", $trunk);
-        $astman->PutDB("KEYTEL/KEYSYS$key", "TYP", $type);
-        $astman->PutDB("KEYTEL/KEYSYS$key", "MMD", $mmd);
-        if(ctype_digit($ogcid)){
-            $astman->PutDB("KEYTEL/KEYSYS$key", "OGCID", $ogcid);
-        }
-        $astman->PutDB("KEYTEL/KEYSYS$key", "RING", $rgrp);
-        $astman->PutDB("KEYTEL/KEYSYS$key", "RGPT", $rgpt);
-        if(ctype_digit($bpin)){
-             $astman->PutDB("KEYTEL/KEYSYS$key", "BPIN", $bpin);
-        }
-        $retval = '登録完了';
+    $astman->PutDB("KEYTEL/KEYSYS$key", "LABEL", $label);
+    $astman->PutDB("KEYTEL/KEYSYS$key", "TECH", $tech);
+    $astman->PutDB("KEYTEL/KEYSYS$key", "TRUNK", $trunk);
+    $astman->PutDB("KEYTEL/KEYSYS$key", "TYP", $type);
+    $astman->PutDB("KEYTEL/KEYSYS$key", "MMD", $mmd);
+    if(ctype_digit($ogcid)){
+        $astman->PutDB("KEYTEL/KEYSYS$key", "OGCID", $ogcid);
     }
+    $astman->PutDB("KEYTEL/KEYSYS$key", "RING", $rgrp);
+    $astman->PutDB("KEYTEL/KEYSYS$key", "RGPT", $rgpt);
+    if(ctype_digit($bpin)){
+         $astman->PutDB("KEYTEL/KEYSYS$key", "BPIN", $bpin);
+    }
+    $retval = '登録完了';
 
     $astman->Logout();
     return $retval;
