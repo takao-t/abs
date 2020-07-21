@@ -1,6 +1,6 @@
 #enoding: UTF-8
 
-# ABSからSlackに通知を投げる
+# ABSからSlackに着信通知を投げる
 # argv[1] : 電話番号
 # argv[2] : CID名(名前)
 
@@ -11,7 +11,8 @@ import slackweb
 # SlackのWebHook URLを設定する
 slack = slackweb.Slack(url="URL_HERE")
 
-# メッセージから外部サービスを使用する場合のリンクを設定する
+# Slackのメッセージをクリックして外部サービスを使用する場合のリンクを設定する
+# CRM等でリンクパラメータで開ける場合には利用可能
 # 電話番号に対するリンク
 number_link = "https://www.google.com/search?hl=ja&q="
 # CID名に対するリンク
