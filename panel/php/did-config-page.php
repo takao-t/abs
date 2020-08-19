@@ -41,6 +41,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $p_rgpt = $_POST['rgpt'];
         AbspFunctions\put_db_item('ABS/DID', 'RGPT', $p_rgpt);
     }
+
+    if($_POST['function'] == 'pfxadd'){ //着信時プレフィクス付加
+        $p_apfx = $_POST['apfx'];
+        if($p_apfx == '1') AbspFunctions\put_db_item('ABS', 'APF', '1');
+        else  AbspFunctions\put_db_item('ABS', 'APF', '0');
+    }
    
 } // end of POST
 
@@ -108,8 +114,7 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/DID');
 
-if($entry != ""){
-  foreach($entry as $line){
+foreach($entry as $line){
 
     list($pnam, $target) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
@@ -140,8 +145,8 @@ echo <<<EOT
       </td>
     </tr>
 EOT;
-  }
-}
+
+} /* end of for */
 
 echo "</table>";
 echo "<br>";
@@ -174,6 +179,29 @@ echo <<<EOT
     </select>
   <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
+EOT;
+
+//プレフィクス付加
+
+    $apfx_selected = array('0'=>'','1'=>'');
+    $apfx = AbspFunctions\get_db_item('ABS', 'APF');
+    $apfx_selected["$apfx"] = "selected";
+
+echo <<<EOT
+<br>
+<h3 id="tdis">着信時外線捕捉プレフィクス付加</h3>
+<font size="-1">
+着信時のCIDに外線発信用プレフィクスを付加します<br>
+ダイヤルイン時はOGP1、キー着信時は*56xを付加します。<br>
+</font>
+<form action="" method="POST">
+<input type="hidden" name="function" value="pfxadd">
+<select name="apfx">
+<option value="0" {$apfx_selected['0']}>しない</option>
+<option value="1" {$apfx_selected['1']}>する</option>
+<input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<br>
 EOT;
 
 ?>

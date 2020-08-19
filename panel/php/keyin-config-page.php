@@ -104,8 +104,7 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/TRUNK');
 
-if($entry != ""){
-  foreach($entry as $line){
+foreach($entry as $line){
 
     list($pnam, $target) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
@@ -140,8 +139,8 @@ echo <<<EOT
 </td>
 </tr>
 EOT;
-  }
-}
+
+} /* end of for */
 
 echo "</table>";
 echo "<br>";
@@ -161,6 +160,10 @@ EOT;
 echo <<<EOT
 <br>
 <h3 id="tdis">着信時外線捕捉プレフィクス付加</h3>
+<font size="-1">
+着信時のCIDに外線発信用プレフィクスを付加します<br>
+ダイヤルイン時はOGP1、キー着信時は*56xを付加します。<br>
+</font>
 <form action="" method="POST">
 <input type="hidden" name="function" value="pfxadd">
 <select name="apfx">
