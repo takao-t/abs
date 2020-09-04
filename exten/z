@@ -1,0 +1,71 @@
+*** ./extensions_inhouse.conf	2020-07-21 09:11:17.071759773 +0900
+--- /etc/asterisk/extensions_inhouse.conf	2020-07-27 12:55:45.128314076 +0900
+***************
+*** 66,76 ****
+--- 89,102 ----
+  ;ダイヤル先のピア名を取得
+  exten => _X.,n(inter),Set(EXT=${EXTEN})
+  exten => _X.,n,Gosub(macro-ext2peer,s,1)
++ ;exten => _X.,n,DumpChan
+  exten => _X.,n,GotoIf($["${PEER}"!=""]?chkgrp)
+  ;ピア名がなければ終了
+  exten => _X.,n,Congestion
+  ;グループかどうかをチェック
+  exten => _X.,n(chkgrp),GotoIf($["${PEER:0:1}"="G"]?group)
++ ;リモート内線チェック
++ exten => _X.,n,GotoIf($["${PEER:0:1}"="R"]?rmtext)
+  ;単独内線ダイヤル実行
+  exten => _X.,n,NoOp(通常内線)
+  ;ダイヤルオプション取得
+***************
+*** 94,99 ****
+--- 120,130 ----
+  ;内線グループへダイヤル
+  exten => _X.,n(group),NoOp(内線グループ)
+  exten => _X.,n,Gosub(macro-groupdial,s,1(${PEER:1}))
++ exten => _X.,n,Hangup
++ ;リモート内線ダイヤル
++ exten => _X.,n(rmtext),NoOp(リモート内線)
++ exten => _X.,n,Gosub(macro-whoami,s,1)
++ exten => _X.,n,Goto(intra-out,${PEER:1},1)
+  
+  ;時間外制御表示用
+  exten => tcc,hint,Custom:TCCOND
+***************
+*** 102,108 ****
+  #include extensions_features.conf
+  #include extensions_pickup.conf
+  
+- 
+  ;ダイヤルイン着信時処理
+  [inhouse-did]
+  exten => did-in,1,NoOp(ダイヤルイン着信処理)
+--- 133,138 ----
+***************
+*** 143,148 ****
+--- 173,197 ----
+  exten => did-in,n(group),NoOp(ダイヤルイン:グループ着信)
+  exten => did-in,n,Gosub(macro-groupdial,s,1,(${EXT:1}))
+  
++ ;リモートパーク処理
++ [remotepark]
++ exten => _X.,1(rempark),NoOp(リモートパーク)
++ exten => _X.,n,Set(IDIGI=${DB(ABS/IOP/DIGITS)})
++ ;かけてきたリモートの内線が自局内で定義されているかチェックする
++ exten => _X.,n,Set(RMCEXT=${CALLERID(num):${IDIGI}})
++ exten => _X.,n,Set(RMOEXT=${DB(ABS/EXT/${RMCEXT})})
++ exten => _X.,n,GotoIf($["${RMOEXT}"=""]?rnogo)
++ exten => _X.,n,Set(RMPKOPT=c(rparkreturn,${RMCEXT},1))
++ exten => _X.,n,Goto(default,${EXT},1)
++ exten => _X.,n(rnogo),Congestion
++ 
++ [rparkreturn]
++ ;リモートパーク時の呼び戻し処理
++ exten => _X.,1,NoOp(リモートパーク呼び戻し)
++ exten => _X.,n,Set(TORET=${DB(ABS/EXT/${EXTEN})})
++ exten => _X.,n,Set(TORET=${TORET:1})
++ exten => _X.,n,Goto(intra-out,${TORET},1)
++ 
+  [fax-in]
+  ;ファクス
+  exten => fax,1,NoOp(ファクス受信)
