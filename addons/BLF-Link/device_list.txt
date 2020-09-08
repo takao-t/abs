@@ -1,0 +1,3 @@
+PJSIP/phone1,Custom:remote-phone1
+PJSIP/phone2,Custom:remote-phone2
+PJSIP/phone3,Custom:remote-phone2

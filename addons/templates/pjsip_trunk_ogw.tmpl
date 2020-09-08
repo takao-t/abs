@@ -1,0 +1,49 @@
+;ひかりOG用テンプレート ##NUM##
+;pjsip.confにtransportを設定しておくこと
+;OG側でAsteriskサーバのMACアドレスとIPアドレスを登録のこと
+;GWとして登録する
+
+;ひかり電話OG
+;
+[##TRUNKNAME##]
+type = aor
+contact = sip:##USERNAME##@##IPADDR##
+qualify_frequency = 30
+authenticate_qualify = no
+outbound_proxy = sip:##IPADDR##\;lr
+
+[##TRUNKNAME##]
+type = auth
+auth_type = userpass
+username = ##USERNAME##
+password = password
+
+[##TRUNKNAME##]
+type = identify
+endpoint = ##TRUNKNAME##
+match = ##IPADDR##
+
+[##TRUNKNAME##]
+type = registration
+transport = transport-udp
+outbound_auth = hikari-hgw##NUM##
+server_uri = sip:##IPADDR##
+client_uri = sip:##USERNAME##@##IPADDR##
+retry_interval = 60
+
+[##TRUNKNAME##]
+type = endpoint
+transport = transport-udp
+context = from-hikari-ogw
+dtmf_mode = inband
+disallow = all
+allow = ulaw
+direct_media = no
+send_pai = yes
+inband_progress = yes
+from_user = ##USERNAME##
+from_domain = ##IPADDR##
+language = ja
+outbound_proxy = sip:##IPADDR##\;lr
+outbound_auth = ##TRUNKNAME##
+aors = ##TRUNKNAME##
