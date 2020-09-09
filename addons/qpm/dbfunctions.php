@@ -217,7 +217,6 @@ function update_ccat($cat){
 
     if($res == ""){
         $query = "INSERT INTO qpm_cats VALUES('" . $cat  . "')";
-        print($query);
         $res = $db->querySingle($query);
     }
 
