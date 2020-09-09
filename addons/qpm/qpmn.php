@@ -1,3 +1,24 @@
+<?php
+include 'config.php';
+include 'astman.php';
+
+//セッション管理
+//ログインとセッション
+ini_set('session.gc_maxlifetime', 28800);
+ini_set('session.save_path', SESSIONPATH);
+@session_start();
+if(!isset($_SESSION['qpm_session']) | !isset($_SESSION['qpm_user'])){
+    echo "<br><center>";
+    echo "<a href=\"login.php\" class=\"pure-button pure-button-active\">ログインしてください</a>";
+    echo "</center><br>";
+    exit;
+} else {
+    $qpm_user = $_SESSION['qpm_user'];
+    $qpm_user_name = $_SESSION['qpm_user_name'];
+}
+
+?>
+
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -180,23 +201,6 @@ function msg_number(str) {
 </script>
 
 <?php
-include 'config.php';
-include 'astman.php';
-
-//セッション管理
-//ログインとセッション
-ini_set('session.gc_maxlifetime', 28800);
-ini_set('session.save_path', SESSIONPATH);
-@session_start();
-if(!isset($_SESSION['qpm_session']) | !isset($_SESSION['qpm_user'])){
-    echo "<br><center>";
-    echo "<a href=\"login.php\" class=\"pure-button pure-button-active\">ログインしてください</a>";
-    echo "</center><br>";
-    exit;
-} else {
-    $qpm_user = $_SESSION['qpm_user'];
-    $qpm_user_name = $_SESSION['qpm_user_name'];
-}
 
 // Asterisk コマンド実行
 function exec_cli_command($param){

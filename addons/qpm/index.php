@@ -93,6 +93,12 @@ $p_attend = "";
 $detail_sheet = '';
 $p_upd_user = '';
 
+$c2c_num;
+$c2c_pn1;
+$c2c_pn2;
+$c2c_pn3;
+$c2c_pn4;
+
 include 'astman.php';
 include 'zipfunctions.php';
 include 'dbfunctions.php';
@@ -706,8 +712,10 @@ $qpmn_url = $qpmn_url . 'qpmn.php';
 //カテゴリプルダウン生成
 $cat_pulldown = "";
 $cat_arr = DBFUNC\get_ccat();
-foreach($cat_arr as $ccat){
+if($cat_arr != NULL){
+  foreach($cat_arr as $ccat){
     $cat_pulldown .= '<option value="' . $ccat['cat'] . '">' . $ccat['cat'] . "</option>";
+  }
 }
 
 echo <<<EOM

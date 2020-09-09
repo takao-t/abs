@@ -1,6 +1,7 @@
 <h3>ログアウト</h3>
 
 <?php
+include 'config.php';
 
 ini_set('session.save_path', SESSIONPATH);
 @session_start();
