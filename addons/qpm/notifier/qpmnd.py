@@ -8,6 +8,7 @@
 #
 
 import signal, os, sys, re
+import datetime
 from qpmnd_config import *
 
 from websocket_server import WebsocketServer
@@ -81,13 +82,17 @@ def message_received(client, server, message):
     #print(content1)
     #print(content2)
 
+    # 受信タイムスタンプ
+    dt_now = datetime.datetime.now()
+    timestamp = dt_now.strftime('%Y/%m/%d(%a) %H-%M-%S')
+
     if condition == 'INCOMING': #メッセージタイプがINCOMINGなら着信通知
         if p_token == TOKEN:    #適当なものを投げられると面倒なのでtokenで判断
             #安全のため数字または非通知でなければ無視
             if content1.isdigit() or content1 == 'anonymous':
                 content1 = tag_eliminate.sub("", content1)
                 # 全クライアント(ブラウザ)にメッセージを送信
-                content2send = 'INCOMING:' +  content1 + ':' + content2
+                content2send = 'INCOMING:' +  content1 + ':' + content2 + ':' + timestamp
                 server.send_message_to_all(content2send)
                 # ヒストリに追加
                 history_append(content2send)
@@ -95,7 +100,7 @@ def message_received(client, server, message):
         # HTMLタグを除去
         content1 = tag_eliminate.sub("", content1)
         # IMの場合はTOKENの個所がユーザ名
-        content2send = 'INSTANTMSG:' + p_token + ":" + content1 + ":" + content2
+        content2send = 'INSTANTMSG:' + p_token + ":" + content1 + ":" + content2 + ':' + timestamp
         #print("IM : " + content2send)
         server.send_message_to_all(content2send)
         # ヒストリに追加
