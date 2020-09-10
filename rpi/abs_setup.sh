@@ -90,6 +90,7 @@ sqlite3 /var/www/qpm/qpm.db < abs/addons/qpm/qpminit.sql
 chown -R www-data:www-data /var/www/qpm
 mkdir /var/www/html/qpm
 cp abs/addons/qpm/*.php /var/www/html/qpm/.
+cp abs/addons/qpm/*.tmpl /var/www/html/qpm/.
 cp -r /var/www/html/css /var/www/html/qpm/.
 chown -R www-data:www-data /var/www/html/qpm
 cp abs/addons/qpm/manage/* /var/www/html/php/addon/.
@@ -116,7 +117,7 @@ else
   cat /etc/rc.local | sed 's,^exit 0,\/var\/lib\/asterisk\/qpmnd/qpmnd.sh \&\nexit 0,' > rclocal.tmp
   cp rclocal.tmp /etc/rc.local
 fi
-chmod +x /var/lib/asterisk/qpmnd.sh
+chmod +x /var/lib/asterisk/qpmnd/qpmnd.sh
 
 #
 systemctl enable apache2
