@@ -120,6 +120,11 @@ fi
 chmod +x /var/lib/asterisk/qpmnd/qpmnd.sh
 
 #
+wget https://raw.githubusercontent.com/takao-t/abs/abs2/rpi/exten_macro.patch
+patch -p0 /etc/asterisk/extensions_macros.conf < exten_macro.patch
+
+
+#
 systemctl enable apache2
 systemctl enable asterisk
 
