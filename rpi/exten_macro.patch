@@ -1,0 +1,41 @@
+*** /etc/asterisk/extensions_macros.conf.org  2020-09-11 03:24:36.153650535 +0900
+--- /etc/asterisk/extensions_macros.conf      2020-09-11 03:40:49.358659984 +0900
+***************
+*** 376,393 ****
+
+  ;外部サービス連携(着信通知)
+  [external-notify]
+! exten => s,1,NoOp(何もしない)
+! exten => s,n,Return
+!
+! ;exten => s,1,NoOp(着信通知連携-QPM)
+! ;exten => s,n,NoOp(${ARG1})
+! ;exten => s,n,Set(TMP_CIDNAME=${DB(cidname/${ARG1})})
+! ;exten => s,n,GotoIf($["${TMP_CIDNAME}" = ""]?noname)
+! ;exten => s,n,Goto(do_qpmnc)
+! ;exten => s,n(noname),Set(TMP_CIDNAME="")
+! ;exten => s,n(do_qpmnc),System(sh -x /var/lib/asterisk/qpmnd/qpmnc.sh ${ARG1} ${TMP_CIDNAME})
+  ;exten => s,n,Return
+
+  ;exten => s,1,NoOp(着信通知連携-slack)
+  ;exten => s,n,NoOp(${ARG1})
+  ;exten => s,n,Set(TMP_CIDNAME=${DB(cidname/${ARG1})})
+--- 376,393 ----
+
+  ;外部サービス連携(着信通知)
+  [external-notify]
+! ;exten => s,1,NoOp(何もしない)
+  ;exten => s,n,Return
+
++ exten => s,1,NoOp(着信通知連携-QPM)
++ exten => s,n,NoOp(${ARG1})
++ exten => s,n,Set(TMP_CIDNAME=${DB(cidname/${ARG1})})
++ exten => s,n,GotoIf($["${TMP_CIDNAME}" = ""]?noname)
++ exten => s,n,Goto(do_qpmnc)
++ exten => s,n(noname),Set(TMP_CIDNAME="")
++ exten => s,n(do_qpmnc),System(sh -x /var/lib/asterisk/qpmnd/qpmnc.sh ${ARG1} ${TMP_CIDNAME})
++ exten => s,n,Return
++
+  ;exten => s,1,NoOp(着信通知連携-slack)
+  ;exten => s,n,NoOp(${ARG1})
+  ;exten => s,n,Set(TMP_CIDNAME=${DB(cidname/${ARG1})})
