@@ -68,8 +68,58 @@ chown -R www-data:www-data /var/www/html
 chown -R www-data:www-data /var/www/absp
 
 #
-echo "起動中"
+echo "アドオンインストール"
+mkdir /var/www/html/php/addon
+mkdir /var/www/html/backup
+mkdir /var/www/html/php/addon/templates
+mkdir /var/www/html/prov
+mkdir /var/www/html/prov/pana
+
+cp abs/addons/*.php /var/www/html/php/addon/.
+cp abs/addons/toolsdef.php /var/www/html/php/.
+cp abs/addons/templates/* /var/www/html/php/addon/templates/.
+chown -R www-data:www-data /var/www/html/php/addon
+chown -R www-data:www-data /var/www/html/backup
+chown -R www-data:www-data /var/www/html/prov/pana
+
+#
+echo "QPMインストール"
+apt-get -y install php-sqlite3
+mkdir /var/www/qpm
+sqlite3 /var/www/qpm/qpm.db < abs/addons/qpm/qpminit.sql
+chown -R www-data:www-data /var/www/qpm
+mkdir /var/www/html/qpm
+cp abs/addons/qpm/*.php /var/www/html/qpm/.
+cp -r /var/www/html/css /var/www/html/qpm/.
+chown -R www-data:www-data /var/www/html/qpm
+cp abs/addons/qpm/manage/* /var/www/html/php/addon/.
+chown -R www-data:www-data /var/www/html/php
+cp abs/addons/qpm/manage/toolsdef.php /var/www/html/php/.
+
+pip3 install websocket-client
+git clone https://github.com/Pithikos/python-websocket-server.git
+cd python-websocket-server/
+python3 ./setup.py install
+cd ..
+
+mkdir /var/lib/asterisk/qpmnd
+cp  abs/addons/qpm/notifier/* /var/lib/asterisk/qpmnd/.
+
+MYIPADDR=`ip add show eth0 |grep 'inet '|cut -f6,6 -d' '|cut -f1,1 -d'/'`
+cat /var/lib/asterisk/qpmnd/qpmnd_config.tmpl | sed s/MYIPADDR/$MYIPADDR/ > /var/lib/asterisk/qpmnd/qpmnd_config.py
+cat /var/www/html/qpm/config.php.tmpl | sed s/MYIPADDR/$MYIPADDR/ > /var/www/html/qpm/config.php
+
+if grep -q qpmnd /etc/rc.local
+then
+  echo 'rc.local already updated'
+else
+  cat /etc/rc.local | sed 's,^exit 0,\/var\/lib\/asterisk\/qpmnd/qpmnd.sh \&\nexit 0,' > rclocal.tmp
+  cp rclocal.tmp /etc/rc.local
+fi
+chmod +x /var/lib/asterisk/qpmnd.sh
+
+#
 systemctl enable apache2
 systemctl enable asterisk
-systemctl start apache2
-systemctl start asterisk
+
+echo "再起動してください"
