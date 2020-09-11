@@ -1,4 +1,4 @@
-ABS Conpyright 2016-2019 Takao Takahashi.
+ABS Conpyright 2016-2020 Takao Takahashi.
 
 ABS(Asterisk Business phone Schema)はAsteriskを小型PBX(ビジホン)として使用するためのAsterisk用設定ファイル一式と操作用のWeb UIです。
 
