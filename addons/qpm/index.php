@@ -93,11 +93,11 @@ $p_attend = "";
 $detail_sheet = '';
 $p_upd_user = '';
 
-$c2c_num;
-$c2c_pn1;
-$c2c_pn2;
-$c2c_pn3;
-$c2c_pn4;
+$c2c_num = "";
+$c2c_pn1 = "";
+$c2c_pn2 = "";
+$c2c_pn3 = "";
+$c2c_pn4 = "";
 
 include 'astman.php';
 include 'zipfunctions.php';

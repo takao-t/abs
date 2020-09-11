@@ -86,6 +86,7 @@ chown -R www-data:www-data /var/www/html/prov/pana
 echo "QPMインストール"
 apt-get -y install php-sqlite3
 mkdir /var/www/qpm
+mkdir /var/www/qpm/csv
 sqlite3 /var/www/qpm/qpm.db < abs/addons/qpm/qpminit.sql
 chown -R www-data:www-data /var/www/qpm
 mkdir /var/www/html/qpm
