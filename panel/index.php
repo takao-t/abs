@@ -81,8 +81,7 @@ if(isset($_SESSION['absp_session'])){
         if(isset($_GET['page'])){
             $lickey = AbspFunctions\get_db_item('ABS', 'LIC');
             if($lickey == "" | $lickey = NULL){
-                echo '<span style="background-color:#ff0000"><font color="white">ライセンス未>
-設定</font></span>';
+                echo '<span style="background-color:#ff0000"><font color="white">ライセンス未設定</font></span>';
             }
             $target_page = $_GET['page'];
             include 'php/' . $target_page;
