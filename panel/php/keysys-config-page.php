@@ -54,10 +54,10 @@ echo <<<EOT
       <th>番号</th>
       <th>ラベル</th>
       <th>TECH</th>
-      <th nowrap>トランク</th>
+      <th nowrap><font color="red">*</font>トランク</th>
       <th>種別</th>
       <th>発信CID</th>
-      <th nowrap>着信</th>
+      <th nowrap><font color="red">*</font>着信</th>
       <th>RING</th>
       <th>割込PIN</th>
       <th nowrap>割込MD</th>
@@ -105,7 +105,7 @@ for($i=1;$i<=$max_keys;$i++){
 
     $bpin = $key_info['bpin'];
 
-    $rgpt_selected = array('1'=>'', '2'=>'', '3'=>'', '4'=>'', '5'=>'');
+    $rgpt_selected = array('0'=>'', '1'=>'', '2'=>'', '3'=>'', '4'=>'', '5'=>'');
     $rgpt = $key_info['rgpt'];
     $rgpt_selected["$rgpt"] = "selected";
 
@@ -167,6 +167,7 @@ echo <<<EOT
       </td>
       <td>
         <select name="rgpt">
+          <option value="0"  {$rgpt_selected['0']}>0</option>
           <option value="1"  {$rgpt_selected['1']}>1</option>
           <option value="2"  {$rgpt_selected['2']}>2</option>
           <option value="3"  {$rgpt_selected['3']}>3</option>
