@@ -1,6 +1,8 @@
 <h2>内線情報設定</h2>
 <?php
 
+$dp_msg = '';
+
 //
 // extension update
 //
@@ -52,6 +54,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if($_POST['function'] == 'rgptset'){
         $p_rgpt = $_POST['rgpt'];
         AbspFunctions\put_db_item('ABS/EXT', 'RGPT', $p_rgpt);
+    }
+
+    if($_POST['function'] == 'dpset'){
+        $p_dpdest = $_POST['dpdest'];
+        $p_dpcid  = $_POST['dpcid'];
+        $p_dpcidn = $_POST['dpcidn'];
+        if($p_dpdest != ""){
+            $p_dprgpt = $_POST['dprgpt'];
+            AbspFunctions\put_db_item('ABS/DOOR', 'RGPT', $p_dprgpt);
+            AbspFunctions\put_db_item('ABS/DOOR', 'RING', $p_dpdest);
+            AbspFunctions\put_db_item('ABS/DOOR', 'CID', $p_dpcid);
+            AbspFunctions\put_db_item('ABS/DOOR', 'CIDN', $p_dpcidn);
+        }
     }
 
 } /* end of update */
@@ -173,6 +188,17 @@ echo '<font size="-1">MACアドレスは電話機設定ファイル自動生成�
     if($rgpt == '') $rgpt = '0';
     $rgpt_selected["$rgpt"] = "selected";
 
+//ドアホン着信先
+    $dpdest = AbspFunctions\get_db_item('ABS/DOOR', 'RING');
+    $dpcid  = AbspFunctions\get_db_item('ABS/DOOR', 'CID');
+    $dpcidn = AbspFunctions\get_db_item('ABS/DOOR', 'CIDN');
+
+//ドアホン鳴動パターン
+    $dprgpt_selected = array('0'=>'', '1'=>'', '2'=>'', '3'=>'', '4'=>'', '5'=>'');
+    $dprgpt = AbspFunctions\get_db_item('ABS/DOOR', 'RGPT');
+    if($dprgpt == '') $rgpt = '0';
+    $dprgpt_selected["$dprgpt"] = "selected";
+
 echo <<<EOT
 <br>
 <h3>内線時鳴動パターン</h3>
@@ -188,5 +214,26 @@ echo <<<EOT
   <input type="hidden" name="function" value="rgptset">
   <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
+<br>
+<hr>
+<h3>ドアホン(受付電話)設定</h3>
+<form action="" method="post">
+着信先：<input type="text" size="4" name="dpdest" value=$dpdest>
+　鳴動パターン: 
+  <select name="dprgpt" >
+    <option value="0"  {$dprgpt_selected['0']}>0</option>
+    <option value="1"  {$dprgpt_selected['1']}>1</option>
+    <option value="2"  {$dprgpt_selected['2']}>2</option>
+    <option value="3"  {$dprgpt_selected['3']}>3</option>
+    <option value="4"  {$dprgpt_selected['4']}>4</option>
+    <option value="5"  {$dprgpt_selected['5']}>5</option>
+  </select>
+　発信者名：<input type="text" size="4" name="dpcidn" value=$dpcidn>
+　発信者番号：<input type="text" size="4" name="dpcid" value=$dpcid>
+  <input type="hidden" name="function" value="dpset">
+  <input type="submit" class={$_(ABSPBUTTON)} value="設定"> $dp_msg
+<br>
+(グループ着信時はGを付けてください)
+</form
 EOT;
 ?>
