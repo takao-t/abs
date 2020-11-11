@@ -49,14 +49,18 @@ echo $p_ddate;
         //更新前全削除
         AbspFunctions\exec_cli_command('database deltree HOLIDAYS');
 
+        //現在年
+        $this_y = date('Y');
         //更新
         foreach($holidays as $line){
             $line = str_replace('"', '', $line);
             list($day, $name) = explode(',', $line, 2);
             list($p_y, $p_m, $p_d) = explode('-', $day, 3);
-            $day = sprintf("%4d-%02d-%02d", $p_y, $p_m, $p_d);
-            AbspFunctions\put_db_item('HOLIDAYS/JAPANBASE', $day, $name);
-            AbspFunctions\put_db_item('HOLIDAYS/JAPAN', $day, '1');
+            if($p_y >= $this_y){
+                $day = sprintf("%4d-%02d-%02d", $p_y, $p_m, $p_d);
+                AbspFunctions\put_db_item('HOLIDAYS/JAPANBASE', $day, $name);
+                AbspFunctions\put_db_item('HOLIDAYS/JAPAN', $day, '1');
+            }
         }
     }
 
