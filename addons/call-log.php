@@ -4,6 +4,15 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
+        if($_POST['function'] == 'ilogset'){
+          $p_ilogmode = trim($_POST['ilogmode']);
+          if($p_ilogmode == 'YES'){
+            AbspFunctions\put_db_item('ABS', 'ILOG', 'YES');
+          } else {
+            AbspFunctions\del_db_item('ABS', 'ILOG');
+          }
+        }
+
         if($_POST['function'] == 'bladd'){
           $p_cid = trim($_POST['blcid']);
           $p_yesno = trim($_POST['blchecked']);
@@ -29,7 +38,27 @@
 
 //着信ログ
 $incoming_file = 'call_incoming.log';
+$ilog_tmp = trim(AbspFunctions\get_db_item('ABS', 'ILOG'));
+if($ilog_tmp == "YES"){
+    $ilog_sel_y = 'selected';
+    $ilog_sel_n = '';
+} else {
+    $ilog_sel_y = '';
+    $ilog_sel_n = 'selected';
+}
+
 echo <<<EOT
+<h3>着信記録</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="ilogset">
+    <select name="ilogmode">
+      <option value="YES" {$ilog_setLy}>行う</option>
+      <option value="NO" {$ilog_sel_n}>行なわない</option>
+    </select>
+<input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<br>
+<h3>履歴ダウンロードと削除</h3>
 <table border=0 class="pure-table">
   <tr>
     <thead>
@@ -132,6 +161,7 @@ EOT;
 //拒否ログ
 $reject_file = 'call_reject.log';
 echo <<<EOT
+<h3>拒否履歴ダウンロードと削除</h3>
 <table border=0 class="pure-table">
   <tr>
     <thead>
