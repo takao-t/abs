@@ -58,6 +58,7 @@
                 <li class="pure-menu-item"><a href="index.php?page=tcs-config-page.php" class="pure-menu-link">時間外制御設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=vm-config-page.php" class="pure-menu-link">留守録設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=cid-config-page.php" class="pure-menu-link">発信者名管理</a></li>
+                <li class="pure-menu-item"><a href="index.php?page=qd-config-page.php" class="pure-menu-link">短縮ダイヤル管理</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=bl-config-page.php" class="pure-menu-link">着信拒否番号管理</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=system-config-page.php" class="pure-menu-link">システム設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=exec-cmd-page.php" class="pure-menu-link">コマンド実行</a></li>
@@ -79,10 +80,6 @@ include 'php/functions.php';
 if(isset($_SESSION['absp_session'])){
     if($_SESSION['absp_session'] == 'logged_in'){
         if(isset($_GET['page'])){
-            $lickey = AbspFunctions\get_db_item('ABS', 'LIC');
-            if($lickey == "" | $lickey = NULL){
-                echo '<span style="background-color:#ff0000"><font color="white">ライセンス未設定</font></span>';
-            }
             $target_page = $_GET['page'];
             include 'php/' . $target_page;
         } else {
