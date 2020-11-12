@@ -194,7 +194,8 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/quickdial');
 
-foreach($entry as $line){
+if(!empty($entry)){
+  foreach($entry as $line){
 
     list($ent, $pnum) = explode(' : ', $line, 2);
     $ent = trim($ent);
@@ -232,7 +233,8 @@ echo <<<EOT
 EOT;
     }
 
-} /* end of for */
+  } /* end of for */
+}
 
 echo "</table>";
 
