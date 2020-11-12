@@ -52,7 +52,7 @@ echo <<<EOT
 <form action="" method="post">
     <input type="hidden" name="function" value="ilogset">
     <select name="ilogmode">
-      <option value="YES" {$ilog_setLy}>行う</option>
+      <option value="YES" {$ilog_sel_y}>行う</option>
       <option value="NO" {$ilog_sel_n}>行なわない</option>
     </select>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
@@ -98,7 +98,7 @@ echo <<<EOT
 EOT;
 
   $i = 0;
-  $f_log = fopen('/var/log/asterisk/call_incoming.log', 'r');
+  $f_log = @fopen('/var/log/asterisk/call_incoming.log', 'r');
 
   if($f_log !== FALSE){
     while(!feof($f_log)){
@@ -199,7 +199,7 @@ echo <<<EOT
 EOT;
 
   $i = 0;
-  $f_log = fopen('/var/log/asterisk/call_reject.log', 'r');
+  $f_log = @fopen('/var/log/asterisk/call_reject.log', 'r');
 
   if($f_log !== FALSE){
     while(!feof($f_log)){
