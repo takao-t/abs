@@ -128,6 +128,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     if($_POST['function'] == 'anonupdate'){
     }
 
+    if($_POST['function'] == 'cpbacktime'){
+        $p_cpbt = trim($_POST['cpbt']);
+        if($p_cpbt == "") $p_cpbt = 60;
+        if(!ctype_digit($p_cpbt)) $p_cpbt = 60;
+        AbspFunctions\put_db_item('ABS', 'CPBT', $p_cpbt);
+    }
+
     if($_POST['function'] == 'localring'){
         $p_lr_ext = $_POST['extnum'];
         $c_lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
@@ -300,6 +307,8 @@ echo <<<EOT
 EOT;
 
     $lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
+    $cpbt = AbspFunctions\get_db_item('ABS', 'CPBT');
+    if($cpbt == "") $cpbt = 60;
 
 echo <<<EOT
 </table>
@@ -331,6 +340,13 @@ echo <<<EOT
     </td>
   </tr>
 </table>
+<hr>
+<h3>コールパーク呼び戻し時間</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="cpbacktime">
+    <input type="text" size="2" name="cpbt" value=$cpbt> 秒
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
 <hr>
 EOT;
 
