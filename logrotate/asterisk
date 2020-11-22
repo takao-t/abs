@@ -1,0 +1,26 @@
+/var/log/asterisk/*.log {
+  su asterisk asterisk
+  weekly 4
+  daily
+  compress
+  missingok
+  notifempty
+}
+
+/var/log/asterisk/messages {
+  su asterisk asterisk
+  rotate 4
+  weekly
+  compress
+  missingok
+  notifempty
+}
+
+/var/log/asterisk/cdr-custom/Master.csv {
+  su asterisk asterisk
+  rotate 4
+  weekly
+  compress
+  missingok
+  notifempty
+}
