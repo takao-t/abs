@@ -101,6 +101,12 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
+    if($_POST['function'] == 'rgptset'){ //鳴動パターン設定
+        $p_rgpt = $_POST['rgpt'];
+        AbspFunctions\put_db_item('ABS/IOP', 'RGPT', $p_rgpt);
+    }
+
+
 } // End POST
 
 
@@ -135,7 +141,35 @@ echo <<<EOT
 <input type="hidden" name="function" value="iopsetdigits">
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
+EOT;
+
+//鳴動パターン
+
+    $rgpt_selected = array('0'=>'', '1'=>'', '2'=>'', '3'=>'', '4'=>'', '5'=>'');
+    $rgpt = AbspFunctions\get_db_item('ABS/IOP', 'RGPT');
+    if($rgpt == '') $rgpt = '0';
+    $rgpt_selected["$rgpt"] = "selected";
+
+echo <<<EOT
 <br>
+<h3>拠点間着信時時鳴動パターン</h3>
+<form action="" method="post">
+  <input type="hidden" name="function" value="rgptset">
+  <select name="rgpt">
+    <option value="0"  {$rgpt_selected['0']}>0</option>
+    <option value="1"  {$rgpt_selected['1']}>1</option>
+    <option value="2"  {$rgpt_selected['2']}>2</option>
+    <option value="3"  {$rgpt_selected['3']}>3</option>
+    <option value="4"  {$rgpt_selected['4']}>4</option>
+    <option value="5"  {$rgpt_selected['5']}>5</option>
+    </select>
+  <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+EOT;
+
+echo <<<EOT
+<br>
+<hr>
 <h3>自局(ここ)情報</h3>
 <form action="" method="post">
 <table border=0 class="pure-table">
