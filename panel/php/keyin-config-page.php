@@ -41,6 +41,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $p_apfx = $_POST['apfx'];
         if($p_apfx == '1') AbspFunctions\put_db_item('ABS', 'APF', '1');
         else  AbspFunctions\put_db_item('ABS', 'APF', '0');
+        $p_opf57 = $_POST['opf57'];
+        AbspFunctions\put_db_item('ABS', 'OPF57', $p_opf57);
     }
    
 } // end of POST
@@ -155,20 +157,34 @@ EOT;
 
     $apfx_selected = array('0'=>'','1'=>'');
     $apfx = AbspFunctions\get_db_item('ABS', 'APF');
+    $apfx_selected = array('','');
     $apfx_selected["$apfx"] = "selected";
+    $opf57_selected = array('','','','','','','');
+    $t_opf57 = AbspFunctions\get_db_item('ABS', 'OPF57');
+    if($t_opf57 == "") $t_opf57 = 0;
+    $opf57_selected[$t_opf57] = 'selected';
 
 echo <<<EOT
 <br>
 <h3 id="tdis">着信時外線捕捉プレフィクス付加</h3>
 <font size="-1">
 着信時のCIDに外線発信用プレフィクスを付加します<br>
-ダイヤルイン時はOGP1、キー着信時は*56xを付加します。<br>
+ダイヤルイン時はOGP1、キー着信時は*56xまたは*571～4を付加します。<br>
+(*56は固定キー位置、*57は空きキーオートハント)<br>
 </font>
 <form action="" method="POST">
 <input type="hidden" name="function" value="pfxadd">
 <select name="apfx">
 <option value="0" {$apfx_selected['0']}>しない</option>
 <option value="1" {$apfx_selected['1']}>する</option>
+</select>
+<select name="opf57">
+<option value="0" {$opf57_selected['0']}>*56</option>
+<option value="1" {$opf57_selected['1']}>*571</option>
+<option value="2" {$opf57_selected['2']}>*572</option>
+<option value="3" {$opf57_selected['3']}>*573</option>
+<option value="4" {$opf57_selected['4']}>*574</option>
+</select>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <br>
