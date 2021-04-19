@@ -432,12 +432,14 @@ function create_tssw_list(){
 
     $r_list = array();
     $i = 0;
-    if(count($retval) > 2){
-        foreach($retval as $line){
-            if(strpos($line, "/") === false){
-                list($t_cid, $dummy) = explode(":", $line, 2);
-                $r_list[$i] = trim($t_cid);
-                $i++;
+    if(is_array($retval)){
+        if(count($retval) > 2){
+            foreach($retval as $line){
+                if(strpos($line, "/") === false){
+                    list($t_cid, $dummy) = explode(":", $line, 2);
+                    $r_list[$i] = trim($t_cid);
+                    $i++;
+                }
             }
         }
     }

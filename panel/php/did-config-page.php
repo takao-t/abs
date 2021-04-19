@@ -46,7 +46,20 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $p_apfx = $_POST['apfx'];
         if($p_apfx == '1') AbspFunctions\put_db_item('ABS', 'APF', '1');
         else  AbspFunctions\put_db_item('ABS', 'APF', '0');
+
+        if(isset($_POST['d56opt'])){
+            $p_d56opt = $_POST['d56opt']; //D56オプション
+print $p_d56opt;
+            if($p_d56opt == 'on'){
+                AbspFunctions\put_db_item('ABS', 'D56', '1');
+            } else {
+                AbspFunctions\del_db_item('ABS', 'D56');
+            }
+        } else {
+            AbspFunctions\del_db_item('ABS', 'D56');
+        }
     }
+
    
 } // end of POST
 
@@ -114,21 +127,22 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/DID');
 
-foreach($entry as $line){
+if(is_array($entry)){
+    foreach($entry as $line){
 
-    list($pnam, $target) = explode(' : ', $line, 2);
-    $pnam = trim($pnam);
-    if(!ctype_digit($pnam)){
-        if($pnam != 'any') continue;
-    }
-    $target = trim($target);
-    $num_ents = $num_ents + 1;
+        list($pnam, $target) = explode(' : ', $line, 2);
+        $pnam = trim($pnam);
+        if(!ctype_digit($pnam)){
+            if($pnam != 'any') continue;
+        }
+        $target = trim($target);
+        $num_ents = $num_ents + 1;
 
-    if($num_ents % 2 != 0){
-        $tr_odd_class = '';
-    } else {
-        $tr_odd_class = 'class="pure-table-odd"';
-    }
+        if($num_ents % 2 != 0){
+            $tr_odd_class = '';
+        } else {
+            $tr_odd_class = 'class="pure-table-odd"';
+        }
 
 echo <<<EOT
     <tr $tr_odd_class>
@@ -146,7 +160,8 @@ echo <<<EOT
     </tr>
 EOT;
 
-} /* end of for */
+    } /* end of for */
+}
 
 echo "</table>";
 echo "<br>";
@@ -188,6 +203,13 @@ EOT;
     $apfx = AbspFunctions\get_db_item('ABS', 'APF');
     $apfx_selected["$apfx"] = "selected";
 
+    $d56opt = AbspFunctions\get_db_item('ABS', "D56");
+    if($d56opt == "1"){
+      $d56ckd = "checked";
+    } else {
+      $d56ckd = "";
+    }
+
 echo <<<EOT
 <br>
 <h3 id="tdis">着信時外線捕捉プレフィクス付加</h3>
@@ -201,6 +223,12 @@ echo <<<EOT
 <option value="0" {$apfx_selected['0']}>しない</option>
 <option value="1" {$apfx_selected['1']}>する</option>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+  <br>
+  (キー番号でリダイヤル発信する場合には以下D56オプションにチェック)
+  <br>
+  D56(*56[キー番号])特番発信
+  &nbsp;
+  <input type="checkbox" name="d56opt" value="on" $d56ckd>
 </form>
 <br>
 EOT;

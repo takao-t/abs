@@ -13,13 +13,23 @@ $uinfolocation = '/var/www/absp/';
 //セキュリティに注意
 $use_file_editor = 'YES';
 
+//ネットワークデバイスの定義
+//使用するネットワークデバイスがeth0ではない場合には変更のこと
+//一部ページでIPアドレスの判定等に使用しているため
+define('NETDEV', 'eth0');
+//define('NETDEV', 'enp4s0');
+
 //ページロケーション
-define('PPREFIX', 'absp2');
+define('PPREFIX', 'absp');
 define('PINDEX', 'index.php');
 
 //プロビジョンファイルのロケーション
 define('PROV_PATH', '/var/www/html');
+//パナソニックプロビジョンファイルのロケーション
 define('PROV_PANA', 'prov/pana');
+//Grandstreamプロビジョンファイルのロケーション
+define('PROV_GS', 'prov/gs');
+
 //Asterisk設定ファイルロケーション
 define('ASTDIR', '/etc/asterisk');
 //バックアップファイルの作成箇所

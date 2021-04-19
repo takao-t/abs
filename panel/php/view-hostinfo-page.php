@@ -3,7 +3,7 @@
 <?php
 
     $retval = array();
-    $cmd = 'ip addr show eth0';
+    $cmd = 'ip addr show ' . NETDEV;
     exec($cmd, $retval);
 
     foreach($retval as $line){
