@@ -80,6 +80,10 @@ include 'php/functions.php';
 if(isset($_SESSION['absp_session'])){
     if($_SESSION['absp_session'] == 'logged_in'){
         if(isset($_GET['page'])){
+            $lickey = AbspFunctions\get_db_item('ABS', 'LIC');
+            if($lickey == "" | $lickey = NULL){
+                echo '<span style="background-color:#ff0000"><font color="white">ライセンス未設定</font></span>';
+            }
             $target_page = $_GET['page'];
             include 'php/' . $target_page;
         } else {
