@@ -38,7 +38,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 if(isset($_POST['post_pnum'])){
     $pnum = trim($_POST['post_pnum']);
     $pname = AbspFunctions\get_db_item('cidname', $pnum);
-    $ret = AbspFunctions\get_db_item('ABS/blacklist', $pnum);
+    $ret = AbspFunctions\get_db_item('ABS/blocklist', $pnum);
     if($ret == '1'){
         $pname = '着信拒否中';
     }

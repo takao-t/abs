@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $p_blnumber = $_POST['blnumber'];
         }
         if(ctype_digit($p_blnumber)){
-            AbspFunctions\put_db_item('ABS/blacklist', $p_blnumber, '1');
+            AbspFunctions\put_db_item('ABS/blocklist', $p_blnumber, '1');
             $msg = '';
         } else {
             $msg = '番号は数字のみで指定';
@@ -24,7 +24,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $index = 'delcb_' . $i;
             if(isset($_POST[$index])){
                 $entry = $_POST[$index];
-                AbspFunctions\del_db_item('ABS/blacklist', $entry);
+                AbspFunctions\del_db_item('ABS/blocklist', $entry);
             }
         }
     }
@@ -118,7 +118,7 @@ echo <<<EOT
   </tr>
 EOT;
 
-$entry = AbspFunctions\get_db_family('ABS/blacklist');
+$entry = AbspFunctions\get_db_family('ABS/blocklist');
 
 if($entry != ""){
   foreach($entry as $line){
@@ -136,6 +136,7 @@ if($entry != ""){
         
 
 echo <<<EOT
+拒否中番号一覧
   <tr $tr_odd_class>
     <td nowrap>
       <input type="txt" size="12" name="pnam_$num_ents" value="$pnam" readonly>
@@ -153,7 +154,7 @@ EOT;
 echo "</table>";
 
 echo <<<EOT
-<input type="submit" class={$_(ABSPBUTTON)} value="削除">
+<input type="submit" class={$_(ABSPBUTTON)} value="削除実行">
 <input type="hidden" name="numents" value="$num_ents">
 </form>
 EOT;
@@ -210,9 +211,10 @@ echo <<<EOT
 <input type="txt" size="24" name="blcc" value="$blcc">
 </label>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
-<br>
-指定時にはcontextを作成すること。未指定時は回線切断。
 </form>
+<br>
+指定時にはcontextを作成すること。未指定時は回線切断。<br>
+飛び先はcontext,s,1の型式。ここでの指定はcontextのみ。
 EOT;
 
 ?>

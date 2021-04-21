@@ -17,9 +17,9 @@
           $p_cid = trim($_POST['blcid']);
           $p_yesno = trim($_POST['blchecked']);
           if($p_yesno == 'YES'){
-            AbspFunctions\put_db_item('ABS/blacklist', $p_cid, '1');
+            AbspFunctions\put_db_item('ABS/blocklist', $p_cid, '1');
           } else {
-            AbspFunctions\del_db_item('ABS/blacklist', $p_cid);
+            AbspFunctions\del_db_item('ABS/blocklist', $p_cid);
           } 
         }
 
@@ -110,7 +110,7 @@ EOT;
 
       $cidname = AbspFunctions\get_db_item('cidname', $cidnum);
 
-      $ret = AbspFunctions\get_db_item('ABS/blacklist', $cidnum);
+      $ret = AbspFunctions\get_db_item('ABS/blocklist', $cidnum);
       if($ret == 1) $ischecked = 'checked';
       else $ischecked = '';
 
@@ -209,7 +209,7 @@ EOT;
       list($dtime, $tmp1) = explode(' : ', $line, 2);
       list($dummy, $cidnum) = explode(' - ', $tmp1, 2);
 
-      $ret = AbspFunctions\get_db_item('ABS/blacklist', $cidnum);
+      $ret = AbspFunctions\get_db_item('ABS/blocklist', $cidnum);
       if($ret == 1) $ischecked = 'checked';
       else $ischecked = '';
 

@@ -17,7 +17,7 @@ CFG_PRODUCT_FILE_PATH="{$_POST['cfg_product']}/Config-{MODEL}.cfg"
 HTTPD_PORTOPEN_AUTO="{$_POST['httpport']}"
 
 #NTP Settings
-NTP_ADDR="192.168.254.175"
+NTP_ADDR="{$_POST['ntp_addr']}"
 TIME_SYNC_INTVL="60"
 TIME_QUERY_INTVL="43200"
 LOCAL_TIME_ZONE_POSIX=""
@@ -54,7 +54,7 @@ EOT;
     } //End POST
 
     $retval = array();
-    $cmd = 'ip addr show eth0';
+    $cmd = 'ip addr show ' . NETDEV;
     exec($cmd, $retval);
 
     foreach($retval as $line){
