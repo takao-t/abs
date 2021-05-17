@@ -298,8 +298,8 @@ echo <<<EOT
 <form action="" method="POST">
   <input type="hidden" name="function" value="extconf">
     <select name="exttech">
-      <option value="SIP"  {$tech_selected['SIP']}>SIP</option>
       <option value="PJSIP"  {$tech_selected['PJSIP']}>PJSIP</option>
+      <option value="SIP"  {$tech_selected['SIP']}>SIP</option>
     </select>
   <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>

@@ -3,6 +3,7 @@
 <?php
 $msg = "";
 $logckd = "";
+$alckd = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -26,6 +27,19 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 $entry = $_POST[$index];
                 AbspFunctions\del_db_item('ABS/blocklist', $entry);
             }
+        }
+    }
+
+    if($_POST['function'] == 'alcont'){ //許可リスト(cidname)のみ着信
+        if(isset($_POST['alist'])){
+            $p_log = $_POST['alist'];
+            if($p_log == 'on'){
+                AbspFunctions\put_db_item('ABS/BLC', 'ALIST', '1');
+            } else {
+                AbspFunctions\del_db_item('ABS/BLC', 'ALIST');
+            }
+        } else {
+            AbspFunctions\del_db_item('ABS/BLC', 'ALIST');
         }
     }
 
@@ -55,7 +69,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
-    if($_POST['function'] == 'blccupdate'){ //匿名着信設定
+    if($_POST['function'] == 'blccupdate'){ //拒否リスト更新
         if(isset($_POST['blcc'])){
             $p_blcc = $_POST['blcc'];
             if($p_blcc != ''){
@@ -167,12 +181,34 @@ EOT;
     $logsw = AbspFunctions\get_db_item('ABS/BLC', 'LOG');
     if($logsw == '1') $logckd="checked=\"checked\"";
 
+    $alsw = '';
+    $alsw = AbspFunctions\get_db_item('ABS/BLC', 'ALIST');
+    if($alsw == '1') $alckd="checked=\"checked\"";
+
     $blcc = '';
     $blcc = AbspFunctions\get_db_item('ABS', 'BLC');
 
 echo <<<EOT
 <br>
 <br>
+<table class="pure-table">
+  <tr>
+    <td width="200">
+      <h3 id="bllog">許可リストのみ着信</h3>
+    </td>
+    <td>
+      <form action="" method="post">
+      <input type="hidden" name="function" value="alcont">
+      <input type="checkbox" name="alist" value="on" $alckd>
+      <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+      </form>
+    </td>
+  </tr>
+</table>
+＊発信者名(CID)に登録されているもののみ着信します
+<br>
+<br>
+
 <table class="pure-table">
   <tr>
     <td width="200">

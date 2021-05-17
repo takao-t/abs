@@ -221,10 +221,10 @@ EOT;
 for($i=1;$i<=2;$i++){
 
     // デフォルト値
-    $nks_tech = 'SIP';
+    $nks_tech = 'PJSIP';
     $nks_type = '';
     $tech_selected = array('SIP'=>'', 'PJSIP'=>'');
-    $tech_selected["SIP"] = "selected";
+    $tech_selected["PJSIP"] = "selected";
     $type_selected = array('none'=>'', 'NTTE'=>'', 'NTTW'=>'', 'BASIX'=>'', 'UAREA'=>'');
     $type_selected["none"] = "selected";
 
@@ -259,8 +259,8 @@ echo <<<EOT
     </td>
     <td>
       <select name="nks_tech_$i">
-        <option value="SIP" {$tech_selected['SIP']}>SIP</option>
         <option value="PJSIP" {$tech_selected['PJSIP']}>PJSIP</option>
+        <option value="SIP" {$tech_selected['SIP']}>SIP</option>
       </select>
     </td>
     <td nowrap>
@@ -420,8 +420,8 @@ echo <<<EOT
     </td>
     <td>
       <select name="tssw_tech">
-        <option value="SIP">SIP</option>
         <option value="PJSIP">PJSIP</option>
+        <option value="SIP">SIP</option>
       </select>
     </td>
     <td nowrap>

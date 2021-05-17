@@ -71,7 +71,7 @@ for($i=1;$i<=$max_keys;$i++){
 
     // デフォルト値
     $label = '';
-    $tech = 'SIP';
+    $tech = 'PJSIP';
     $ktype = '';
     $ogcid = '';
     $rgrp = '';
@@ -141,8 +141,8 @@ echo <<<EOT
       </td>
       <td>
         <select name="tech">
-          <option value="SIP" {$tech_selected['SIP']}>SIP</option>
           <option value="PJSIP" {$tech_selected['PJSIP']}>PJSIP</option>
+          <option value="SIP" {$tech_selected['SIP']}>SIP</option>
         </select>
       </td>
       <td nowrap>
