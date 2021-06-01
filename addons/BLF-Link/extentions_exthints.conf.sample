@@ -1,3 +1,0 @@
-exten => 201,hint,Custom:remote-phone1
-exten => 202,hint,Custom:remote-phone2
-exten => 203,hint,Custom:remote-phone3
