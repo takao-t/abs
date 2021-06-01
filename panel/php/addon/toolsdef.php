@@ -10,6 +10,7 @@ class ToolsMenu
     'リモート内線',
     '内線ヒント生成',
     '電話機設定ファイル',
+    'Slack連携',
     'バックアップ',
     'リストア' ];
 
@@ -21,6 +22,7 @@ class ToolsMenu
     '接続先拠点の内線をローカルな内線として設定します',
     'BLFで内線状態を確認するためのヒントを生成します',
     '電話機の設定ファイルを生成します(機種限定)',
+    'Slack連携機能の設定を行います',
     'ABSの情報と設定ファイルのバックアップを行います',
     'バックアップファイルからの復元を行います' ];
 
@@ -32,6 +34,7 @@ class ToolsMenu
     'addon/remote-exten-page',
     'hint-generator',
     'addon/prov-generator',
+    'addon/slack-page',
     'addon/backup-page',
     'addon/restore-page' ];  
 }

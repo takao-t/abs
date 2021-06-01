@@ -1,0 +1,42 @@
+;トランク設定(OPENGATE) ##NUM##
+;
+
+[##TRUNKNAME##]
+type = aor
+contact = sip:##USERNAME##@##IPADDR##
+qualify_frequency = 30
+authenticate_qualify = no
+
+[##TRUNKNAME##]
+type = identify
+endpoint = ##TRUNKNAME##
+match = ##IPADDR##
+
+[##TRUNKNAME##]
+type = auth
+username = ##USERNAME##
+password = ##PASSWORD##
+
+[##TRUNKNAME##]
+type = registration
+transport = transport-udp
+outbound_auth = ##TRUNKNAME##
+server_uri = sip:##IPADDR##
+client_uri = sip:##USERNAME##@##IPADDR##
+retry_interval = 60
+
+[##TRUNKNAME##]
+type = endpoint
+context = from-opengate
+dtmf_mode = inband
+disallow = all
+allow = ulaw
+direct_media = no
+send_pai = yes
+inband_progress = yes
+from_user = ##USERNAME##
+from_domain = ##IPADDR##
+language = ja
+auth = ##TRUNKNAME##
+outbound_auth = ##TRUNKNAME##
+aors = ##TRUNKNAME##

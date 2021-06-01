@@ -165,6 +165,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
+    if($_POST['function'] == 'khblink'){ //保留時点滅
+        if(isset($_POST['khbuse'])){
+            $p_khbuse = $_POST['khbuse'];
+            AbspFunctions\put_db_item('ABS/KHBL', 'USE', $p_khbuse);
+        }
+        if(isset($_POST['khbtime'])){
+            $p_khbtime = trim($_POST['khbtime']);
+            if($p_khbtime < 2) $p_khbtime = 2;
+            AbspFunctions\put_db_item('ABS/KHBL', 'TIME', $p_khbtime);
+        }
+    }
+
 } // end of POST
 
 //情報確認
@@ -292,6 +304,18 @@ EOT;
     $tech = AbspFunctions\get_db_item('ABS', 'EXTTECH');
     $tech_selected["$tech"] = "selected";
 
+//キー保留時点滅機能
+    $khbl_use = AbspFunctions\get_db_item('ABS/KHBL', 'USE');
+    if($khbl_use == '') $khbl_use = "0";
+    if($khbl_use == "1"){
+        $khbl_suse = 'selected';
+        $khbl_nsuse = '';
+    } else {
+        $khbl_suse = '';
+        $khbl_nsuse = 'selected';
+    }
+    $khbt = AbspFunctions\get_db_item('ABS/KHBL', 'TIME');
+    if($khbt == '') $khbt = "3";
 
 echo <<<EOT
 <h3 id="exttech">内線テクノロジ</h3>
@@ -312,7 +336,9 @@ EOT;
 
 echo <<<EOT
 </table>
-<h4>特殊内線(鳴動内線)設定</h4>
+<h3>特殊内線(鳴動内線)設定</h3>
+鳴動のみする内線番号を設定します。キー着信時にいずれの電話機のベルも鳴らさない場合に使用します。<br>
+実在する内線と重複しない内線番号を設定します。
 <table border=0 class="pure-table">
   <tr>
     <thead>
@@ -348,6 +374,22 @@ echo <<<EOT
     <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <hr>
+<h3>キー保留時点滅機能</h3>
+キー保留時に保留しているキーを点滅させます。
+<form action="" method="post">
+    <select name="khbuse">
+      <option value="1" $khbl_suse>使う</option>
+      <option value="0"  $khbl_nsuse>使わない</option>
+    </select>
+    <input type="hidden" name="function" value="khblink">
+    &nbsp;
+    間隔
+    <input type="text" size="2" name="khbtime" value=$khbt> 秒
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+※電話機によってはうまく動作しません。間隔の最小値は2秒です。<br>
+　(2秒点灯、2秒消灯の繰り返し)
+<hr>
 EOT;
 
 //エリア管理
@@ -362,6 +404,7 @@ EOT;
 
 echo <<<EOT
 <h3 id="exttech">エリア管理</h3>
+<font color="red">インストール直後は[設定]をクリックしてください。</font><br>
 ※この情報は発信者番号通知のPPIヘッダで使用されます。<br>
 <table class="pure-table">
   <form action="" method="POST">
@@ -412,6 +455,7 @@ EOT;
 
 echo <<<EOT
 <h3 id="exttech">キーシステム初期化</h3>
+<font color="red">インストール直後は初期化を実行してください。</font><br>
 <form action="" method="POST">
 <table border="0" class="pure-table">
   <tr>
@@ -435,6 +479,7 @@ EOT;
 
 echo <<<EOT
 <h3 id="exttech">ライセンスキー</h3>
+<font color="red">割り当てられたライセンスキーを設定してください</font><br>
 <form action="" method="POST">
 <input type="hidden" name="function" value="licset">
 <input type="txt" size="40" name="lickey" value="$lickey">
