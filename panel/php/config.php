@@ -33,7 +33,10 @@ define('PROV_GS', 'prov/gs');
 //Asterisk設定ファイルロケーション
 define('ASTDIR', '/etc/asterisk');
 //バックアップファイルの作成箇所
-define('BACKUPDIR', '/var/www/html/backup');
+//define('BACKUPDIR', '/var/www/html/backup');
+//ブラウザからアクセスできない場所におくならば下記例
+//ディレクトリの権限に注意
+define('BACKUPDIR', '/var/www/absp/backup');
 //ログファイルの作成箇所
 define('LOGDIR', '/var/log/asterisk');
 
