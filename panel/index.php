@@ -84,7 +84,20 @@ if(isset($_SESSION['absp_session'])){
             if($lickey == "" | $lickey = NULL){
                 echo '<span style="background-color:#ff0000"><font color="white">ライセンス未設定</font></span>';
             }
+
             $target_page = $_GET['page'];
+            $help_page = $target_page;
+            if(strstr($help_page, 'addon/') != ''){
+                list($dummy, $tmp_help) = explode('/', $help_page); 
+                $help_page = $tmp_help;
+            }
+            $help_page = 'help_' . $help_page;
+
+            echo <<<EOT
+<h3 style="text-align:right">
+<a href="help/$help_page" target="new_abs_help">ヘルプ</a><br>
+</h3>
+EOT;
             include 'php/' . $target_page;
         } else {
             include 'php/blank_page.php';
