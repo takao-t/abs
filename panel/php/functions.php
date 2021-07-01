@@ -48,6 +48,20 @@ function del_db_item($item_name, $param){
     return false;
 }
 
+// AstDBからツリーごと削除
+function del_db_tree($item_name){
+
+    if($item_name != ''){
+        $astman = new AstMan();
+        $astman->Login('localhost', AMIUSERNAME, AMIPASSWORD);
+        $retval = $astman->DelDBTree($item_name);
+        $astman->Logout();
+        return $retval;
+    }
+
+    return false;
+}
+
 // AstDBからのファミリ単位取得
 function get_db_family($item_name){
 
@@ -266,7 +280,8 @@ function set_group_info($group_info){
         //以前に割り当てられていた内線があれば削除
         $tmp_ext = $astman->GetDB("ABS/GRP/$p_grp", 'EXT');
         if($tmp_ext != ''){ //割り当て内線がある場合は自グループなら削除
-            if($tmp_ext == "G$p_grp") $astman->DelDB('ABS/EXT', $tmp_ext);
+            $tmp_ext2 = $astman->GetDB("ABS/EXT", $tmp_ext);
+            if($tmp_ext2 == "G$p_grp") $astman->DelDB('ABS/EXT', $tmp_ext);
         }
         //更新前に全削除
         $astman->DelDB('ABS/GRP', $p_grp);
