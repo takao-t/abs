@@ -43,6 +43,17 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         else  AbspFunctions\put_db_item('ABS', 'APF', '0');
         $p_opf57 = $_POST['opf57'];
         AbspFunctions\put_db_item('ABS', 'OPF57', $p_opf57);
+        if(isset($_POST['d56opt'])){
+            $p_d56opt = $_POST['d56opt']; //D56オプション
+            if($p_d56opt == 'on'){
+                AbspFunctions\put_db_item('ABS', 'D56', '1');
+            } else {
+                AbspFunctions\del_db_item('ABS', 'D56');
+            }
+        } else {
+            AbspFunctions\del_db_item('ABS', 'D56');
+        }
+
     }
    
 } // end of POST
@@ -164,8 +175,16 @@ EOT;
     if($t_opf57 == "") $t_opf57 = 0;
     $opf57_selected[$t_opf57] = 'selected';
 
+    $d56opt = AbspFunctions\get_db_item('ABS', "D56");
+    if($d56opt == "1"){
+      $d56ckd = "checked";
+    } else {
+      $d56ckd = "";
+    }
+
 echo <<<EOT
 <br>
+<hr>
 <h3 id="tdis">着信時外線捕捉プレフィクス付加</h3>
 <font size="-1">
 着信時のCIDに外線発信用プレフィクスを付加します<br>
@@ -185,6 +204,13 @@ echo <<<EOT
 <option value="3" {$opf57_selected['3']}>*573</option>
 <option value="4" {$opf57_selected['4']}>*574</option>
 </select>
+<br>
+(キー番号でリダイヤル発信する場合には以下D56オプションにチェック)
+<br>
+D56(*56[キー番号])特番発信
+&nbsp;
+<input type="checkbox" name="d56opt" value="on" $d56ckd>
+<br>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <br>

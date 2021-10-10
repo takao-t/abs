@@ -122,17 +122,27 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $msg = '初期化完了';
     }
 
-    if($_POST['function'] == 'bllog'){
-    }
-
-    if($_POST['function'] == 'anonupdate'){
-    }
 
     if($_POST['function'] == 'cpbacktime'){
         $p_cpbt = trim($_POST['cpbt']);
         if($p_cpbt == "") $p_cpbt = 60;
         if(!ctype_digit($p_cpbt)) $p_cpbt = 60;
+        if($p_cpbt < 30) $p_cpbt =30;
         AbspFunctions\put_db_item('ABS', 'CPBT', $p_cpbt);
+    }
+
+    if($_POST['function'] == 'spbacktime'){
+        $p_spbt = trim($_POST['spbt']);
+        if($p_spbt == "") $p_spbt = 60;
+        if(!ctype_digit($p_spbt)) $p_spbt = 60;
+        if($p_spbt < 30) $p_spbt =30;
+        AbspFunctions\put_db_item('ABS', 'SPBT', $p_spbt);
+        $p_sppuse = trim($_POST['sppuse']);
+        if($p_sppuse == '1'){
+            AbspFunctions\put_db_item('ABS', 'SPBU', '1');
+        } else {
+            AbspFunctions\put_db_item('ABS', 'SPBU', '0');
+        }
     }
 
     if($_POST['function'] == 'localring'){
@@ -174,6 +184,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $p_khbtime = trim($_POST['khbtime']);
             if($p_khbtime < 2) $p_khbtime = 2;
             AbspFunctions\put_db_item('ABS/KHBL', 'TIME', $p_khbtime);
+        }
+    }
+
+    if($_POST['function'] == 'mydigits'){ //自局番号桁数
+        if(isset($_POST['mdigits'])){
+            $p_mdigits = $_POST['mdigits'];
+            AbspFunctions\put_db_item('ABS', 'MDIGITS', $p_mdigits);
         }
     }
 
@@ -298,6 +315,10 @@ echo <<<EOT
 <hr>
 EOT;
 
+//電話番号桁数
+    $mdigits = AbspFunctions\get_db_item('ABS','MDIGITS');
+    if($mdigits == '') $mdigits = 10;
+
 //内線テクノロジ
 
     $tech_selected = array('SIP'=>'', 'PJSIP'=>'');
@@ -318,6 +339,15 @@ EOT;
     if($khbt == '') $khbt = "3";
 
 echo <<<EOT
+<h3>電話番号桁数(自局)</h3>
+着信時の番号判断に使用します(デフォルト:10桁)<br>
+例：03-1234-5678 ならば10桁
+<form action="" method="post">
+    <input type="hidden" name="function" value="mydigits">
+    <input type="text" size="2" name="mdigits" value=$mdigits> 桁 
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
 <h3 id="exttech">内線テクノロジ</h3>
 <form action="" method="POST">
   <input type="hidden" name="function" value="extconf">
@@ -330,9 +360,21 @@ echo <<<EOT
 <br>
 EOT;
 
+//各設定値
     $lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
     $cpbt = AbspFunctions\get_db_item('ABS', 'CPBT');
     if($cpbt == "") $cpbt = 60;
+    $spbt = AbspFunctions\get_db_item('ABS', 'SPBT');
+    if($spbt == "") $spbt = 60;
+    $t_sp = AbspFunctions\get_db_item('ABS', 'SPBU');
+    if($t_sp == '') $t_sp = "0";
+    if($t_sp == "1"){
+        $spp_suse = 'selected';
+        $spp_nuse = '';
+    } else {
+        $spp_suse = '';
+        $spp_nuse = 'selected';
+    }
 
 echo <<<EOT
 </table>
@@ -371,6 +413,19 @@ echo <<<EOT
 <form action="" method="post">
     <input type="hidden" name="function" value="cpbacktime">
     <input type="text" size="2" name="cpbt" value=$cpbt> 秒
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
+<h3>セルフパーク呼び戻し時間</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="spbacktime">
+    <input type="text" size="2" name="spbt" value=$spbt> 秒
+    &nbsp;
+    ピックアップ
+    <select name="sppuse">
+      <option value="1" $spp_suse>使う</option>
+      <option value="0"  $spp_nuse>使わない</option>
+    </select>
     <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <hr>

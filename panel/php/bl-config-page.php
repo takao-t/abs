@@ -1,9 +1,10 @@
-<h2 id="bllist">着信拒否番号管理</h2>
+<h2 id="bllist">着信拒否管理</h2>
 
 <?php
 $msg = "";
-$logckd = "";
 $alckd = "";
+$bh_num = '';
+$bh_msg = '';
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -43,19 +44,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
-    if($_POST['function'] == 'bllog'){ //拒否ログ設定
-        if(isset($_POST['logsw'])){
-            $p_log = $_POST['logsw'];
-            if($p_log == 'on'){
-                AbspFunctions\put_db_item('ABS/BLC', 'LOG', '1');
-            } else {
-                AbspFunctions\del_db_item('ABS/BLC', 'LOG');
-            }
-        } else {
-            AbspFunctions\del_db_item('ABS/BLC', 'LOG');
-        }
-    }
-
     if($_POST['function'] == 'anonupdate'){ //匿名着信設定
         if(isset($_POST['anonopt'])){
             $p_anon = $_POST['anonopt'];
@@ -79,6 +67,30 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             }
         } else {
             AbspFunctions\del_db_item('ABS', 'BLC');
+        }
+    }
+
+    //ゴミ箱内線登録
+    if($_POST['function'] == 'bhnumber'){
+        $p_bh_ext = $_POST['bhnum'];
+        $c_bh_ext = AbspFunctions\get_db_item('ABS/ERV', 'trashbin');
+        if($p_bh_ext == ''){
+            if($c_bh_ext != ''){
+                AbspFunctions\del_db_item('ABS/EXT', $c_bh_ext);
+                AbspFunctions\del_db_item('ABS/ERV', 'trashbin');
+                $bh_msg = '削除';
+            }
+        } else {
+            $ck_peer = AbspFunctions\get_db_item('ABS/EXT', $p_bh_ext);
+            if($ck_peer != ''){
+                $bh_msg = '内線重複';
+            } else {
+                AbspFunctions\put_db_item('ABS/LOCALTECH', 'trashbin', 'Local');
+                AbspFunctions\del_db_item('ABS/EXT', $c_bh_ext);
+                AbspFunctions\put_db_item('ABS/EXT', $p_bh_ext, 'trashbin');
+                AbspFunctions\put_db_item('ABS/ERV', 'trashbin', $p_bh_ext);
+                $bh_msg = '設定完了';
+            }
         }
     }
    
@@ -132,6 +144,8 @@ echo <<<EOT
   </tr>
 EOT;
 
+echo "拒否中番号一覧";
+
 $entry = AbspFunctions\get_db_family('ABS/blocklist');
 
 if($entry != ""){
@@ -150,7 +164,6 @@ if($entry != ""){
         
 
 echo <<<EOT
-拒否中番号一覧
   <tr $tr_odd_class>
     <td nowrap>
       <input type="txt" size="12" name="pnam_$num_ents" value="$pnam" readonly>
@@ -177,16 +190,15 @@ EOT;
     $anb = AbspFunctions\get_db_item('ABS', 'ANB');
     if($anb == '1') $anonckd="checked=\"checked\"";
 
-    $logsw = '';
-    $logsw = AbspFunctions\get_db_item('ABS/BLC', 'LOG');
-    if($logsw == '1') $logckd="checked=\"checked\"";
-
     $alsw = '';
     $alsw = AbspFunctions\get_db_item('ABS/BLC', 'ALIST');
     if($alsw == '1') $alckd="checked=\"checked\"";
 
     $blcc = '';
     $blcc = AbspFunctions\get_db_item('ABS', 'BLC');
+
+    $bhnum = AbspFunctions\get_db_item('ABS/ERV', 'trashbin');
+
 
 echo <<<EOT
 <br>
@@ -212,22 +224,6 @@ echo <<<EOT
 <table class="pure-table">
   <tr>
     <td width="200">
-      <h3 id="bllog">着信拒否記録</h3>
-    </td>
-    <td>
-      <form action="" method="post">
-      <input type="hidden" name="function" value="bllog">
-      <input type="checkbox" name="logsw" value="on" $logckd>
-      <input type="submit" class={$_(ABSPBUTTON)} value="設定">
-      </form>
-    </td>
-  </tr>
-</table>
-<br>
-
-<table class="pure-table">
-  <tr>
-    <td width="200">
       <h3 id="anon">匿名(anonymous)着信拒否</h3>
     </td>
     <td>
@@ -241,11 +237,23 @@ echo <<<EOT
 </table>
 <br>
 
+<h3 id="blcontext">ゴミ箱内線設定</h3>
+<form action="" method="post">
+<input type="hidden" name="function" value="bhnumber">
+<input type="txt" size="8" name="bhnum" value="$bhnum">
+<input type="submit" class={$_(ABSPBUTTON)} value="設定">
+<font color='red'>
+$bh_msg
+</font>
+</form>
+注意：簡単な内線番号にすると誤登録の恐れがあるため、ある程度長い内線番号を設定してください。
+<br>
+<br>
+
 <h3 id="blcontext">着信拒否時カスタムcontext</h3>
 <form action="" method="post">
 <input type="hidden" name="function" value="blccupdate">
 <input type="txt" size="24" name="blcc" value="$blcc">
-</label>
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <br>

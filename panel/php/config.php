@@ -16,8 +16,8 @@ $use_file_editor = 'YES';
 //ネットワークデバイスの定義
 //使用するネットワークデバイスがeth0ではない場合には変更のこと
 //一部ページでIPアドレスの判定等に使用しているため
-define('NETDEV', 'eth0');
-//define('NETDEV', 'enp4s0');
+//define('NETDEV', 'eth0');
+define('NETDEV', 'enp4s0');
 
 //ページロケーション
 define('PPREFIX', 'absp');
@@ -39,6 +39,8 @@ define('ASTDIR', '/etc/asterisk');
 define('BACKUPDIR', '/var/www/absp/backup');
 //ログファイルの作成箇所
 define('LOGDIR', '/var/log/asterisk');
+//着信履歴(着信,拒否)DBのファイル
+define('CLOGDB', '/var/log/asterisk/abslog.sqlite3');
 
 //以下は修正しないこと
 $_ = function($str){return $str;};

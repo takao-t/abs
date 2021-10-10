@@ -290,6 +290,13 @@ EOT;
         }
         $i++;
 
+        if(!isset($iop_list[$tkey]['TECH'])){
+            $iop_list[$tkey]['TECH'] = '---';
+        }
+        if(!isset($iop_list[$tkey]['TRUNK'])){
+            $iop_list[$tkey]['TRUNK'] = '---';
+        }
+
 echo <<<EOT
     <tr $tr_odd_class>
       <td>

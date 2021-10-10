@@ -1,5 +1,6 @@
 <?php
-include 'config.php';
+include '../config.php';
+include 'qpm-config.php';
 
 @session_start();
 if(isset($_SESSION['absp_session'])){
@@ -15,15 +16,9 @@ if(isset($_SESSION['absp_session'])){
 }
 
     $target_filename = $_FILES['upload_file']['name'];
-    $upload_path = BACKUPDIR . '/' . $_FILES['upload_file']['name']; 
+    $upload_path = CSVDIR . '/' . $_FILES['upload_file']['name']; 
 
-    if(preg_match('/astconf-/', $target_filename)){
-        move_uploaded_file($_FILES['upload_file']['tmp_name'], $upload_path);
-    }
-    if(preg_match('/astdb-/', $target_filename)){
-        move_uploaded_file($_FILES['upload_file']['tmp_name'], $upload_path);
-    }
-    if(preg_match('/extconf/', $target_filename)){
+    if(preg_match('/qpm-/', $target_filename)){
         move_uploaded_file($_FILES['upload_file']['tmp_name'], $upload_path);
     }
 

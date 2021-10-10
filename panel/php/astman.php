@@ -110,6 +110,15 @@ class AstMan {
     $this->error =  "Database entry does not exist";
    	return FALSE;
   }	
+
+  function DelDBTree($family){
+    $wrets = $this->Query("Action: Command\r\nCommand: database deltree $family\r\n\r\n");
+
+        if (strpos($wrets, "database entries removed.") != FALSE){
+                return TRUE;
+        }
+    $this->error =  "Database entry does not exist";
+  }
   
   // BIG Modify.  
   function GetFamilyDB($family){

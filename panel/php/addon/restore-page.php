@@ -129,6 +129,9 @@ EOT;
 
     foreach($file_list as $key=>$file){
        if($file == '.htaccess') continue;
+       if(!(preg_match('/astconf-/', $file))){
+           if(!(preg_match('/astdb-/', $file))) continue;
+       }
        $target = BACKUPDIR . '/' . $file;
        if(is_file($target)) {
 
@@ -174,6 +177,46 @@ echo <<<EOT
 </table>
 <font color="red">注意:安全のためリストアは現在の内容を上書きします。完全にリストアしたい場合にはディレクトリの内容を空にし、AstDBの内容を空にしてから行ってください。</font>
 <br>
+<hr>
+保存されている内線設定ファイル<br>
+<table border=0 class="pure-table">
+  <tr>
+    <thead>
+      <th>ファイル</th>
+      <th>削除</th>
+    </thead>
+  </tr>
+EOT;
+
+    $i=0;
+    foreach($file_list as $key=>$file){
+       if(preg_match('/extconf-/', $file)){
+           if($i % 2 == 0){
+               $tr_odd_class = '';
+           } else {
+               $tr_odd_class = 'class="pure-table-odd"';
+           }
+           $i++;
+echo <<<EOT
+<tr $tr_odd_class>
+  <td>
+    $file
+  </td>
+  <td>
+    <form action="" method="post">
+    <input type="hidden" name="filename" value="$file">
+    <input type="hidden" name="function" value="delete">
+    <input type="checkbox" name="confirm" value="yes">
+    <input type="submit" class={$_(ABSPBUTTON)} value="削除">
+    </form>
+  </td>
+</tr>
+EOT;
+       }
+    }
+
+echo <<<EOT
+</table>
 <hr>
 実行結果は下に表示されます。
 <hr>

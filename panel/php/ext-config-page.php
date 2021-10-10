@@ -53,7 +53,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if($_POST['function'] == 'rgptset'){
         $p_rgpt = $_POST['rgpt'];
-        AbspFunctions\put_db_item('ABS/EXT', 'RGPT', $p_rgpt);
+        AbspFunctions\put_db_item('ABS/EXTOPT', 'RGPT', $p_rgpt);
     }
 
     if($_POST['function'] == 'dpset'){
@@ -184,7 +184,7 @@ echo '<font size="-1">MACアドレスは電話機設定ファイル自動生成�
 //鳴動パターン
 
     $rgpt_selected = array('0'=>'', '1'=>'', '2'=>'', '3'=>'', '4'=>'', '5'=>'');
-    $rgpt = AbspFunctions\get_db_item('ABS/EXT', 'RGPT');
+    $rgpt = AbspFunctions\get_db_item('ABS/EXTOPT', 'RGPT');
     if($rgpt == '') $rgpt = '0';
     $rgpt_selected["$rgpt"] = "selected";
 

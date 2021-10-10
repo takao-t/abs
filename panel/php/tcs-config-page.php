@@ -62,6 +62,16 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         AbspFunctions\put_db_item('ABS', 'WTI', $p_wtival);
     }
 
+    if($_POST['function'] == 'tcovr'){ // 時間外迂回設定
+        $p_tcpbrp = trim($_POST['tcpbrp']);
+        if($p_tcpbrp < 0) $p_tcpbrp = 1;
+        AbspFunctions\put_db_item('ABS', 'TCPBRP', $p_tcpbrp);
+        $p_tcovrpin = trim($_POST['tcovrpin']);
+        AbspFunctions\put_db_item('ABS', 'TCOVRPIN', $p_tcovrpin);
+        $p_tcovrext = trim($_POST['tcovrext']);
+        AbspFunctions\put_db_item('ABS', 'TCOVREXT', $p_tcovrext);
+    }
+
 } // end of POST
 
 
@@ -347,5 +357,39 @@ echo <<<EOT
   </tr>
       </form>
 </table>
+EOT;
+
+    $tcpbrp = AbspFunctions\get_db_item('ABS', 'TCPBRP');
+    if($tcpbrp == '') $tcpbrp = "1";
+    $tcovrpin = AbspFunctions\get_db_item('ABS', 'TCOVRPIN');
+    $tcovrext = AbspFunctions\get_db_item('ABS', 'TCOVREXT');
+    $selectors = AbspFunctions\create_target_list('group',$tcovrext);
+
+echo <<<EOT
+<br>
+<hr>
+<h3 id="tcspec">時間外迂回機能</h3>
+<table class="pure-table">
+  <tr>
+    <td>
+      <form action="" method="POST">
+      <input type="hidden" name="function" value="tcovr">
+      応答繰り返し回数
+      <input type="text" size="2" name="tcpbrp" value=$tcpbrp>
+      &nbsp;PIN
+      <input type="text" size="4" name="tcovrpin" value=$tcovrpin>
+      &nbsp;着信先内線
+      <select name="tcovrext">
+      $selectors
+      </select>
+    </td>
+    <td>
+      <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+    </td>
+  </tr>
+      </form>
+</table>
+<font color=#ff0000 size="-1">注意：繰り返し回数は音声再生後切断時のみ有効。留守録時のメッセージ再生は1回のみ。</font>
+
 EOT;
 ?>

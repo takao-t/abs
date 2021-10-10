@@ -34,7 +34,23 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 } // end of POST
 
 
-//新規追加
+$pnum = '';
+$pname = '';
+
+//GETでの追加・変更
+if(isset($_GET['post_pnum'])){
+    $ref_url = explode('/',$_SERVER['HTTP_REFERER']);
+    if(end($ref_url) == 'index.php?page=call-log-disp.php'){ //AdHoc:履歴ページからしか処理しない
+        $pnum = trim($_GET['post_pnum']);
+        $pname = AbspFunctions\get_db_item('cidname', $pnum);
+        $ret = AbspFunctions\get_db_item('ABS/blocklist', $pnum);
+        if($ret == '1'){
+            $pname = '着信拒否中';
+        }
+    }
+}
+
+//POSTでの追加・変更
 if(isset($_POST['post_pnum'])){
     $pnum = trim($_POST['post_pnum']);
     $pname = AbspFunctions\get_db_item('cidname', $pnum);
@@ -42,9 +58,6 @@ if(isset($_POST['post_pnum'])){
     if($ret == '1'){
         $pname = '着信拒否中';
     }
-} else {
-    $pnum = '';
-    $pname = '';
 }
 
 echo <<<EOT
