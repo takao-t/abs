@@ -59,7 +59,8 @@
                 <li class="pure-menu-item"><a href="index.php?page=vm-config-page.php" class="pure-menu-link">留守録設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=cid-config-page.php" class="pure-menu-link">発信者名管理</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=qd-config-page.php" class="pure-menu-link">短縮ダイヤル管理</a></li>
-                <li class="pure-menu-item"><a href="index.php?page=bl-config-page.php" class="pure-menu-link">着信拒否番号管理</a></li>
+                <li class="pure-menu-item"><a href="index.php?page=call-log-page.php" class="pure-menu-link">着信記録管理</a></li>
+                <li class="pure-menu-item"><a href="index.php?page=bl-config-page.php" class="pure-menu-link">着信拒否管理</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=system-config-page.php" class="pure-menu-link">システム設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=exec-cmd-page.php" class="pure-menu-link">コマンド実行</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=tools-page.php" class="pure-menu-link">ツール</a></li>
