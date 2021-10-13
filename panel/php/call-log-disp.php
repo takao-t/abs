@@ -93,7 +93,6 @@ $bl_addmsg
   </tr>
 EOT;
 
-
 $num_ents = 0;
 $res_ar = array();
 $qstr = "SELECT * FROM abslog WHERE KIND='INCOMING' ORDER BY ID desc LIMIT 20" . " OFFSET " . $inofsn;
@@ -112,6 +111,17 @@ foreach ($res_ar as $eent){
     } else {
         $tr_odd_class = 'class="pure-table-odd"';
     }
+
+    //落ち先チェック
+    $in_dest = '';
+    $in_dest = trim(AbspFunctions\get_db_item('ABS/TRUNK/' . $eent['DESTNUM'] , 'KEY'));
+    if($in_dest != ""){//キー着該当あり
+        $in_dest = '(K' . $in_dest . ')';
+    } else { //DIDありかどうか
+        $in_dest = trim(AbspFunctions\get_db_item('ABS/DID' , $eent['DESTNUM']));
+        if($in_dest != "") $in_dest = "(DIN)";
+    }
+
 
     //拒否リストにあるかどうかチェック
     $f_color = 'black';
@@ -143,6 +153,7 @@ echo <<<EOM
       </td>
       <td>
         {$eent['DESTNUM']}
+        $in_dest
       </td>
       <td>
         <form action="" method="POST">
@@ -191,5 +202,8 @@ echo <<<EOM
 <A HREF="index.php?page=call-log-page.php">戻る</A>
 EOM;
 
+
+//Close DB
+$logdb->close();
 
 ?>

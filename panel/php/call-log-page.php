@@ -112,6 +112,79 @@ echo <<<EOT
 <br>
 EOT;
 
+//ログ概要表示
+echo <<<EOT
+<h4>ローテーションした記録の概要</h4>
+<table border="0" class="pure-table">
+  <thead>
+    <th>番号</th>
+    <th>開始</th>
+    <th>終了</th>
+    <th>件数</th>
+  </thead>
+EOT;
+
+//ログDBファイル名(config.phpで設定する)
+$dbfile_base = CLOGDB;
+//ログサマリ表示
+for($i=0;$i<10;$i++){
+    if($i == 0){
+        $log_num = '現在';
+        $dbfile = $dbfile_base;
+    } else {
+        $log_num = $i;
+        $dbfile = $dbfile_base . ".$i";
+    }
+
+    try {
+        //件数取得
+        $logdb = new SQLite3($dbfile,SQLITE3_OPEN_READONLY);
+        $q = $logdb->prepare("SELECT count(*) FROM abslog");
+        $res = $q->execute();
+        $res_ar = $res->fetchArray();
+        $count_total = (int)$res_ar['count(*)'];
+        if($count_total > 0){
+            //最初のエントリのタイムスタンプ
+            $q = $logdb->prepare("SELECT TIMESTAMP FROM abslog WHERE ID='1'");
+            $res = $q->execute();
+            $res_ar = $res->fetchArray();
+            $tm_start = $res_ar['TIMESTAMP'];
+            //最後のエントリのタイムスタンプ
+            $q = $logdb->prepare("SELECT TIMESTAMP FROM abslog WHERE ID=" . $count_total);
+            $res = $q->execute();
+            $res_ar = $res->fetchArray();
+            $tm_end = $res_ar['TIMESTAMP'];
+        } else {
+            $tm_start = "---";
+            $tm_end = "---";
+        }
+        $logdb->close();
+    } catch (Exception $e) {
+        $count_total = 'ファイルなし';
+        $tm_start = "---";
+        $tm_end = "---";
+    }
+
+echo <<<EOT
+  <tr>
+    <td>
+      $log_num
+    </td>
+    <td>
+      $tm_start
+    </td>
+    <td>
+      $tm_end
+    </td>
+    <td>
+      $count_total
+    </td>
+  </tr>
+EOT;
+
+} //サマリforのおわり
+
+echo "</table>";
 
 //着信ログ現在値
     $clogsw = '';
