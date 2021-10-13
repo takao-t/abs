@@ -136,6 +136,7 @@ for($i=0;$i<10;$i++){
         $dbfile = $dbfile_base . ".$i";
     }
 
+    $e_str = '';
     try {
         //件数取得
         $logdb = new SQLite3($dbfile,SQLITE3_OPEN_READONLY);
@@ -155,16 +156,18 @@ for($i=0;$i<10;$i++){
             $res_ar = $res->fetchArray();
             $tm_end = $res_ar['TIMESTAMP'];
         } else {
+            $count_total = 0;
             $tm_start = "---";
             $tm_end = "---";
         }
         $logdb->close();
-    } catch (Exception $e) {
+    } catch (Exception $e_str) {
         $count_total = 'ファイルなし';
         $tm_start = "---";
         $tm_end = "---";
     }
 
+    if(strpos($e_str,'Exception: Unable to open database') === false){
 echo <<<EOT
   <tr>
     <td>
@@ -181,6 +184,7 @@ echo <<<EOT
     </td>
   </tr>
 EOT;
+    }//ファイル有の場合
 
 } //サマリforのおわり
 

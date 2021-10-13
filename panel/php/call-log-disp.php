@@ -133,7 +133,7 @@ foreach ($res_ar as $eent){
     $t_cidname = trim(AbspFunctions\get_db_item('cidname', $eent['NUMBER']));
 
 
-echo <<<EOM
+echo <<<EOT
     <tr $tr_odd_class>
       <td>
         {$eent['ID']}
@@ -164,11 +164,11 @@ echo <<<EOM
         </form>
       </td>
     </tr>
-EOM;
+EOT;
 
 }
 
-echo <<<EOM
+echo <<<EOT
     <tr>
       <td>
         <form action="" method="post">
@@ -200,7 +200,7 @@ echo <<<EOM
 </table>
 <BR>
 <A HREF="index.php?page=call-log-page.php">戻る</A>
-EOM;
+EOT;
 
 
 //Close DB

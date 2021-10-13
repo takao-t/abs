@@ -106,7 +106,7 @@ foreach ($res_ar as $eent){
         $tr_odd_class = 'class="pure-table-odd"';
     }
 
-echo <<<EOM
+echo <<<EOT
     <tr $tr_odd_class>
       <td>
         {$eent["ID"]}
@@ -123,11 +123,11 @@ echo <<<EOM
         {$eent["DESTNUM"]}
       </td>
     </tr>
-EOM;
+EOT;
 
 }
 
-echo <<<EOM
+echo <<<EOT
     <tr>
       <td>
         <form action="" method="post">
@@ -155,7 +155,10 @@ echo <<<EOM
 </table>
 <BR>
 <A HREF="index.php?page=call-log-page.php">戻る</A>
-EOM;
+EOT;
+
+//Close DB
+$logdb->close();
 
 
 ?>
