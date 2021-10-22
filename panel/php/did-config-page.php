@@ -71,6 +71,7 @@ $target = '';
 $selectors = AbspFunctions\create_target_list('group','');
 
 echo <<<EOT
+ダイヤルイン着信番号追加
 <form action="" method="POST">
   <input type="hidden" name="function" value="newadd">
   <table border=0 class="pure-table">
@@ -112,6 +113,7 @@ EOT;
 $num_ents = 0;
 
 echo <<<EOT
+登録済着信番号一覧
 <form action="" method="POST">
   <input type="hidden" name="function" value="entdel">
   <table border=0 class="pure-table">

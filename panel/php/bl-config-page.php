@@ -13,7 +13,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $p_blnumber = $_POST['blnumber'];
         }
         if(ctype_digit($p_blnumber)){
-            AbspFunctions\put_db_item('ABS/blocklist', $p_blnumber, '1');
+            $nowdt = new DateTime('NOW');
+            $tmpdt = $nowdt->format('Y-m-d/H:i:s');
+            AbspFunctions\put_db_item('ABS/blocklist', $p_blnumber, $tmpdt);
             $msg = '';
         } else {
             $msg = '番号は数字のみで指定';
@@ -139,7 +141,7 @@ echo <<<EOT
     <thead>
       <th>番号</th>
       <th>削除</th>
-      <th></th>
+      <th>登録日時</th>
     </thead>
   </tr>
 EOT;
@@ -151,9 +153,9 @@ $entry = AbspFunctions\get_db_family('ABS/blocklist');
 if($entry != ""){
   foreach($entry as $line){
 
-    list($pnam, $pname) = explode(' : ', $line, 2);
+    list($pnam, $pdate) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
-    $pname = trim($pname);
+    $pdate = trim($pdate);
     $num_ents = $num_ents + 1;
 
     if($num_ents % 2 != 0){
@@ -172,6 +174,7 @@ echo <<<EOT
       <input type="checkbox" name="delcb_$num_ents" value="$pnam">
     </td>
     <td>
+      $pdate
     </td>
   </tr>
 EOT;

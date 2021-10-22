@@ -63,6 +63,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 $pnam = '';
 $target = '';
 echo <<<EOT
+キー着信番号追加
 <form action="" method="POST">
 <input type="hidden" name="function" value="newadd">
 <table border=0 class="pure-table">
@@ -102,6 +103,7 @@ EOT;
 $num_ents = 0;
 
 echo <<<EOT
+キー着信番号一覧
 <form action="" method="POST">
 <input type="hidden" name="function" value="entdel">
 <table border=0 class="pure-table">
