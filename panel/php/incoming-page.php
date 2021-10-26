@@ -9,6 +9,9 @@ echo <<<EOT
       <a href="index.php?help=incoming-1-1.html" style="width:100%;" class ="pure-button pure-button-active">
         着信(全番号)
       </a>
+      <a href="index.php?page=call-log-page.php#inlog" style="width:100%;" class ="pure-button pure-button-active">
+        着信記録
+      </a>
       </button>
     </td>
     <td>
@@ -45,8 +48,8 @@ echo <<<EOT
       <img src="icons/arrow-right.png">
     </td>
     <td>
-      <a href="index.php?page=bl-config-page.php#bllog" style="width:100%;" class ="pure-button pure-button-active">
-        着信拒否ログ記録
+      <a href="index.php?page=call-log-page.php#bllog" style="width:100%;" class ="pure-button pure-button-active">
+        着信拒否記録
       </a>
     </td>
     <td>

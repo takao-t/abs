@@ -209,7 +209,7 @@ echo <<<EOT
 <table class="pure-table">
   <tr>
     <td width="200">
-      <h3 id="bllog">許可リストのみ着信</h3>
+      <h3>許可リストのみ着信</h3>
     </td>
     <td>
       <form action="" method="post">

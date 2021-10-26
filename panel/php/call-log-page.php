@@ -207,7 +207,7 @@ echo <<<EOT
 <table class="pure-table">
   <tr>
     <td width="200">
-      <h3 id="bllog">着信記録</h3>
+      <h3 id="inlog">着信記録</h3>
     </td>
     <td>
       <form action="" method="post">
