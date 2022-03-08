@@ -119,7 +119,8 @@ EOT;
 
 $entry = AbspFunctions\get_db_family('ABS/TRUNK');
 
-foreach($entry as $line){
+if(is_array($entry)){
+  foreach($entry as $line){
 
     list($pnam, $target) = explode(' : ', $line, 2);
     $pnam = trim($pnam);
@@ -155,7 +156,8 @@ echo <<<EOT
 </tr>
 EOT;
 
-} /* end of for */
+  } /* end of foreach */
+} /* endo of is_array check */
 
 echo "</table>";
 echo "<br>";

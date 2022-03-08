@@ -4,7 +4,7 @@
 $msg = "";
 
 //音声フォーマット変換
-exec('audio/convert.sh');
+exec('audio/convert.sh abs-tcmessage abs-tcrmessage > /dev/null 2>&1');
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 

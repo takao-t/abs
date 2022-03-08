@@ -144,6 +144,39 @@ echo <<<EOT
 
   <tr>
     <td>
+      <a href="index.php?page=ivr-config-page.php#blcontext" style="width:100%;" class ="pure-button pure-button-active">
+        IVR処理チェック
+      </a>
+    </td>
+    <td>
+      <img src="icons/arrow-right.png">
+    </td>
+    <td>
+      <a href="index.php?page=ivr-config-page.php#blcontext" style="width:100%;" class ="pure-button pure-button-active">
+        IVR処理
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="icons/arrow-down.png">
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+    <td>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
       <a href="index.php?page=did-config-page.php" style="width:100%;" class ="pure-button pure-button-active">
         ダイヤルイン着信
       </a>

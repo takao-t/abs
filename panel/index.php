@@ -54,6 +54,7 @@
                 <li class="pure-menu-item"><a href="index.php?page=incoming-page.php" class="pure-menu-link">着信経路</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=did-config-page.php" class="pure-menu-link">ダイヤルイン設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=keyin-config-page.php" class="pure-menu-link">キー着信設定</a></li>
+                <li class="pure-menu-item"><a href="index.php?page=ivr-config-page.php" class="pure-menu-link">IVR設定</a></li>
                 <hr>
                 <li class="pure-menu-item"><a href="index.php?page=tcs-config-page.php" class="pure-menu-link">時間外制御設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=vm-config-page.php" class="pure-menu-link">留守録設定</a></li>
