@@ -1,0 +1,3 @@
+ABSでFAXを受信させるためにはspandspが必要です。(Digium FAXがなくなったので)
+spandspをまずインストールしてください。libtiff-devが必要になります。
+Asteriskの res_fax、res_fax_spandspを有効にし、再コンパイル、インストールを行ってください。spandspをインストールした後、Asteriskのconfigureからやり直す必要があります。
