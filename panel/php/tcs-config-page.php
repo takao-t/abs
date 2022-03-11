@@ -77,7 +77,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 //時間外制御
 
-    $tcc_selected = array('0'=>'','1'=>'','2'=>'','3'=>'','4'=>'');
+    $tcc_selected = array('0'=>'','1'=>'','2'=>'','3'=>'','4'=>'','5'=>'','6'=>'');
     $tcsval = AbspFunctions\get_db_item('ABS', 'TCC');
     $tcc_selected["$tcsval"] = "selected";
 
@@ -96,6 +96,8 @@ echo <<<EOT
           <option value="2" {$tcc_selected['2']}>時刻分岐あり。要件録音あり。</option>
           <option value="3" {$tcc_selected['3']}>強制時間外設定。音声再生後切断。</option>
           <option value="4" {$tcc_selected['4']}>強制時間外設定。要件録音あり。</option>
+          <option value="5" {$tcc_selected['5']}>時間分岐IVR</option>
+          <option value="6" {$tcc_selected['6']}>強制時間外IVR</option>
         </select>
     </td>
     <td>
