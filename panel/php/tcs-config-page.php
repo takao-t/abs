@@ -311,6 +311,8 @@ echo <<<EOT
         <option value="2" {$tct_selected['2']}>時刻分岐あり。要件録音あり。</option>
         <option value="3" {$tct_selected['3']}>強制時間外設定。音声再生後切断。</option>
         <option value="4" {$tct_selected['4']}>強制時間外設定。要件録音あり。</option>
+        <option value="5" {$tct_selected['5']}>時間分岐IVR</option>
+        <option value="6" {$tct_selected['6']}>強制時間外IVR</option>
       </select>
     </td>
     <td>
