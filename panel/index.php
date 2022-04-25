@@ -47,6 +47,7 @@
                 <li class="pure-menu-item"><a href="index.php?page=ext-config-page.php" class="pure-menu-link">内線設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=group-config-page.php" class="pure-menu-link">内線グループ設定</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=keysys-config-page.php" class="pure-menu-link">キーシステム設定</a></li>
+                <li class="pure-menu-item"><a href="index.php?page=fap-config-page.php" class="pure-menu-link">FAユーザ設定</a></li>
                 <hr>
                 <li class="pure-menu-item"><a href="index.php?page=outgoing-page.php" class="pure-menu-link">発信経路</a></li>
                 <li class="pure-menu-item"><a href="index.php?page=ogr-config-page.php" class="pure-menu-link">発信設定</a></li>

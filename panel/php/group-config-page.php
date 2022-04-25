@@ -33,7 +33,26 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $group_info_set['bnt'] = $p_bnt;
 
         $notice_msg_g[$p_grp] = '';
-        $notice_msg_g[$p_grp] = AbspFunctions\set_group_info($group_info_set);
+        //FDとの重複チェック
+        $e_exists = "";
+        $entry = AbspFunctions\get_db_family('ABS/FAP/UID');
+        if(is_array($entry)){
+           foreach($entry as $line){
+               list($uid, $ent) = explode('/', $line, 2);
+               list($cat, $val) = explode(':',$ent,2);
+               $cat = trim($cat);
+               $val = trim($val);
+               if($cat == 'EXT'){
+                   if($val == $p_exten) $e_exists = 'yes';
+               }
+           }
+        }
+        if($e_exists == "yes"){
+            $notice_msg_g[$p_grp] = "内線番号重複(FD)";
+            //登録処理しない
+        } else { //FDとの重複なければ登録処理
+            $notice_msg_g[$p_grp] = AbspFunctions\set_group_info($group_info_set);
+        }
 
     } //グループ更新
 

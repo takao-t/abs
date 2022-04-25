@@ -15,18 +15,3 @@ do
     echo "inbound_auth/password = $SECRET"
     echo ""
 done
-#
-#echo ";ビデオドアホン用(H.264 GS向け)"
-#for i in 1 2
-#do
-#    echo "[doorphone$i](phone)"
-#    echo "username=phone$i"
-#    SALT=`date +%N`
-#    SECBASE="phone:$SALT:$i"
-#    SECRET=`echo $SECBASE | md5sum | cut -f1,1 -d' '`
-#    echo "secret=$SECRET"
-#    echo "context=from-door"
-#    echo "callerid=\"ドアホン$i\" <500$i>"
-#    echo "allow=h264"
-#    echo ""
-#done

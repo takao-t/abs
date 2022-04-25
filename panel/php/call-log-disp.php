@@ -114,12 +114,21 @@ foreach ($res_ar as $eent){
 
     //落ち先チェック
     $in_dest = '';
-    $in_dest = trim(AbspFunctions\get_db_item('ABS/TRUNK/' . $eent['DESTNUM'] , 'KEY'));
-    if($in_dest != ""){//キー着該当あり
-        $in_dest = '(K' . $in_dest . ')';
-    } else { //DIDありかどうか
-        $in_dest = trim(AbspFunctions\get_db_item('ABS/DID' , $eent['DESTNUM']));
-        if($in_dest != "") $in_dest = "(DIN)";
+    $in_destc = trim(AbspFunctions\get_db_item('ABS/TRUNK/' . $eent['DESTNUM'] , 'KEY'));
+    if($in_destc != ""){//キー着該当あり
+        $in_dest = '(K' . $in_destc . ')';
+    }
+    $in_destc = trim(AbspFunctions\get_db_item('ABS/DID' , $eent['DESTNUM']));
+    if($in_destc != ""){//DID着信
+        $in_dest = "(DIN)";
+    }
+    $in_destc = trim(AbspFunctions\get_db_item('ABS/IVR/NUM' , $eent['DESTNUM']));
+    if($in_destc != ""){//IVR着信
+        $in_dest = "(IVR)";
+    }
+    $in_destc = trim(AbspFunctions\get_db_item('ABS/IVR/DIR/' . $eent['DESTNUM'], 'CTX'));
+    if($in_destc != ""){//IVRダイレクト
+        $in_dest = "(IVR-D)";
     }
 
 

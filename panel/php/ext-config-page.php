@@ -24,30 +24,50 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         $peer_info_set['ogcid'] = $p_ogcid;
         $peer_info_set['pgrp'] = $p_pgrp;
 
-        $notice_msg[$p_peer] = AbspFunctions\set_peer_info($peer_info_set);
+        //FDとの重複チェック
+        $e_exists = "";
+        $entry = AbspFunctions\get_db_family('ABS/FAP/UID');
+        if(is_array($entry)){
+           foreach($entry as $line){
+               list($uid, $ent) = explode('/', $line, 2);
+               list($cat, $val) = explode(':',$ent,2);
+               $cat = trim($cat);
+               $val = trim($val);
+               if($cat == 'EXT'){
+                   if($val == $p_exten) $e_exists = 'yes';
+               }
+           }
+        }
+        if($e_exists == "yes"){
+            $notice_msg[$p_peer] = "内線番号重複(FD)";
+            //登録処理しない
+        } else { //FDとの重複なければ登録処理
 
-        $p_macadd = trim($_POST['macadd']);
-        if($p_macadd != ''){
-            if(strpos($p_macadd, ':') === false){
-                $tmp_str = str_split($p_macadd, 2);
-                if(count($tmp_str) == 6){
-                    $p_macadd = sprintf("%2s:%2s:%2s:%2s:%2s:%2s", $tmp_str[0],$tmp_str[1],$tmp_str[2],$tmp_str[3],$tmp_str[4],$tmp_str[5]);
-                }
-            } else {
-                $tmp_str = explode(':', $p_macadd);
-                if(count($tmp_str) != 6) $p_macadd = '';
-            }
+            $notice_msg[$p_peer] = AbspFunctions\set_peer_info($peer_info_set);
+
+            $p_macadd = trim($_POST['macadd']);
             if($p_macadd != ''){
-                $p_macadd = strtoupper($p_macadd);
-                AbspFunctions\put_db_item("ABS/PINFO/$p_peer", 'MAC', $p_macadd);
+                if(strpos($p_macadd, ':') === false){
+                    $tmp_str = str_split($p_macadd, 2);
+                    if(count($tmp_str) == 6){
+                        $p_macadd = sprintf("%2s:%2s:%2s:%2s:%2s:%2s", $tmp_str[0],$tmp_str[1],$tmp_str[2],$tmp_str[3],$tmp_str[4],$tmp_str[5]);
+                    }
+                } else {
+                    $tmp_str = explode(':', $p_macadd);
+                    if(count($tmp_str) != 6) $p_macadd = '';
+                }
+                if($p_macadd != ''){
+                    $p_macadd = strtoupper($p_macadd);
+                    AbspFunctions\put_db_item("ABS/PINFO/$p_peer", 'MAC', $p_macadd);
+                } else {
+                    AbspFunctions\del_db_item("ABS/PINFO/$p_peer", 'MAC');
+                    $notice_msg[$p_peer] = '';
+                }
             } else {
                 AbspFunctions\del_db_item("ABS/PINFO/$p_peer", 'MAC');
                 $notice_msg[$p_peer] = '';
             }
-        } else {
-            AbspFunctions\del_db_item("ABS/PINFO/$p_peer", 'MAC');
-            $notice_msg[$p_peer] = '';
-        }
+         }
     }
 
 

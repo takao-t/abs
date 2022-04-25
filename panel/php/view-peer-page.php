@@ -12,14 +12,6 @@ ABSの端末(電話機)情報は以下の内容で設定します。各端末の
 pjsip_wizard.confファイルを編集した場合にはAsteriskの再起動が必要となります。<br>
 <font color="red"><b>このページの情報の取り扱いには注意してください。</b></font><br>
 <br>
-<br>
-<table border=0 class="pure-table">
-<tr>
-<thead>
-<th>端末(ピア)名</th>
-<th>パスワード</th>
-</thead>
-</tr>
 EOT;
 
 if($tech == 'SIP'){
@@ -36,6 +28,15 @@ $wizard_file = str_replace('(phone-defaults)', '', $wizard_file);
 $wizard_file = str_replace('(phone)', '', $wizard_file);
 $wizard_file = str_replace('(!)', '', $wizard_file);
 $wizard_file = parse_ini_string($wizard_file, true);
+
+echo '通常端末';
+echo '<table border=0 class="pure-table">';
+echo '<tr>';
+echo '<thead>';
+echo '<th>端末(ピア)名</th>';
+echo '<th>パスワード</th>';
+echo '</thead>';
+echo '</tr>';
 
 for($i=1;$i<=$max_sip_phones;$i++){
 
@@ -57,6 +58,48 @@ echo <<<EOT
 <tr $tr_odd_class>
 <td align="right">
 phone$i
+</td>
+<td nowrap>
+$p_password
+</td>
+</tr>
+EOT;
+
+} /* end of for */
+
+echo "</table>";
+echo "<br>";
+
+echo 'フリーアドレス端末';
+echo '<table border=0 class="pure-table">';
+echo '<tr>';
+echo '<thead>';
+echo '<th>端末(ピア)名</th>';
+echo '<th>パスワード</th>';
+echo '</thead>';
+echo '</tr>';
+
+for($i=1;$i<=$max_sip_phones;$i++){
+
+    $fap_p = sprintf("%03d",$i);
+    if($tech == 'SIP'){
+        //SIP
+        $p_password = $wizard_file["FAP$fap_p"]['secret'];
+    } else {
+        //PJSIP
+        $p_password = $wizard_file["FAP$fap_p"]['inbound_auth/password'];
+    }
+
+    if($i % 2 != 0){
+        $tr_odd_class = '';
+    } else {
+        $tr_odd_class = 'class="pure-table-odd"';
+    }
+
+echo <<<EOT
+<tr $tr_odd_class>
+<td align="right">
+FAP$fap_p
 </td>
 <td nowrap>
 $p_password

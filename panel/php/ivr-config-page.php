@@ -17,6 +17,8 @@ $ivr_selection = array(
     "ivr-item8" => "FAX受信(サンプル)",
     "ivr-item9" => "カスタム1",
     "ivr-item10" => "カスタム2",
+    "ivr-item11" => "カスタム3",
+    "ivr-item12" => "カスタム4",
 );
 
 //セレクション生成

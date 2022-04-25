@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SALT=`dd if=/dev/random bs=512 count=1|md5sum`
+SALT=`dd if=/dev/urandom bs=512 count=1|md5sum`
 SECBASE="somewhere:$SALT:someone:$1"
 ACCCODE=`echo $SECBASE | md5sum | cut -f1,1 -d' '`
 
@@ -13,7 +13,7 @@ echo "accepts_registrations = yes"
 echo "sends_registrations = no"
 echo "accepts_auth = yes"
 echo "sends_auth = yes"
-echo "endpoint/context = default"
+#echo "endpoint/context = default"
 echo "endpoint/dtmf_mode = rfc4733"
 echo "endpoint/call_group = 1"
 echo "endpoint/pickup_group = 1"
@@ -45,20 +45,21 @@ do
     echo "inbound_auth/password = $SECRET"
     echo "outbound_auth/username = phone$i"
     echo "outbound_auth/password = $SECRET"
+    echo "endpoint/context = default"
     echo ""
 done
 #
-#echo ";ビデオドアホン用(H.264 GS向け)"
-#for i in 1 2
-#do
-#    echo "[doorphone$i](phone)"
-#    echo "username=phone$i"
-#    SALT=`date +%N`
-#    SECBASE="phone:$SALT:$i"
-#    SECRET=`echo $SECBASE | md5sum | cut -f1,1 -d' '`
-#    echo "secret=$SECRET"
-#    echo "context=from-door"
-#    echo "callerid=\"ドアホン$i\" <500$i>"
-#    echo "allow=h264"
-#    echo ""
-#done
+echo ";フリーアドレス電話機個別設定"
+for i in 001 002 003 004 005 006 007 008 009 010 011 012 013 014 015 016 017 018 019 020 021 022 023 024 025 026 027 028 029 030 031 032
+do
+    echo "[FAP$i](phone-defaults)"
+    echo "inbound_auth/username = FAP$i"
+    SALT=`date +%N`
+    SECBASE="phone:$SALT:$i"
+    SECRET=`echo $SECBASE | md5sum | cut -f1,1 -d' '`
+    echo "inbound_auth/password = $SECRET"
+    echo "outbound_auth/username = FAP$i"
+    echo "outbound_auth/password = $SECRET"
+    echo "endpoint/context = fap-handler"
+    echo ""
+done
