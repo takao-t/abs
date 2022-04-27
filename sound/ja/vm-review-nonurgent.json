@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"メッセージの緊急を解除するには４を押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

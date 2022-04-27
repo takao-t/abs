@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"詳細オプションは３を"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

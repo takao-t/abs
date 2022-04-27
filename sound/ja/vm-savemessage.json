@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"保存するには９を"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

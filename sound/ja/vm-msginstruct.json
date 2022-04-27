@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"次のメッセージを聞くには６、このメッセージを繰り返すには５、前のメッセージを聞くには４、メッセージを削除または削除取り消しは０、終了するにはシャープを押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

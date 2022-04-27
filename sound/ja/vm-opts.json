@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"フォルダー変更は２を、詳細オプションは３を、メールボックスオプションはゼロを押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"メッセージを確認するには１を押してください。終了する場合にはシャープを押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

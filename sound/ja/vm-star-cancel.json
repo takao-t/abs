@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"キャンセルには、こめを"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

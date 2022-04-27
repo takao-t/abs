@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"この録音でよければ１を、もういちど聞くには２を、録音するには３を"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

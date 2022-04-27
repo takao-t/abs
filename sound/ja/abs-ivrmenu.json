@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"お電話ありがとうございます。総務にご用のかたは１、営業にご用のかたは２、経理にご用のかたは３、そのほかは４を押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

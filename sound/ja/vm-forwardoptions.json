@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"メッセージを追加するには１、追加せず転送するには２を押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

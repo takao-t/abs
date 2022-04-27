@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"緊急設定を解除"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"お電話ありがとうございます。現在、すべてのオペレーターが電話セールスの相手をしています。空き次第、順番にお繋ぎしますので、そのままお待ちください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

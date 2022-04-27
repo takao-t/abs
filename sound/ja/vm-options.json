@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"不在時のメッセージには１を、はなしちゅう時のメッセージは２を、名前を録音するには３を、一時メッセージの録音は４を、パスワード変更は５を、メインメニューに戻るには、こめを押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

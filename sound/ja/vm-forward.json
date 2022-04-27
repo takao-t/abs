@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"内線を指定するには１、ディレクトリを使うには２を押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

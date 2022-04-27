@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"誰も電話に出られません。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

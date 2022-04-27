@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"他のフォルダーのメッセージは２を、他のメールボックスにメッセージを録音するには３を、あなたの応答メッセージまたはパスワード管理はゼロを押してください。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

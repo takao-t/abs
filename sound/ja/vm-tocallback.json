@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"メッセージの送信者を呼び出すには２を"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}

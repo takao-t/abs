@@ -1,0 +1,12 @@
+{
+  "input":{
+    "text":"ボイスメールです。まず最初に設定方法を説明します。"
+  },
+  "voice":{
+    "languageCode":"ja-JP",
+    "name":"ja-JP-Wavenet-B",
+  },
+  "audioConfig":{
+    "audioEncoding":"LINEAR16"
+  }
+}
