@@ -1,0 +1,281 @@
+0,abs-again,,もういちど
+1,abs-alreadylogin,,すでにログインずみです
+2,abs-anotherp,,他の場所でログインしています
+3,abs-complogin,,ログイン、完了
+4,abs-confirm,,に、設定します。
+5,abs-flogout,,強制ログアウトしました
+6,abs-ivrmenu,,お電話ありがとうございます。総務にご用のかたは１、営業にご用のかたは２、経理にご用のかたは３、そのほかは４を押してください。
+7,abs-login,,ログイン
+8,abs-loginfail,,ログインできません
+9,abs-logout,,ログアウトしました
+10,abs-nologin,,ログインしていません
+11,abs-password,,パスワード
+12,abs-tcmessage,,本日の営業は終了しました。明日のお電話をお待ちしております。
+13,abs-tcrmessage,,本日の営業は終了しました。トーンのあとにメッセージを録音し、最後にシャープを押してください。
+14,auth-thankyou, Thank you.,ありがとうございました
+15,digits/0, zero,ゼロ
+16,digits/1, one,１
+17,digits/10, ten,１０
+18,digits/11, eleven,１１
+19,digits/12, twelve,１２
+20,digits/13, thirteen,１３
+21,digits/14, fourteen,１４
+22,digits/15, fifteen,１５
+23,digits/16, sixteen,１６
+24,digits/17, seventeen,１７
+25,digits/18, eighteen,１８
+26,digits/19, nineteen,１９
+27,digits/2, two,２
+28,digits/20, twenty,２０
+29,digits/3, three,３
+30,digits/30, thirty,３０
+31,digits/4, four,４
+32,digits/40, forty,４０
+33,digits/5, five,５
+34,digits/50, fifty,５０
+35,digits/6, six,６
+36,digits/60, sixty,６０
+37,digits/7, seven,７
+38,digits/70, seventy,７０
+39,digits/8, eight,８
+40,digits/80, eighty,８０
+41,digits/9, nine,９
+42,digits/90, ninety,９０
+43,digits/a-m, A.M.,午前
+44,digits/at, at,に
+45,digits/billion, billion,億
+46,digits/day-0, Sunday,日曜
+47,digits/day-1, Monday,月曜
+48,digits/day-2, Tuesday,火曜
+49,digits/day-3, Wednesday,水曜
+50,digits/day-4, Thursday,木曜
+51,digits/day-5, Friday,金曜
+52,digits/day-6, Saturday,土曜
+53,digits/dollars, dollars,ドル
+54,digits/fun,,ふん
+55,digits/h-1, first,最初
+56,digits/h-10, tenth,１０番目
+57,digits/h-11, eleventh,１１番目
+58,digits/h-12, twelfth,１２番目
+59,digits/h-13, thirteenth,１３番目
+60,digits/h-14, fourteenth,１４番目
+61,digits/h-15, fifteenth,１５番目
+62,digits/h-16, sixteenth,１６番目
+63,digits/h-17, seventeenth,１７番目
+64,digits/h-18, eighteenth,１８番目
+65,digits/h-19, nineteenth,１９番目
+66,digits/h-2, second,２番目
+67,digits/h-20, twentieth,２０番目
+68,digits/h-3, third,３番目
+69,digits/h-30, thirtieth,３０番目
+70,digits/h-4, fourth,４番目
+71,digits/h-40, fourtieth,４０番目
+72,digits/h-5, fifth,５番目
+73,digits/h-50, fiftieth,５０番目
+74,digits/h-6, sixth,６番目
+75,digits/h-60, sixtieth,６０番目
+76,digits/h-7, seventh,７番目
+77,digits/h-70, seventieth,７０番目
+78,digits/h-8, eighth,８番目
+79,digits/h-80, eightieth,８０番目
+80,digits/h-9, ninth,９番目
+81,digits/h-90, ninetieth,１９番目
+82,digits/h-billion, billionth,億番目
+83,digits/h-hundred, hundredth,１００番目
+84,digits/h-million, millionth,１００万番目
+85,digits/h-thousand, thousandth,１０００番目
+86,digits/hundred,,１００
+87,digits/ji,,じ
+88,digits/million,,１００万
+89,digits/minus, minus,マイナス
+90,digits/mon-0, January,１月
+91,digits/mon-1, February,２月
+92,digits/mon-10, November,１１月
+93,digits/mon-11, December,１２月
+94,digits/mon-2, March,３月
+95,digits/mon-3, April,４月
+96,digits/mon-4, May,５月
+97,digits/mon-5, June,６月
+98,digits/mon-6, July,７月
+99,digits/mon-7, August,８月
+100,digits/mon-8, September,９月
+101,digits/mon-9, October,１０月
+102,digits/nen,,ねん
+103,digits/nichi,,にち
+104,digits/oclock,,じ
+105,digits/oh,,おー
+106,digits/p-m,,午後
+107,digits/pound,,シャープ
+108,digits/star,,こめ
+109,digits/thousand,,千
+110,digits/today,,今日
+111,digits/tomorrow,,明日
+112,digits/yesterday,,昨日
+113,jp-arimasen,,ありません
+114,jp-arimasu,,あります
+115,jp-baai,,場合
+116,jp-chigaimasu,,ちがいます
+117,jp-dekimasen,,できません
+118,jp-dekimasu,,できます
+119,jp-desu,,です
+120,jp-ga,,が
+121,jp-gozaimasu,,ございます
+122,jp-kara,,から
+123,jp-machigai,,間違い
+124,jp-masu,,ます
+125,jp-ni,,に
+126,jp-no,,の
+127,jp-saigo,,最後
+128,jp-saisho,,最初
+129,jp-tadashii,,正しい
+130,jp-wa,,わ
+131,jp-wo,,を
+132,minute, minute,ふん
+133,minutes, minutes,ふん
+134,number, Number.,番号
+135,one-moment-please," One moment, please.",お待ちください
+136,pbx-invalid," I am sorry, that's not a valid extension.  Please try again.",番号が間違っています。
+137,pbx-invalidpark," I am sorry, there is no call parked on that extension.  Please try again.",この番号でのコールパークはありません。
+138,pbx-parkingfailed, Parking attempt failed.,コールパークが失敗しました。
+139,tt-allbusy, All representatives of the household are currently assisting other telemarketers.  Please hold and your call will be answered in the order it was received.,お電話ありがとうございます。現在、すべてのオペレーターが電話セールスの相手をしています。空き次第、順番にお繋ぎしますので、そのままお待ちください。
+140,vm-advopts, press 3 for advanced options,詳細オプションは３を
+141,vm-and, and,と
+142,vm-calldiffnum, press 2 to enter a different number,別な番号は2を押してください
+143,vm-changeto, Change to which folder?,変更先のフォルダは？
+144,vm-Cust1, folder 5,フォルダー５
+145,vm-Cust2, folder 6,フォルダー６
+146,vm-Cust3, folder 7,フォルダー７
+147,vm-Cust4, folder 8,フォルダー８
+148,vm-Cust5, folder 9,フォルダー９
+149,vm-delete, Press 7 to delete this message.,メッセージ削除は７を
+150,vm-deleted, Message deleted.,メッセージは削除されました。
+151,vm-dialout, please wait while i connect your call,発信中です。おまちください。
+152,vm-duration, This message lasts ...,このメッセージの長さは
+153,vm-enter-num-to-call, please enter the number you wish to call,呼び出したい番号を入力してください。
+154,vm-extension, extension,内線
+155,vm-Family, family,家族
+156,vm-first, first,最初
+157,vm-for, for,宛先
+158,vm-forward," Press 1 to enter an extension, press 2 to use the directory",内線を指定するには１、ディレクトリを使うには２を押してください。
+159,vm-forward-multiple," press 1 to send this message, or 2 to add another recipient.",メッセージを送るには１、受信者を追加するには２を押してください。
+160,vm-forwardoptions, press 1 to prepend a message or 2 to forward the message without prepending,メッセージを追加するには１、追加せず転送するには２を押してください。
+161,vm-Friend, friend,友人
+162,vm-Friends, friends,友人
+163,vm-from, from,から
+164,vm-from-extension, message from extension,メッセージは内線
+165,vm-from-phonenumber, message from phone number,メッセージは電話番号
+166,vm-goodbye, Goodbye,ありがとうございました。
+167,vm-helpexit, Press star for help or pound to exit.,ヘルプはこめ、終了はシャープを押してください。
+168,vm-INBOX, new,新しい
+169,vm-incorrect, Login incorrect.,ログイン失敗
+170,vm-incorrect-mailbox, Login incorrect.  Mailbox?,ログイン失敗。メールボックスは？
+171,vm-instructions, To look into your messages press 1 now.  You may quit voicemail at any time by pressing the pound key.,メッセージを確認するには１を押してください。終了する場合にはシャープを押してください。
+172,vm-intro, Please leave your message after the tone.  When done hang up or press the pound key. (simple tone sound plays),トーンの後にメッセージを録音し、シャープを押すか電話をお切りください。
+173,vm-invalidpassword, That is not a valid password.  Please try again.,パスワードが間違っています。もう一度入力してください。
+174,vm-invalid-password, That password does not meet the minimum requirements for this mailbox.  Please try again.,パスワードの桁すうが少なすぎます。もう一度入力してください。
+175,vm-isonphone, is on the phone,は、はなしちゅうです。
+176,vm-isunavail, is unavailable,は、電話に出ることができません。
+177,vm-last, last,最後
+178,vm-leavemsg,  Press 5 to leave a message,メッセージを残すには５を
+179,vm-login, Comedian Mail.  Mailbox?,ボイスメール。メールボックスは？
+180,vm-mailboxfull, sorry but the user's mail box can't accept more messages,メールボックスがいっぱいです。
+181,vm-marked-nonurgent, Urgent status removed.,緊急設定を解除
+182,vm-marked-urgent, Message marked urgent.,メッセージを緊急に設定
+183,vm-message, message,メッセージ
+184,vm-messages, messages,メッセージ
+185,vm-minutes, minutes,ふん
+186,vm-mismatch, The passwords you entered and re-entered did not match.  Please try again.,パスワードが一致しません。もう一度入力してください。
+187,vm-msgforwarded, Your message has been successfully forwarded.,メッセージは転送されました。
+188,vm-msginstruct," To hear the next message press 6, to repeat this message press 5, to hear the previous message press 4, to delete or undelete this message press zero, to quit voicemail press pound.",次のメッセージを聞くには６、このメッセージを繰り返すには５、前のメッセージを聞くには４、メッセージを削除または削除取り消しは０、終了するにはシャープを押してください。
+189,vm-msgsaved, Your message has been saved.,メッセージは保存されました。
+190,vm-newpassword, Please enter your new password followed by the pound key.,新しいパスワードを入力し、最後にシャープを押してください。
+191,vm-newuser," Welcome to Comedian Mail. First, I will guide you through a short setup process.",ボイスメールです。まず最初に設定方法を説明します。
+192,vm-next, Press 6 to play the next message.,次のメッセージは６を押してください。
+193,vm-no, no,いいえ
+194,vm-nobodyavail, Nobody is available to take your call at the moment,誰も電話に出られません。
+195,vm-nobox, you cannot reply to this message because the sender does not have a mailbox,送り先のメールボックスがないため、返信できません。
+196,vm-nomore, No more messages.,メッセージは以上です。
+197,vm-nonumber, I'm afraid i don't know who sent this message,送り元がわかりません。
+198,vm-num-i-have, the number i have is,番号は
+199,vm-Old, old,以前の
+200,vm-onefor, Press 1 for,１を押すと
+201,vm-onefor-full, Press one to listen to ...,１を押して聞く
+202,vm-options," Press 1 to record your unavailable message, press 2 to record your busy message, press 3 to record your name, press 4 to record your temporary greeting, press 5 to change your password, press star to return to the main menu.",不在時のメッセージには１を、はなしちゅう時のメッセージは２を、名前を録音するには３を、一時メッセージの録音は４を、パスワード変更は５を、メインメニューに戻るには、こめを押してください。
+203,vm-opts," Press 2 to change folders, press 3 for advanced options, press zero for mailbox options.",フォルダー変更は２を、詳細オプションは３を、メールボックスオプションはゼロを押してください。
+204,vm-opts-full, press 2 to access messages saved in other folders.  Press 3 to record a message for another mailbox.  Press 0 for greetings and password management.,他のフォルダーのメッセージは２を、他のメールボックスにメッセージを録音するには３を、あなたの応答メッセージまたはパスワード管理はゼロを押してください。
+205,vm-passchanged, Your passwords have been changed.,パスワードは変更されました。
+206,vm-password, password,パスワード
+207,vm-pls-try-again, please try again,もういちどやりなおしてください
+208,vm-press, press,押す
+209,vm-prev, Press 4 for the previous message,前のメッセージは４を押してください
+210,vm-reachoper, press 0 to reach an operator,オペレーターを呼び出すにはゼロを
+211,vm-rec-busy, After the tone say your busy message and then press the pound key.,トーンのあとにあなたの、はなしちゅうメッセージを録音し、最後にシャープを押してください。
+212,vm-received, received,受信しました
+213,vm-rec-name, After the tone say your name and then press the pound key.,トーンのあとにあなたの名前を言ってからシャープを押してください。
+214,vm-record-prepend," At the tone, please record an introduction to the forwarded message.  When done, press the pound sign.",トーンのあとに転送メッセージを録音し、最後にシャープを押してください。
+215,vm-rec-temp," After the tone, say your temporary message, and then press the pound key.",トーンの後に一時メッセージを録音し、最後にシャープを押してください。
+216,vm-rec-unv, After the tone say your unavailable message and then press the pound key.,トーンの後に不在時のメッセージを録音し、最後にシャープを押してください。
+217,vm-reenterpassword, Please re-enter your password followed by the pound key.,もういちどパスワードを入力し、最後にシャープを押してください。
+218,vm-repaet, Press 5 to repeat the current message.,このメッセージをもう一度再生するには５を押してください。
+219,vm-review, press 1 to accept this recording press 2 to listen to it press 3 to rerecord your message,この録音でよければ１を、もういちど聞くには２を、録音するには３を
+220,vm-review-nonurgent, Press 4 to remove the urgent status of this message.,メッセージの緊急を解除するには４を押してください。
+221,vm-review-urgent, Press 4 to mark this message as urgent.,メッセージを緊急にするには４を押してください。
+222,vm-saved, saved,保存
+223,vm-savedto, saved to,保存先
+224,vm-savefolder, Which folder should I save the message to?,このメッセージを保存するフォルダーは？
+225,vm-savemessage, or 9 to save this message,保存するには９を
+226,vm-saveoper," press 1 to accept this recording, otherwise, please continue to hold",このメッセージでよければ１を、そうでなければお待ちください
+227,vm-sorry, I'm sorry I did not understand your response.,入力が判別できません
+228,vm-star-cancel, press star to cancel,キャンセルには、こめを
+229,vm-starmain,press star to return to the main menu,メインメニューに戻るには米を
+230,vm-tempgreetactive, Your temporary greeting is currently active,一時メッセージが有効です
+231,vm-tempgreeting, press 1 to record your temporary greeting,一時メッセージを録音するには１を
+232,vm-tempgreeting2," press 1 to record your temporary greeting, or press 2 to erase your temporary greeting",一時メッセージを録音するには１を、削除するには２を
+233,vm-tempremoved, Your temporary greeting has been removed,一時メッセージは削除されました
+234,vm-then-pound, then press pound,シャープを押してください。
+235,vm-theperson, The person at extension,このユーザーの内線は
+236,vm-tmpexists," There is a temporary greeting, which overrides your standard greetings.",このメッセージは一時保存です。どのメッセージに適用しますか？
+237,vm-tocallback, press 2 to call the person who sent this message,メッセージの送信者を呼び出すには２を
+238,vm-tocallnum, press 1 to call this number,この番号を呼び出すには１を
+239,vm-tocancel, or pound to cancel.,キャンセルにはシャープを。
+240,vm-tocancelmsg, press star to cancel this message,このメッセージをキャンセルするには、こめを
+241,vm-toenternumber, press 1 to enter a number,番号を入力するには１を
+242,vm-toforward,Press 8 to forward the message to another user,このメッセージを転送するには8を
+243,vm-tohearenv,press 3 to hear the message envelope,このメッセージの詳細を聞くには３を
+244,vm-tomakecall, press 4 to place an outgoing call,外線発信するには４を
+245,vm-tooshort, your message is too short,メッセージが短すぎます
+246,vm-toreply,press 1 to send a reply,返信するには１を
+247,vm-torerecord, press 3 to rerecord your message,メッセージを録音するには３を
+248,vm-undelete,Press 7 to undelete this message,削除を取り消すには７を
+249,vm-undeleted, Message undeleted.,削除は取り消されました
+250,vm-unknown-caller, from an unknown caller,不明な発信者
+251,vm-Urgent, urgent,急ぎ
+252,vm-whichbox," To leave a message, please enter a mailbox number.",メッセージを残すにはメールボックス番号を押してください。
+253,vm-Work, work,仕事
+254,vm-youhave, you have,あなたには
+255,letters/a,a,エー
+256,letters/b,b,ビー
+257,letters/c,c,シー
+258,letters/f,d,ディー
+259,letters/e,e,イー
+260,letters/f,f,エフ
+261,letters/g,g,ジー
+262,letters/h,h,エイチ
+263,letters/i,i,アイ
+264,letters/j,j,ジェイ
+265,letters/k,k,ケイ
+266,letters/l,l,エル
+267,letters/m,m,エム
+268,letters/n,n,エヌ
+269,letters/o,o,オー
+270,letters/p,p,ピー
+271,letters/q,q,キュー
+272,letters/r,r,アール
+273,letters/s,s,エス
+274,letters/t,t,ティー
+275,letters/u,u,ユー
+276,letters/v,v,ブイ
+277,letters/w,w,ダブリュー
+278,letters/x,x,エックス
+279,letters/y,y,ワイ
+280,letters/z,z,ゼット
