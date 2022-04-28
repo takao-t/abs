@@ -72,18 +72,34 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     } //新規追加
 
-    if($_POST['function'] == 'entdel'){ //ユーザ一括削除
-        $p_maxent = $_POST['numents'];
-        for($i=1;$i<=$p_maxent;$i++){
-            $index = 'delcb_' . $i;
-            if(isset($_POST[$index])){
-                $entry = $_POST[$index];
-                //ログイン済内線の場合には内線削除
-                $u_ext = AbspFunctions\get_db_item("ABS/FAP/UID/$entry", "EXT");
-                AbspFunctions\del_db_item("ABS/EXT", $u_ext);
-                //エントリ削除
-                AbspFunctions\del_db_tree("ABS/FAP/UID/$entry");
+    if($_POST['function'] == 'entdel'){ //ユーザ削除
+        if(isset($_POST['delcb'])){
+            if($_POST['delcb'] == "yes"){
+                if(isset($_POST['d_uid'])){
+                    $p_d_uid = $_POST['d_uid'];
+                    $p_d_ext = $_POST['d_ext'];
+                    $p_d_peer = $_POST['d_peer'];
+                    if($p_d_peer != ""){ //ログイン済内線の場合には内線削除
+                        AbspFunctions\del_db_item("ABS/EXT/$p_d_ext", "OGCID");
+                        AbspFunctions\del_db_item("ABS/EXT", $p_d_ext);
+                        AbspFunctions\del_db_item("ABS/ERV", $p_d_peer);
+                        AbspFunctions\del_db_item("ABS/LMT", $p_d_peer);
+                    }
+                    //エントリ削除
+                    AbspFunctions\del_db_tree("ABS/FAP/UID/$p_d_uid");
+                }
             }
+        }
+    }
+
+    if($_POST['function'] == 'tlogout'){ //端末ログアウト
+        if(isset($_POST['d_ext']) & isset($_POST['d_peer'])){
+            $p_l_ext = $_POST['d_ext'];
+            $p_l_peer = $_POST['d_peer'];
+            AbspFunctions\del_db_item("ABS/EXT/$p_l_ext", "OGCID");
+            AbspFunctions\del_db_item("ABS/EXT", $p_l_ext);
+            AbspFunctions\del_db_item("ABS/ERV", $p_l_peer);
+            AbspFunctions\del_db_item("ABS/LMT", $p_l_peer);
         }
     }
 
@@ -159,8 +175,6 @@ $num_ents = 0;
 
 echo <<<EOT
 <h3>フリーアドレスユーザ一覧</h3>
-<form action="" method="POST">
-<input type="hidden" name="function" value="entdel">
 <table border=0 class="pure-table">
 <tr>
 <thead>
@@ -171,6 +185,8 @@ echo <<<EOT
 <th>発信者番号</th>
 <th>削除</th>
 <th></th>
+<th>ログイン</th>
+<th>操作</th>
 </thead>
 </tr>
 EOT;
@@ -216,6 +232,8 @@ if(is_array($entry)){
     if(isset($r_line['OGCID'])) $ogcid = $r_line['OGCID'];
     else $ogcid = '';
 
+    $lin_peer = AbspFunctions\get_db_item('ABS/EXT', $ext);
+
     $num_ents = $num_ents + 1;
     if($num_ents % 2 == 0){
         $tr_odd_class = 'class="pure-table-odd"';
@@ -242,12 +260,42 @@ $limit
 $ogcid
 </td>
 <td>
-<label>
-  <input type="checkbox" name="delcb_$num_ents" value="$uid">
-</label>
+  <form action="" method="POST">
+  <input type="hidden" name="function" value="entdel">
+  <input type="hidden" name="d_uid" value="$uid">
+  <input type="hidden" name="d_ext" value="$ext">
+  <input type="hidden" name="d_peer" value="$lin_peer">
+  <input type="checkbox" name="delcb" value="yes">
+  <input type="submit" class={$_(ABSPBUTTON)} value="削除">
+  </form>
 </td>
 <td>
 </td>
+<td>
+$lin_peer
+</td>
+EOT;
+
+if($lin_peer != ""){ //ログイン中ならログアウトボタン表示
+echo <<<EOT
+<td>
+  <form action="" method="POST">
+  <input type="hidden" name="function" value="tlogout">
+  <input type="hidden" name="d_ext" value="$ext">
+  <input type="hidden" name="d_peer" value="$lin_peer">
+  <input type="submit" class={$_(ABSPBUTTON)} value="ログアウト">
+  </form>
+</td>
+EOT;
+} else {
+echo <<<EOT
+<td>
+ 
+</td>
+EOT;
+}
+
+echo <<<EOT
 </tr>
 EOT;
   } /* end of foreach */
@@ -255,12 +303,6 @@ EOT;
 } /* is_array  */
 echo "</table>";
 echo "<br>";
-
-echo <<<EOT
-<input type="submit" class={$_(ABSPBUTTON)} value="削除">
-<input type="hidden" name="numents" value="$num_ents">
-</form>
-EOT;
 
 $flo = AbspFunctions\get_db_item('ABS/FAP', 'FLO');
 if($flo == 'NO'){
