@@ -38,7 +38,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             //内線重複チェック
             $e_ext = AbspFunctions\get_db_item("ABS/EXT", $p_ext);
             if($e_ext != ""){
-                $msg = "内線番号重複";
+                if(strstr($e_ext,"FAP") === false){
+                    $msg = "内線番号重複";
+                } else {
+                    $msg = "ログイン中";
+                }
             } else {
                 //FDユーザ内線チェック
                 $entry = AbspFunctions\get_db_family('ABS/FAP/UID');
@@ -89,6 +93,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     AbspFunctions\del_db_tree("ABS/FAP/UID/$p_d_uid");
                 }
             }
+        }
+    }
+
+    if($_POST['function'] == 'entedi'){ //ユーザ編集
+        if(isset($_POST['e_uid'])){
+           $p_uid = $_POST['e_uid'];
+           $p_ext = $_POST['e_ext'];
+           $p_pin = $_POST['e_pin'];
+           $p_ogcid = $_POST['e_ogcid'];
+           $limit_selected = array('0'=>'', '1'=>'', '2'=>'', '3'=>'', '4'=>'');
+           $p_limit = trim($_POST['e_limit']);
+           $limit_selected[$p_limit] = 'selected';
         }
     }
 
@@ -183,8 +199,8 @@ echo <<<EOT
 <th>内線番号</th>
 <th>規制値</th>
 <th>発信者番号</th>
+<th>編集</th>
 <th>削除</th>
-<th></th>
 <th>ログイン</th>
 <th>操作</th>
 </thead>
@@ -261,6 +277,17 @@ $ogcid
 </td>
 <td>
   <form action="" method="POST">
+  <input type="hidden" name="function" value="entedi">
+  <input type="hidden" name="e_uid" value="$uid">
+  <input type="hidden" name="e_ext" value="$ext">
+  <input type="hidden" name="e_pin" value="$pin">
+  <input type="hidden" name="e_limit" value="$limit">
+  <input type="hidden" name="e_ogcid" value="$ogcid">
+  <input type="submit" class={$_(ABSPBUTTON)} value="編集">
+  </form>
+</td>
+<td>
+  <form action="" method="POST">
   <input type="hidden" name="function" value="entdel">
   <input type="hidden" name="d_uid" value="$uid">
   <input type="hidden" name="d_ext" value="$ext">
@@ -268,8 +295,6 @@ $ogcid
   <input type="checkbox" name="delcb" value="yes">
   <input type="submit" class={$_(ABSPBUTTON)} value="削除">
   </form>
-</td>
-<td>
 </td>
 <td>
 $lin_peer
