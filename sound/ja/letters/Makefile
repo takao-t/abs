@@ -1,5 +1,6 @@
 # Makefile
 
+TOKEN := $(shell ../../google_auth.sh)
 SRCS= $(wildcard *.json)
 SLINS= $(patsubst %.json,%.lin16,$(SRCS))
 WAVS= $(patsubst %.json,%.wav,$(SRCS))
@@ -7,7 +8,7 @@ WAVS= $(patsubst %.json,%.wav,$(SRCS))
 all: $(SLINS) $(WAVS)
 
 %.lin16: %.json
-	../../google_tts.sh $<
+	@../../google_tts.sh $(TOKEN) $<
 
 %.wav: %.lin16
 	cat $< | sox -t wav - -r 8000 -c 1 $@ gain -6

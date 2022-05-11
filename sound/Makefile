@@ -18,5 +18,13 @@ install:
 	  cd $(MHOME); \
 	done
 
+clean:
+	for subd in $(DIRS); do \
+	  echo $$subd; \
+	  cd $$subd; \
+	  make clean; \
+	  cd $(MHOME); \
+	done
+
 tgz:
 	tar cvfz abs-sounds-ja.tgz ja/*.wav ja/digits/*.wav ja/letters/*.wav
