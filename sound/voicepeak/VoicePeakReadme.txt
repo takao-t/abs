@@ -16,7 +16,7 @@ abs-ja-voice.vppファイルを[プロジェクトを開く]で読み込みま�
 ABS-Sounds.xlsxファイルを開き、編集します。
 音声を追加する場合にはA列を"=ROW()-1"で指定します。行番号-1がファイル名となるためです。
 日本語テキスト部分をコピーし、テキストファイルとしてabs-sounds.txtという名前で保存します。
-ABS-Sounds.xlsxファイルを.csv形式でエクスポートします。
+ABS-Sounds.xlsxファイルを.csv(UTF-8)形式でエクスポートします。
 voice peakでabs-sounds.txtをインポートします。インポートしたらパラメータ等を調整します。
 この手順で元(xlsx)からvoice peakで音声を生成できるようになります。
 

@@ -8,7 +8,7 @@ SRCF="./abs-sounds.csv"
 # VPで生成した場合の名前(000-abs=ja-voice.wavの形になる)
 SRCN="abs-ja-voice"
 # 変換後の音声ファイルの置き場所
-DIRS="ja ja/digits"
+DIRS="ja ja/digits ja/letters ja/phonetic"
 
 # 出力先のサブ・ディレクトリ作成
 for i in $DIRS

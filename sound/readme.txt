@@ -4,7 +4,7 @@ ABSの標準音声をGoogle TTS APIのものに変更しました。
 
 音声生成するにはgcloudパッケージとsoxが必要です。Google TTS APIの設定を行い、認証情報をgoogle_auth.shに設定する必要があります。
 
-CSVファイル(abs-sounds-src.csv)は"番号,ファイル名,本文"のファイルで、Excel等でつくることを想定し、本文はSJISを想定しています。csv2txtを実行するとtemplate.jsonをもとに各音声用のjsonを生成します。このとき、ファイル名にはサブディレクトリを含むのでdigits、lettersのディレクトリがあることを確認しておいてください。
+CSVファイル(abs-sounds-src.csv)は"番号,ファイル名,本文"のファイルで、UTF-8で保存してください。csv2txtを実行するとtemplate.jsonをもとに各音声用のjsonを生成します。このとき、ファイル名にはサブディレクトリを含むのでdigits、lettersのディレクトリがあることを確認しておいてください。
 
 拡張子.lin16はPCMリニア16bitの音声ファイルでGoogle TTSから返されるフォーマットのものです(sox変換前)。
 

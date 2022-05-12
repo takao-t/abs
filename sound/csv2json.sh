@@ -12,7 +12,7 @@ mkdir -p ja/letters
 
 while read i
 do
-    TLINE=`echo $i | nkf | sed  's/"//g'`
+    TLINE=`echo $i | sed  's/"//g'`
     FNAME=`echo $TLINE | cut -f2,2 -d','`
     TTEXT=`echo $TLINE | cut -f3,3 -d',' | sed 's/\r//g'`
     cat $TEMPLATE  | sed s/###TEXTHERE###/$TTEXT/ > ja/$FNAME.json

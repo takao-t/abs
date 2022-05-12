@@ -1,281 +1,281 @@
-0,abs-again,,‚à‚¤‚¢‚¿‚Ç
-1,abs-alreadylogin,,‚·‚Å‚ÉƒƒOƒCƒ“‚¸‚İ‚Å‚·
-2,abs-anotherp,,‘¼‚ÌêŠ‚ÅƒƒOƒCƒ“‚µ‚Ä‚¢‚Ü‚·
-3,abs-complogin,,ƒƒOƒCƒ“AŠ®—¹
-4,abs-confirm,,‚ÉAİ’è‚µ‚Ü‚·B
-5,abs-flogout,,‹­§ƒƒOƒAƒEƒg‚µ‚Ü‚µ‚½
-6,abs-ivrmenu,,‚¨“d˜b‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚·B‘–±‚É‚²—p‚Ì‚©‚½‚Í‚PA‰c‹Æ‚É‚²—p‚Ì‚©‚½‚Í‚QAŒo—‚É‚²—p‚Ì‚©‚½‚Í‚RA‚»‚Ì‚Ù‚©‚Í‚S‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-7,abs-login,,ƒƒOƒCƒ“
-8,abs-loginfail,,ƒƒOƒCƒ“‚Å‚«‚Ü‚¹‚ñ
-9,abs-logout,,ƒƒOƒAƒEƒg‚µ‚Ü‚µ‚½
-10,abs-nologin,,ƒƒOƒCƒ“‚µ‚Ä‚¢‚Ü‚¹‚ñ
-11,abs-password,,ƒpƒXƒ[ƒh
-12,abs-tcmessage,,–{“ú‚Ì‰c‹Æ‚ÍI—¹‚µ‚Ü‚µ‚½B–¾“ú‚Ì‚¨“d˜b‚ğ‚¨‘Ò‚¿‚µ‚Ä‚¨‚è‚Ü‚·B
-13,abs-tcrmessage,,–{“ú‚Ì‰c‹Æ‚ÍI—¹‚µ‚Ü‚µ‚½Bƒg[ƒ“‚Ì‚ ‚Æ‚ÉƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-14,auth-thankyou, Thank you.,‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚µ‚½
-15,digits/0, zero,ƒ[ƒ
-16,digits/1, one,‚P
-17,digits/10, ten,‚P‚O
-18,digits/11, eleven,‚P‚P
-19,digits/12, twelve,‚P‚Q
-20,digits/13, thirteen,‚P‚R
-21,digits/14, fourteen,‚P‚S
-22,digits/15, fifteen,‚P‚T
-23,digits/16, sixteen,‚P‚U
-24,digits/17, seventeen,‚P‚V
-25,digits/18, eighteen,‚P‚W
-26,digits/19, nineteen,‚P‚X
-27,digits/2, two,‚Q
-28,digits/20, twenty,‚Q‚O
-29,digits/3, three,‚R
-30,digits/30, thirty,‚R‚O
-31,digits/4, four,‚S
-32,digits/40, forty,‚S‚O
-33,digits/5, five,‚T
-34,digits/50, fifty,‚T‚O
-35,digits/6, six,‚U
-36,digits/60, sixty,‚U‚O
-37,digits/7, seven,‚V
-38,digits/70, seventy,‚V‚O
-39,digits/8, eight,‚W
-40,digits/80, eighty,‚W‚O
-41,digits/9, nine,‚X
-42,digits/90, ninety,‚X‚O
-43,digits/a-m, A.M.,Œß‘O
-44,digits/at, at,‚É
-45,digits/billion, billion,‰­
-46,digits/day-0, Sunday,“ú—j
-47,digits/day-1, Monday,Œ—j
-48,digits/day-2, Tuesday,‰Î—j
-49,digits/day-3, Wednesday,…—j
-50,digits/day-4, Thursday,–Ø—j
-51,digits/day-5, Friday,‹à—j
-52,digits/day-6, Saturday,“y—j
-53,digits/dollars, dollars,ƒhƒ‹
-54,digits/fun,,‚Ó‚ñ
-55,digits/h-1, first,Å‰
-56,digits/h-10, tenth,‚P‚O”Ô–Ú
-57,digits/h-11, eleventh,‚P‚P”Ô–Ú
-58,digits/h-12, twelfth,‚P‚Q”Ô–Ú
-59,digits/h-13, thirteenth,‚P‚R”Ô–Ú
-60,digits/h-14, fourteenth,‚P‚S”Ô–Ú
-61,digits/h-15, fifteenth,‚P‚T”Ô–Ú
-62,digits/h-16, sixteenth,‚P‚U”Ô–Ú
-63,digits/h-17, seventeenth,‚P‚V”Ô–Ú
-64,digits/h-18, eighteenth,‚P‚W”Ô–Ú
-65,digits/h-19, nineteenth,‚P‚X”Ô–Ú
-66,digits/h-2, second,‚Q”Ô–Ú
-67,digits/h-20, twentieth,‚Q‚O”Ô–Ú
-68,digits/h-3, third,‚R”Ô–Ú
-69,digits/h-30, thirtieth,‚R‚O”Ô–Ú
-70,digits/h-4, fourth,‚S”Ô–Ú
-71,digits/h-40, fourtieth,‚S‚O”Ô–Ú
-72,digits/h-5, fifth,‚T”Ô–Ú
-73,digits/h-50, fiftieth,‚T‚O”Ô–Ú
-74,digits/h-6, sixth,‚U”Ô–Ú
-75,digits/h-60, sixtieth,‚U‚O”Ô–Ú
-76,digits/h-7, seventh,‚V”Ô–Ú
-77,digits/h-70, seventieth,‚V‚O”Ô–Ú
-78,digits/h-8, eighth,‚W”Ô–Ú
-79,digits/h-80, eightieth,‚W‚O”Ô–Ú
-80,digits/h-9, ninth,‚X”Ô–Ú
-81,digits/h-90, ninetieth,‚P‚X”Ô–Ú
-82,digits/h-billion, billionth,‰­”Ô–Ú
-83,digits/h-hundred, hundredth,‚P‚O‚O”Ô–Ú
-84,digits/h-million, millionth,‚P‚O‚O–œ”Ô–Ú
-85,digits/h-thousand, thousandth,‚P‚O‚O‚O”Ô–Ú
-86,digits/hundred,,‚P‚O‚O
-87,digits/ji,,‚¶
-88,digits/million,,‚P‚O‚O–œ
-89,digits/minus, minus,ƒ}ƒCƒiƒX
-90,digits/mon-0, January,‚PŒ
-91,digits/mon-1, February,‚QŒ
-92,digits/mon-10, November,‚P‚PŒ
-93,digits/mon-11, December,‚P‚QŒ
-94,digits/mon-2, March,‚RŒ
-95,digits/mon-3, April,‚SŒ
-96,digits/mon-4, May,‚TŒ
-97,digits/mon-5, June,‚UŒ
-98,digits/mon-6, July,‚VŒ
-99,digits/mon-7, August,‚WŒ
-100,digits/mon-8, September,‚XŒ
-101,digits/mon-9, October,‚P‚OŒ
-102,digits/nen,,‚Ë‚ñ
-103,digits/nichi,,‚É‚¿
-104,digits/oclock,,‚¶
-105,digits/oh,,‚¨[
-106,digits/p-m,,ŒßŒã
-107,digits/pound,,ƒVƒƒ[ƒv
-108,digits/star,,‚±‚ß
-109,digits/thousand,,ç
-110,digits/today,,¡“ú
-111,digits/tomorrow,,–¾“ú
-112,digits/yesterday,,ğ“ú
-113,jp-arimasen,,‚ ‚è‚Ü‚¹‚ñ
-114,jp-arimasu,,‚ ‚è‚Ü‚·
-115,jp-baai,,ê‡
-116,jp-chigaimasu,,‚¿‚ª‚¢‚Ü‚·
-117,jp-dekimasen,,‚Å‚«‚Ü‚¹‚ñ
-118,jp-dekimasu,,‚Å‚«‚Ü‚·
-119,jp-desu,,‚Å‚·
-120,jp-ga,,‚ª
-121,jp-gozaimasu,,‚²‚´‚¢‚Ü‚·
-122,jp-kara,,‚©‚ç
-123,jp-machigai,,ŠÔˆá‚¢
-124,jp-masu,,‚Ü‚·
-125,jp-ni,,‚É
-126,jp-no,,‚Ì
-127,jp-saigo,,ÅŒã
-128,jp-saisho,,Å‰
-129,jp-tadashii,,³‚µ‚¢
-130,jp-wa,,‚í
-131,jp-wo,,‚ğ
-132,minute, minute,‚Ó‚ñ
-133,minutes, minutes,‚Ó‚ñ
-134,number, Number.,”Ô†
-135,one-moment-please," One moment, please.",‚¨‘Ò‚¿‚­‚¾‚³‚¢
-136,pbx-invalid," I am sorry, that's not a valid extension.  Please try again.",”Ô†‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚·B
-137,pbx-invalidpark," I am sorry, there is no call parked on that extension.  Please try again.",‚±‚Ì”Ô†‚Å‚ÌƒR[ƒ‹ƒp[ƒN‚Í‚ ‚è‚Ü‚¹‚ñB
-138,pbx-parkingfailed, Parking attempt failed.,ƒR[ƒ‹ƒp[ƒN‚ª¸”s‚µ‚Ü‚µ‚½B
-139,tt-allbusy, All representatives of the household are currently assisting other telemarketers.  Please hold and your call will be answered in the order it was received.,‚¨“d˜b‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚·BŒ»İA‚·‚×‚Ä‚ÌƒIƒyƒŒ[ƒ^[‚ª“d˜bƒZ[ƒ‹ƒX‚Ì‘Šè‚ğ‚µ‚Ä‚¢‚Ü‚·B‹ó‚«Ÿ‘æA‡”Ô‚É‚¨Œq‚¬‚µ‚Ü‚·‚Ì‚ÅA‚»‚Ì‚Ü‚Ü‚¨‘Ò‚¿‚­‚¾‚³‚¢B
-140,vm-advopts, press 3 for advanced options,Ú×ƒIƒvƒVƒ‡ƒ“‚Í‚R‚ğ
-141,vm-and, and,‚Æ
-142,vm-calldiffnum, press 2 to enter a different number,•Ê‚È”Ô†‚Í2‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢
-143,vm-changeto, Change to which folder?,•ÏXæ‚ÌƒtƒHƒ‹ƒ_‚ÍH
-144,vm-Cust1, folder 5,ƒtƒHƒ‹ƒ_[‚T
-145,vm-Cust2, folder 6,ƒtƒHƒ‹ƒ_[‚U
-146,vm-Cust3, folder 7,ƒtƒHƒ‹ƒ_[‚V
-147,vm-Cust4, folder 8,ƒtƒHƒ‹ƒ_[‚W
-148,vm-Cust5, folder 9,ƒtƒHƒ‹ƒ_[‚X
-149,vm-delete, Press 7 to delete this message.,ƒƒbƒZ[ƒWíœ‚Í‚V‚ğ
-150,vm-deleted, Message deleted.,ƒƒbƒZ[ƒW‚Ííœ‚³‚ê‚Ü‚µ‚½B
-151,vm-dialout, please wait while i connect your call,”­M’†‚Å‚·B‚¨‚Ü‚¿‚­‚¾‚³‚¢B
-152,vm-duration, This message lasts ...,‚±‚ÌƒƒbƒZ[ƒW‚Ì’·‚³‚Í
-153,vm-enter-num-to-call, please enter the number you wish to call,ŒÄ‚Ño‚µ‚½‚¢”Ô†‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
-154,vm-extension, extension,“àü
-155,vm-Family, family,‰Æ‘°
-156,vm-first, first,Å‰
-157,vm-for, for,ˆ¶æ
-158,vm-forward," Press 1 to enter an extension, press 2 to use the directory",“àü‚ğw’è‚·‚é‚É‚Í‚PAƒfƒBƒŒƒNƒgƒŠ‚ğg‚¤‚É‚Í‚Q‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-159,vm-forward-multiple," press 1 to send this message, or 2 to add another recipient.",ƒƒbƒZ[ƒW‚ğ‘—‚é‚É‚Í‚PAóMÒ‚ğ’Ç‰Á‚·‚é‚É‚Í‚Q‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-160,vm-forwardoptions, press 1 to prepend a message or 2 to forward the message without prepending,ƒƒbƒZ[ƒW‚ğ’Ç‰Á‚·‚é‚É‚Í‚PA’Ç‰Á‚¹‚¸“]‘—‚·‚é‚É‚Í‚Q‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-161,vm-Friend, friend,—Fl
-162,vm-Friends, friends,—Fl
-163,vm-from, from,‚©‚ç
-164,vm-from-extension, message from extension,ƒƒbƒZ[ƒW‚Í“àü
-165,vm-from-phonenumber, message from phone number,ƒƒbƒZ[ƒW‚Í“d˜b”Ô†
-166,vm-goodbye, Goodbye,‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚µ‚½B
-167,vm-helpexit, Press star for help or pound to exit.,ƒwƒ‹ƒv‚Í‚±‚ßAI—¹‚ÍƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-168,vm-INBOX, new,V‚µ‚¢
-169,vm-incorrect, Login incorrect.,ƒƒOƒCƒ“¸”s
-170,vm-incorrect-mailbox, Login incorrect.  Mailbox?,ƒƒOƒCƒ“¸”sBƒ[ƒ‹ƒ{ƒbƒNƒX‚ÍH
-171,vm-instructions, To look into your messages press 1 now.  You may quit voicemail at any time by pressing the pound key.,ƒƒbƒZ[ƒW‚ğŠm”F‚·‚é‚É‚Í‚P‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢BI—¹‚·‚éê‡‚É‚ÍƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-172,vm-intro, Please leave your message after the tone.  When done hang up or press the pound key. (simple tone sound plays),ƒg[ƒ“‚ÌŒã‚ÉƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAƒVƒƒ[ƒv‚ğ‰Ÿ‚·‚©“d˜b‚ğ‚¨Ø‚è‚­‚¾‚³‚¢B
-173,vm-invalidpassword, That is not a valid password.  Please try again.,ƒpƒXƒ[ƒh‚ªŠÔˆá‚Á‚Ä‚¢‚Ü‚·B‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
-174,vm-invalid-password, That password does not meet the minimum requirements for this mailbox.  Please try again.,ƒpƒXƒ[ƒh‚ÌŒ…‚·‚¤‚ª­‚È‚·‚¬‚Ü‚·B‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
-175,vm-isonphone, is on the phone,‚ÍA‚Í‚È‚µ‚¿‚ã‚¤‚Å‚·B
-176,vm-isunavail, is unavailable,‚ÍA“d˜b‚Éo‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñB
-177,vm-last, last,ÅŒã
-178,vm-leavemsg,  Press 5 to leave a message,ƒƒbƒZ[ƒW‚ğc‚·‚É‚Í‚T‚ğ
-179,vm-login, Comedian Mail.  Mailbox?,ƒ{ƒCƒXƒ[ƒ‹Bƒ[ƒ‹ƒ{ƒbƒNƒX‚ÍH
-180,vm-mailboxfull, sorry but the user's mail box can't accept more messages,ƒ[ƒ‹ƒ{ƒbƒNƒX‚ª‚¢‚Á‚Ï‚¢‚Å‚·B
-181,vm-marked-nonurgent, Urgent status removed.,‹Ù‹}İ’è‚ğ‰ğœ
-182,vm-marked-urgent, Message marked urgent.,ƒƒbƒZ[ƒW‚ğ‹Ù‹}‚Éİ’è
-183,vm-message, message,ƒƒbƒZ[ƒW
-184,vm-messages, messages,ƒƒbƒZ[ƒW
-185,vm-minutes, minutes,‚Ó‚ñ
-186,vm-mismatch, The passwords you entered and re-entered did not match.  Please try again.,ƒpƒXƒ[ƒh‚ªˆê’v‚µ‚Ü‚¹‚ñB‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢B
-187,vm-msgforwarded, Your message has been successfully forwarded.,ƒƒbƒZ[ƒW‚Í“]‘—‚³‚ê‚Ü‚µ‚½B
-188,vm-msginstruct," To hear the next message press 6, to repeat this message press 5, to hear the previous message press 4, to delete or undelete this message press zero, to quit voicemail press pound.",Ÿ‚ÌƒƒbƒZ[ƒW‚ğ•·‚­‚É‚Í‚UA‚±‚ÌƒƒbƒZ[ƒW‚ğŒJ‚è•Ô‚·‚É‚Í‚TA‘O‚ÌƒƒbƒZ[ƒW‚ğ•·‚­‚É‚Í‚SAƒƒbƒZ[ƒW‚ğíœ‚Ü‚½‚Ííœæ‚èÁ‚µ‚Í‚OAI—¹‚·‚é‚É‚ÍƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-189,vm-msgsaved, Your message has been saved.,ƒƒbƒZ[ƒW‚Í•Û‘¶‚³‚ê‚Ü‚µ‚½B
-190,vm-newpassword, Please enter your new password followed by the pound key.,V‚µ‚¢ƒpƒXƒ[ƒh‚ğ“ü—Í‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-191,vm-newuser," Welcome to Comedian Mail. First, I will guide you through a short setup process.",ƒ{ƒCƒXƒ[ƒ‹‚Å‚·B‚Ü‚¸Å‰‚Éİ’è•û–@‚ğà–¾‚µ‚Ü‚·B
-192,vm-next, Press 6 to play the next message.,Ÿ‚ÌƒƒbƒZ[ƒW‚Í‚U‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-193,vm-no, no,‚¢‚¢‚¦
-194,vm-nobodyavail, Nobody is available to take your call at the moment,’N‚à“d˜b‚Éo‚ç‚ê‚Ü‚¹‚ñB
-195,vm-nobox, you cannot reply to this message because the sender does not have a mailbox,‘—‚èæ‚Ìƒ[ƒ‹ƒ{ƒbƒNƒX‚ª‚È‚¢‚½‚ßA•ÔM‚Å‚«‚Ü‚¹‚ñB
-196,vm-nomore, No more messages.,ƒƒbƒZ[ƒW‚ÍˆÈã‚Å‚·B
-197,vm-nonumber, I'm afraid i don't know who sent this message,‘—‚èŒ³‚ª‚í‚©‚è‚Ü‚¹‚ñB
-198,vm-num-i-have, the number i have is,”Ô†‚Í
-199,vm-Old, old,ˆÈ‘O‚Ì
-200,vm-onefor, Press 1 for,‚P‚ğ‰Ÿ‚·‚Æ
-201,vm-onefor-full, Press one to listen to ...,‚P‚ğ‰Ÿ‚µ‚Ä•·‚­
-202,vm-options," Press 1 to record your unavailable message, press 2 to record your busy message, press 3 to record your name, press 4 to record your temporary greeting, press 5 to change your password, press star to return to the main menu.",•sİ‚ÌƒƒbƒZ[ƒW‚É‚Í‚P‚ğA‚Í‚È‚µ‚¿‚ã‚¤‚ÌƒƒbƒZ[ƒW‚Í‚Q‚ğA–¼‘O‚ğ˜^‰¹‚·‚é‚É‚Í‚R‚ğAˆêƒƒbƒZ[ƒW‚Ì˜^‰¹‚Í‚S‚ğAƒpƒXƒ[ƒh•ÏX‚Í‚T‚ğAƒƒCƒ“ƒƒjƒ…[‚É–ß‚é‚É‚ÍA‚±‚ß‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-203,vm-opts," Press 2 to change folders, press 3 for advanced options, press zero for mailbox options.",ƒtƒHƒ‹ƒ_[•ÏX‚Í‚Q‚ğAÚ×ƒIƒvƒVƒ‡ƒ“‚Í‚R‚ğAƒ[ƒ‹ƒ{ƒbƒNƒXƒIƒvƒVƒ‡ƒ“‚Íƒ[ƒ‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-204,vm-opts-full, press 2 to access messages saved in other folders.  Press 3 to record a message for another mailbox.  Press 0 for greetings and password management.,‘¼‚ÌƒtƒHƒ‹ƒ_[‚ÌƒƒbƒZ[ƒW‚Í‚Q‚ğA‘¼‚Ìƒ[ƒ‹ƒ{ƒbƒNƒX‚ÉƒƒbƒZ[ƒW‚ğ˜^‰¹‚·‚é‚É‚Í‚R‚ğA‚ ‚È‚½‚Ì‰“šƒƒbƒZ[ƒW‚Ü‚½‚ÍƒpƒXƒ[ƒhŠÇ—‚Íƒ[ƒ‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-205,vm-passchanged, Your passwords have been changed.,ƒpƒXƒ[ƒh‚Í•ÏX‚³‚ê‚Ü‚µ‚½B
-206,vm-password, password,ƒpƒXƒ[ƒh
-207,vm-pls-try-again, please try again,‚à‚¤‚¢‚¿‚Ç‚â‚è‚È‚¨‚µ‚Ä‚­‚¾‚³‚¢
-208,vm-press, press,‰Ÿ‚·
-209,vm-prev, Press 4 for the previous message,‘O‚ÌƒƒbƒZ[ƒW‚Í‚S‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢
-210,vm-reachoper, press 0 to reach an operator,ƒIƒyƒŒ[ƒ^[‚ğŒÄ‚Ño‚·‚É‚Íƒ[ƒ‚ğ
-211,vm-rec-busy, After the tone say your busy message and then press the pound key.,ƒg[ƒ“‚Ì‚ ‚Æ‚É‚ ‚È‚½‚ÌA‚Í‚È‚µ‚¿‚ã‚¤ƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-212,vm-received, received,óM‚µ‚Ü‚µ‚½
-213,vm-rec-name, After the tone say your name and then press the pound key.,ƒg[ƒ“‚Ì‚ ‚Æ‚É‚ ‚È‚½‚Ì–¼‘O‚ğŒ¾‚Á‚Ä‚©‚çƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-214,vm-record-prepend," At the tone, please record an introduction to the forwarded message.  When done, press the pound sign.",ƒg[ƒ“‚Ì‚ ‚Æ‚É“]‘—ƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-215,vm-rec-temp," After the tone, say your temporary message, and then press the pound key.",ƒg[ƒ“‚ÌŒã‚ÉˆêƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-216,vm-rec-unv, After the tone say your unavailable message and then press the pound key.,ƒg[ƒ“‚ÌŒã‚É•sİ‚ÌƒƒbƒZ[ƒW‚ğ˜^‰¹‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-217,vm-reenterpassword, Please re-enter your password followed by the pound key.,‚à‚¤‚¢‚¿‚ÇƒpƒXƒ[ƒh‚ğ“ü—Í‚µAÅŒã‚ÉƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-218,vm-repaet, Press 5 to repeat the current message.,‚±‚ÌƒƒbƒZ[ƒW‚ğ‚à‚¤ˆê“xÄ¶‚·‚é‚É‚Í‚T‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-219,vm-review, press 1 to accept this recording press 2 to listen to it press 3 to rerecord your message,‚±‚Ì˜^‰¹‚Å‚æ‚¯‚ê‚Î‚P‚ğA‚à‚¤‚¢‚¿‚Ç•·‚­‚É‚Í‚Q‚ğA˜^‰¹‚·‚é‚É‚Í‚R‚ğ
-220,vm-review-nonurgent, Press 4 to remove the urgent status of this message.,ƒƒbƒZ[ƒW‚Ì‹Ù‹}‚ğ‰ğœ‚·‚é‚É‚Í‚S‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-221,vm-review-urgent, Press 4 to mark this message as urgent.,ƒƒbƒZ[ƒW‚ğ‹Ù‹}‚É‚·‚é‚É‚Í‚S‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-222,vm-saved, saved,•Û‘¶
-223,vm-savedto, saved to,•Û‘¶æ
-224,vm-savefolder, Which folder should I save the message to?,‚±‚ÌƒƒbƒZ[ƒW‚ğ•Û‘¶‚·‚éƒtƒHƒ‹ƒ_[‚ÍH
-225,vm-savemessage, or 9 to save this message,•Û‘¶‚·‚é‚É‚Í‚X‚ğ
-226,vm-saveoper," press 1 to accept this recording, otherwise, please continue to hold",‚±‚ÌƒƒbƒZ[ƒW‚Å‚æ‚¯‚ê‚Î‚P‚ğA‚»‚¤‚Å‚È‚¯‚ê‚Î‚¨‘Ò‚¿‚­‚¾‚³‚¢
-227,vm-sorry, I'm sorry I did not understand your response.,“ü—Í‚ª”»•Ê‚Å‚«‚Ü‚¹‚ñ
-228,vm-star-cancel, press star to cancel,ƒLƒƒƒ“ƒZƒ‹‚É‚ÍA‚±‚ß‚ğ
-229,vm-starmain,press star to return to the main menu,ƒƒCƒ“ƒƒjƒ…[‚É–ß‚é‚É‚Í•Ä‚ğ
-230,vm-tempgreetactive, Your temporary greeting is currently active,ˆêƒƒbƒZ[ƒW‚ª—LŒø‚Å‚·
-231,vm-tempgreeting, press 1 to record your temporary greeting,ˆêƒƒbƒZ[ƒW‚ğ˜^‰¹‚·‚é‚É‚Í‚P‚ğ
-232,vm-tempgreeting2," press 1 to record your temporary greeting, or press 2 to erase your temporary greeting",ˆêƒƒbƒZ[ƒW‚ğ˜^‰¹‚·‚é‚É‚Í‚P‚ğAíœ‚·‚é‚É‚Í‚Q‚ğ
-233,vm-tempremoved, Your temporary greeting has been removed,ˆêƒƒbƒZ[ƒW‚Ííœ‚³‚ê‚Ü‚µ‚½
-234,vm-then-pound, then press pound,ƒVƒƒ[ƒv‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-235,vm-theperson, The person at extension,‚±‚Ìƒ†[ƒU[‚Ì“àü‚Í
-236,vm-tmpexists," There is a temporary greeting, which overrides your standard greetings.",‚±‚ÌƒƒbƒZ[ƒW‚Íˆê•Û‘¶‚Å‚·B‚Ç‚ÌƒƒbƒZ[ƒW‚É“K—p‚µ‚Ü‚·‚©H
-237,vm-tocallback, press 2 to call the person who sent this message,ƒƒbƒZ[ƒW‚Ì‘—MÒ‚ğŒÄ‚Ño‚·‚É‚Í‚Q‚ğ
-238,vm-tocallnum, press 1 to call this number,‚±‚Ì”Ô†‚ğŒÄ‚Ño‚·‚É‚Í‚P‚ğ
-239,vm-tocancel, or pound to cancel.,ƒLƒƒƒ“ƒZƒ‹‚É‚ÍƒVƒƒ[ƒv‚ğB
-240,vm-tocancelmsg, press star to cancel this message,‚±‚ÌƒƒbƒZ[ƒW‚ğƒLƒƒƒ“ƒZƒ‹‚·‚é‚É‚ÍA‚±‚ß‚ğ
-241,vm-toenternumber, press 1 to enter a number,”Ô†‚ğ“ü—Í‚·‚é‚É‚Í‚P‚ğ
-242,vm-toforward,Press 8 to forward the message to another user,‚±‚ÌƒƒbƒZ[ƒW‚ğ“]‘—‚·‚é‚É‚Í8‚ğ
-243,vm-tohearenv,press 3 to hear the message envelope,‚±‚ÌƒƒbƒZ[ƒW‚ÌÚ×‚ğ•·‚­‚É‚Í‚R‚ğ
-244,vm-tomakecall, press 4 to place an outgoing call,ŠOü”­M‚·‚é‚É‚Í‚S‚ğ
-245,vm-tooshort, your message is too short,ƒƒbƒZ[ƒW‚ª’Z‚·‚¬‚Ü‚·
-246,vm-toreply,press 1 to send a reply,•ÔM‚·‚é‚É‚Í‚P‚ğ
-247,vm-torerecord, press 3 to rerecord your message,ƒƒbƒZ[ƒW‚ğ˜^‰¹‚·‚é‚É‚Í‚R‚ğ
-248,vm-undelete,Press 7 to undelete this message,íœ‚ğæ‚èÁ‚·‚É‚Í‚V‚ğ
-249,vm-undeleted, Message undeleted.,íœ‚Íæ‚èÁ‚³‚ê‚Ü‚µ‚½
-250,vm-unknown-caller, from an unknown caller,•s–¾‚È”­MÒ
-251,vm-Urgent, urgent,‹}‚¬
-252,vm-whichbox," To leave a message, please enter a mailbox number.",ƒƒbƒZ[ƒW‚ğc‚·‚É‚Íƒ[ƒ‹ƒ{ƒbƒNƒX”Ô†‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢B
-253,vm-Work, work,d–
-254,vm-youhave, you have,‚ ‚È‚½‚É‚Í
-255,letters/a,a,ƒG[
-256,letters/b,b,ƒr[
-257,letters/c,c,ƒV[
-258,letters/f,d,ƒfƒB[
-259,letters/e,e,ƒC[
-260,letters/f,f,ƒGƒt
-261,letters/g,g,ƒW[
-262,letters/h,h,ƒGƒCƒ`
-263,letters/i,i,ƒAƒC
-264,letters/j,j,ƒWƒFƒC
-265,letters/k,k,ƒPƒC
-266,letters/l,l,ƒGƒ‹
-267,letters/m,m,ƒGƒ€
-268,letters/n,n,ƒGƒk
-269,letters/o,o,ƒI[
-270,letters/p,p,ƒs[
-271,letters/q,q,ƒLƒ…[
-272,letters/r,r,ƒA[ƒ‹
-273,letters/s,s,ƒGƒX
-274,letters/t,t,ƒeƒB[
-275,letters/u,u,ƒ†[
-276,letters/v,v,ƒuƒC
-277,letters/w,w,ƒ_ƒuƒŠƒ…[
-278,letters/x,x,ƒGƒbƒNƒX
-279,letters/y,y,ƒƒC
-280,letters/z,z,ƒ[ƒbƒg
+ï»¿0,abs-again,,ã‚‚ã†ã„ã¡ã©
+1,abs-alreadylogin,,ã™ã§ã«ãƒ­ã‚°ã‚¤ãƒ³ãšã¿ã§ã™
+2,abs-anotherp,,ä»–ã®å ´æ‰€ã§ãƒ­ã‚°ã‚¤ãƒ³ã—ã¦ã„ã¾ã™
+3,abs-complogin,,ãƒ­ã‚°ã‚¤ãƒ³ã€å®Œäº†
+4,abs-confirm,,ã«ã€è¨­å®šã—ã¾ã™ã€‚
+5,abs-flogout,,å¼·åˆ¶ãƒ­ã‚°ã‚¢ã‚¦ãƒˆã—ã¾ã—ãŸ
+6,abs-ivrmenu,,ãŠé›»è©±ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã™ã€‚ç·å‹™ã«ã”ç”¨ã®ã‹ãŸã¯ï¼‘ã€å–¶æ¥­ã«ã”ç”¨ã®ã‹ãŸã¯ï¼’ã€çµŒç†ã«ã”ç”¨ã®ã‹ãŸã¯ï¼“ã€ãã®ã»ã‹ã¯ï¼”ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+7,abs-login,,ãƒ­ã‚°ã‚¤ãƒ³
+8,abs-loginfail,,ãƒ­ã‚°ã‚¤ãƒ³ã§ãã¾ã›ã‚“
+9,abs-logout,,ãƒ­ã‚°ã‚¢ã‚¦ãƒˆã—ã¾ã—ãŸ
+10,abs-nologin,,ãƒ­ã‚°ã‚¤ãƒ³ã—ã¦ã„ã¾ã›ã‚“
+11,abs-password,,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+12,abs-tcmessage,,æœ¬æ—¥ã®å–¶æ¥­ã¯çµ‚äº†ã—ã¾ã—ãŸã€‚æ˜æ—¥ã®ãŠé›»è©±ã‚’ãŠå¾…ã¡ã—ã¦ãŠã‚Šã¾ã™ã€‚
+13,abs-tcrmessage,,æœ¬æ—¥ã®å–¶æ¥­ã¯çµ‚äº†ã—ã¾ã—ãŸã€‚ãƒˆãƒ¼ãƒ³ã®ã‚ã¨ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+14,auth-thankyou, Thank you.,ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã—ãŸ
+15,digits/0, zero,ã‚¼ãƒ­
+16,digits/1, one,ï¼‘
+17,digits/10, ten,ï¼‘ï¼
+18,digits/11, eleven,ï¼‘ï¼‘
+19,digits/12, twelve,ï¼‘ï¼’
+20,digits/13, thirteen,ï¼‘ï¼“
+21,digits/14, fourteen,ï¼‘ï¼”
+22,digits/15, fifteen,ï¼‘ï¼•
+23,digits/16, sixteen,ï¼‘ï¼–
+24,digits/17, seventeen,ï¼‘ï¼—
+25,digits/18, eighteen,ï¼‘ï¼˜
+26,digits/19, nineteen,ï¼‘ï¼™
+27,digits/2, two,ï¼’
+28,digits/20, twenty,ï¼’ï¼
+29,digits/3, three,ï¼“
+30,digits/30, thirty,ï¼“ï¼
+31,digits/4, four,ï¼”
+32,digits/40, forty,ï¼”ï¼
+33,digits/5, five,ï¼•
+34,digits/50, fifty,ï¼•ï¼
+35,digits/6, six,ï¼–
+36,digits/60, sixty,ï¼–ï¼
+37,digits/7, seven,ï¼—
+38,digits/70, seventy,ï¼—ï¼
+39,digits/8, eight,ï¼˜
+40,digits/80, eighty,ï¼˜ï¼
+41,digits/9, nine,ï¼™
+42,digits/90, ninety,ï¼™ï¼
+43,digits/a-m, A.M.,åˆå‰
+44,digits/at, at,ã«
+45,digits/billion, billion,å„„
+46,digits/day-0, Sunday,æ—¥æ›œ
+47,digits/day-1, Monday,æœˆæ›œ
+48,digits/day-2, Tuesday,ç«æ›œ
+49,digits/day-3, Wednesday,æ°´æ›œ
+50,digits/day-4, Thursday,æœ¨æ›œ
+51,digits/day-5, Friday,é‡‘æ›œ
+52,digits/day-6, Saturday,åœŸæ›œ
+53,digits/dollars, dollars,ãƒ‰ãƒ«
+54,digits/fun,,ãµã‚“
+55,digits/h-1, first,æœ€åˆ
+56,digits/h-10, tenth,ï¼‘ï¼ç•ªç›®
+57,digits/h-11, eleventh,ï¼‘ï¼‘ç•ªç›®
+58,digits/h-12, twelfth,ï¼‘ï¼’ç•ªç›®
+59,digits/h-13, thirteenth,ï¼‘ï¼“ç•ªç›®
+60,digits/h-14, fourteenth,ï¼‘ï¼”ç•ªç›®
+61,digits/h-15, fifteenth,ï¼‘ï¼•ç•ªç›®
+62,digits/h-16, sixteenth,ï¼‘ï¼–ç•ªç›®
+63,digits/h-17, seventeenth,ï¼‘ï¼—ç•ªç›®
+64,digits/h-18, eighteenth,ï¼‘ï¼˜ç•ªç›®
+65,digits/h-19, nineteenth,ï¼‘ï¼™ç•ªç›®
+66,digits/h-2, second,ï¼’ç•ªç›®
+67,digits/h-20, twentieth,ï¼’ï¼ç•ªç›®
+68,digits/h-3, third,ï¼“ç•ªç›®
+69,digits/h-30, thirtieth,ï¼“ï¼ç•ªç›®
+70,digits/h-4, fourth,ï¼”ç•ªç›®
+71,digits/h-40, fourtieth,ï¼”ï¼ç•ªç›®
+72,digits/h-5, fifth,ï¼•ç•ªç›®
+73,digits/h-50, fiftieth,ï¼•ï¼ç•ªç›®
+74,digits/h-6, sixth,ï¼–ç•ªç›®
+75,digits/h-60, sixtieth,ï¼–ï¼ç•ªç›®
+76,digits/h-7, seventh,ï¼—ç•ªç›®
+77,digits/h-70, seventieth,ï¼—ï¼ç•ªç›®
+78,digits/h-8, eighth,ï¼˜ç•ªç›®
+79,digits/h-80, eightieth,ï¼˜ï¼ç•ªç›®
+80,digits/h-9, ninth,ï¼™ç•ªç›®
+81,digits/h-90, ninetieth,ï¼‘ï¼™ç•ªç›®
+82,digits/h-billion, billionth,å„„ç•ªç›®
+83,digits/h-hundred, hundredth,ï¼‘ï¼ï¼ç•ªç›®
+84,digits/h-million, millionth,ï¼‘ï¼ï¼ä¸‡ç•ªç›®
+85,digits/h-thousand, thousandth,ï¼‘ï¼ï¼ï¼ç•ªç›®
+86,digits/hundred,,ï¼‘ï¼ï¼
+87,digits/ji,,ã˜
+88,digits/million,,ï¼‘ï¼ï¼ä¸‡
+89,digits/minus, minus,ãƒã‚¤ãƒŠã‚¹
+90,digits/mon-0, January,ï¼‘æœˆ
+91,digits/mon-1, February,ï¼’æœˆ
+92,digits/mon-10, November,ï¼‘ï¼‘æœˆ
+93,digits/mon-11, December,ï¼‘ï¼’æœˆ
+94,digits/mon-2, March,ï¼“æœˆ
+95,digits/mon-3, April,ï¼”æœˆ
+96,digits/mon-4, May,ï¼•æœˆ
+97,digits/mon-5, June,ï¼–æœˆ
+98,digits/mon-6, July,ï¼—æœˆ
+99,digits/mon-7, August,ï¼˜æœˆ
+100,digits/mon-8, September,ï¼™æœˆ
+101,digits/mon-9, October,ï¼‘ï¼æœˆ
+102,digits/nen,,ã­ã‚“
+103,digits/nichi,,ã«ã¡
+104,digits/oclock,,ã˜
+105,digits/oh,,ãŠãƒ¼
+106,digits/p-m,,åˆå¾Œ
+107,digits/pound,,ã‚·ãƒ£ãƒ¼ãƒ—
+108,digits/star,,ã“ã‚
+109,digits/thousand,,åƒ
+110,digits/today,,ä»Šæ—¥
+111,digits/tomorrow,,æ˜æ—¥
+112,digits/yesterday,,æ˜¨æ—¥
+113,jp-arimasen,,ã‚ã‚Šã¾ã›ã‚“
+114,jp-arimasu,,ã‚ã‚Šã¾ã™
+115,jp-baai,,å ´åˆ
+116,jp-chigaimasu,,ã¡ãŒã„ã¾ã™
+117,jp-dekimasen,,ã§ãã¾ã›ã‚“
+118,jp-dekimasu,,ã§ãã¾ã™
+119,jp-desu,,ã§ã™
+120,jp-ga,,ãŒ
+121,jp-gozaimasu,,ã”ã–ã„ã¾ã™
+122,jp-kara,,ã‹ã‚‰
+123,jp-machigai,,é–“é•ã„
+124,jp-masu,,ã¾ã™
+125,jp-ni,,ã«
+126,jp-no,,ã®
+127,jp-saigo,,æœ€å¾Œ
+128,jp-saisho,,æœ€åˆ
+129,jp-tadashii,,æ­£ã—ã„
+130,jp-wa,,ã‚
+131,jp-wo,,ã‚’
+132,minute, minute,ãµã‚“
+133,minutes, minutes,ãµã‚“
+134,number, Number.,ç•ªå·
+135,one-moment-please," One moment, please.",ãŠå¾…ã¡ãã ã•ã„
+136,pbx-invalid," I am sorry, that's not a valid extension.  Please try again.",ç•ªå·ãŒé–“é•ã£ã¦ã„ã¾ã™ã€‚
+137,pbx-invalidpark," I am sorry, there is no call parked on that extension.  Please try again.",ã“ã®ç•ªå·ã§ã®ã‚³ãƒ¼ãƒ«ãƒ‘ãƒ¼ã‚¯ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚
+138,pbx-parkingfailed, Parking attempt failed.,ã‚³ãƒ¼ãƒ«ãƒ‘ãƒ¼ã‚¯ãŒå¤±æ•—ã—ã¾ã—ãŸã€‚
+139,tt-allbusy, All representatives of the household are currently assisting other telemarketers.  Please hold and your call will be answered in the order it was received.,ãŠé›»è©±ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã™ã€‚ç¾åœ¨ã€ã™ã¹ã¦ã®ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ãƒ¼ãŒé›»è©±ã‚»ãƒ¼ãƒ«ã‚¹ã®ç›¸æ‰‹ã‚’ã—ã¦ã„ã¾ã™ã€‚ç©ºãæ¬¡ç¬¬ã€é †ç•ªã«ãŠç¹‹ãã—ã¾ã™ã®ã§ã€ãã®ã¾ã¾ãŠå¾…ã¡ãã ã•ã„ã€‚
+140,vm-advopts, press 3 for advanced options,è©³ç´°ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¯ï¼“ã‚’
+141,vm-and, and,ã¨
+142,vm-calldiffnum, press 2 to enter a different number,åˆ¥ãªç•ªå·ã¯2ã‚’æŠ¼ã—ã¦ãã ã•ã„
+143,vm-changeto, Change to which folder?,å¤‰æ›´å…ˆã®ãƒ•ã‚©ãƒ«ãƒ€ã¯ï¼Ÿ
+144,vm-Cust1, folder 5,ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ï¼•
+145,vm-Cust2, folder 6,ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ï¼–
+146,vm-Cust3, folder 7,ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ï¼—
+147,vm-Cust4, folder 8,ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ï¼˜
+148,vm-Cust5, folder 9,ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ï¼™
+149,vm-delete, Press 7 to delete this message.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‰Šé™¤ã¯ï¼—ã‚’
+150,vm-deleted, Message deleted.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å‰Šé™¤ã•ã‚Œã¾ã—ãŸã€‚
+151,vm-dialout, please wait while i connect your call,ç™ºä¿¡ä¸­ã§ã™ã€‚ãŠã¾ã¡ãã ã•ã„ã€‚
+152,vm-duration, This message lasts ...,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é•·ã•ã¯
+153,vm-enter-num-to-call, please enter the number you wish to call,å‘¼ã³å‡ºã—ãŸã„ç•ªå·ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+154,vm-extension, extension,å†…ç·š
+155,vm-Family, family,å®¶æ—
+156,vm-first, first,æœ€åˆ
+157,vm-for, for,å®›å…ˆ
+158,vm-forward," Press 1 to enter an extension, press 2 to use the directory",å†…ç·šã‚’æŒ‡å®šã™ã‚‹ã«ã¯ï¼‘ã€ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½¿ã†ã«ã¯ï¼’ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+159,vm-forward-multiple," press 1 to send this message, or 2 to add another recipient.",ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’é€ã‚‹ã«ã¯ï¼‘ã€å—ä¿¡è€…ã‚’è¿½åŠ ã™ã‚‹ã«ã¯ï¼’ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+160,vm-forwardoptions, press 1 to prepend a message or 2 to forward the message without prepending,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¿½åŠ ã™ã‚‹ã«ã¯ï¼‘ã€è¿½åŠ ã›ãšè»¢é€ã™ã‚‹ã«ã¯ï¼’ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+161,vm-Friend, friend,å‹äºº
+162,vm-Friends, friends,å‹äºº
+163,vm-from, from,ã‹ã‚‰
+164,vm-from-extension, message from extension,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å†…ç·š
+165,vm-from-phonenumber, message from phone number,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯é›»è©±ç•ªå·
+166,vm-goodbye, Goodbye,ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã—ãŸã€‚
+167,vm-helpexit, Press star for help or pound to exit.,ãƒ˜ãƒ«ãƒ—ã¯ã“ã‚ã€çµ‚äº†ã¯ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+168,vm-INBOX, new,æ–°ã—ã„
+169,vm-incorrect, Login incorrect.,ãƒ­ã‚°ã‚¤ãƒ³å¤±æ•—
+170,vm-incorrect-mailbox, Login incorrect.  Mailbox?,ãƒ­ã‚°ã‚¤ãƒ³å¤±æ•—ã€‚ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ã¯ï¼Ÿ
+171,vm-instructions, To look into your messages press 1 now.  You may quit voicemail at any time by pressing the pound key.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç¢ºèªã™ã‚‹ã«ã¯ï¼‘ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚çµ‚äº†ã™ã‚‹å ´åˆã«ã¯ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+172,vm-intro, Please leave your message after the tone.  When done hang up or press the pound key. (simple tone sound plays),ãƒˆãƒ¼ãƒ³ã®å¾Œã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã™ã‹é›»è©±ã‚’ãŠåˆ‡ã‚Šãã ã•ã„ã€‚
+173,vm-invalidpassword, That is not a valid password.  Please try again.,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé–“é•ã£ã¦ã„ã¾ã™ã€‚ã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+174,vm-invalid-password, That password does not meet the minimum requirements for this mailbox.  Please try again.,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®æ¡ã™ã†ãŒå°‘ãªã™ãã¾ã™ã€‚ã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+175,vm-isonphone, is on the phone,ã¯ã€ã¯ãªã—ã¡ã‚…ã†ã§ã™ã€‚
+176,vm-isunavail, is unavailable,ã¯ã€é›»è©±ã«å‡ºã‚‹ã“ã¨ãŒã§ãã¾ã›ã‚“ã€‚
+177,vm-last, last,æœ€å¾Œ
+178,vm-leavemsg,  Press 5 to leave a message,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ®‹ã™ã«ã¯ï¼•ã‚’
+179,vm-login, Comedian Mail.  Mailbox?,ãƒœã‚¤ã‚¹ãƒ¡ãƒ¼ãƒ«ã€‚ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ã¯ï¼Ÿ
+180,vm-mailboxfull, sorry but the user's mail box can't accept more messages,ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ãŒã„ã£ã±ã„ã§ã™ã€‚
+181,vm-marked-nonurgent, Urgent status removed.,ç·Šæ€¥è¨­å®šã‚’è§£é™¤
+182,vm-marked-urgent, Message marked urgent.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç·Šæ€¥ã«è¨­å®š
+183,vm-message, message,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+184,vm-messages, messages,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+185,vm-minutes, minutes,ãµã‚“
+186,vm-mismatch, The passwords you entered and re-entered did not match.  Please try again.,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒä¸€è‡´ã—ã¾ã›ã‚“ã€‚ã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+187,vm-msgforwarded, Your message has been successfully forwarded.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯è»¢é€ã•ã‚Œã¾ã—ãŸã€‚
+188,vm-msginstruct," To hear the next message press 6, to repeat this message press 5, to hear the previous message press 4, to delete or undelete this message press zero, to quit voicemail press pound.",æ¬¡ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’èãã«ã¯ï¼–ã€ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç¹°ã‚Šè¿”ã™ã«ã¯ï¼•ã€å‰ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’èãã«ã¯ï¼”ã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‰Šé™¤ã¾ãŸã¯å‰Šé™¤å–ã‚Šæ¶ˆã—ã¯ï¼ã€çµ‚äº†ã™ã‚‹ã«ã¯ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+189,vm-msgsaved, Your message has been saved.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ä¿å­˜ã•ã‚Œã¾ã—ãŸã€‚
+190,vm-newpassword, Please enter your new password followed by the pound key.,æ–°ã—ã„ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+191,vm-newuser," Welcome to Comedian Mail. First, I will guide you through a short setup process.",ãƒœã‚¤ã‚¹ãƒ¡ãƒ¼ãƒ«ã§ã™ã€‚ã¾ãšæœ€åˆã«è¨­å®šæ–¹æ³•ã‚’èª¬æ˜ã—ã¾ã™ã€‚
+192,vm-next, Press 6 to play the next message.,æ¬¡ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ï¼–ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+193,vm-no, no,ã„ã„ãˆ
+194,vm-nobodyavail, Nobody is available to take your call at the moment,èª°ã‚‚é›»è©±ã«å‡ºã‚‰ã‚Œã¾ã›ã‚“ã€‚
+195,vm-nobox, you cannot reply to this message because the sender does not have a mailbox,é€ã‚Šå…ˆã®ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ãŒãªã„ãŸã‚ã€è¿”ä¿¡ã§ãã¾ã›ã‚“ã€‚
+196,vm-nomore, No more messages.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ä»¥ä¸Šã§ã™ã€‚
+197,vm-nonumber, I'm afraid i don't know who sent this message,é€ã‚Šå…ƒãŒã‚ã‹ã‚Šã¾ã›ã‚“ã€‚
+198,vm-num-i-have, the number i have is,ç•ªå·ã¯
+199,vm-Old, old,ä»¥å‰ã®
+200,vm-onefor, Press 1 for,ï¼‘ã‚’æŠ¼ã™ã¨
+201,vm-onefor-full, Press one to listen to ...,ï¼‘ã‚’æŠ¼ã—ã¦èã
+202,vm-options," Press 1 to record your unavailable message, press 2 to record your busy message, press 3 to record your name, press 4 to record your temporary greeting, press 5 to change your password, press star to return to the main menu.",ä¸åœ¨æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«ã¯ï¼‘ã‚’ã€ã¯ãªã—ã¡ã‚…ã†æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ï¼’ã‚’ã€åå‰ã‚’éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼“ã‚’ã€ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®éŒ²éŸ³ã¯ï¼”ã‚’ã€ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰å¤‰æ›´ã¯ï¼•ã‚’ã€ãƒ¡ã‚¤ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«æˆ»ã‚‹ã«ã¯ã€ã“ã‚ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+203,vm-opts," Press 2 to change folders, press 3 for advanced options, press zero for mailbox options.",ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼å¤‰æ›´ã¯ï¼’ã‚’ã€è©³ç´°ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¯ï¼“ã‚’ã€ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¯ã‚¼ãƒ­ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+204,vm-opts-full, press 2 to access messages saved in other folders.  Press 3 to record a message for another mailbox.  Press 0 for greetings and password management.,ä»–ã®ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ï¼’ã‚’ã€ä»–ã®ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ã«ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼“ã‚’ã€ã‚ãªãŸã®å¿œç­”ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¾ãŸã¯ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ç®¡ç†ã¯ã‚¼ãƒ­ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+205,vm-passchanged, Your passwords have been changed.,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¯å¤‰æ›´ã•ã‚Œã¾ã—ãŸã€‚
+206,vm-password, password,ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
+207,vm-pls-try-again, please try again,ã‚‚ã†ã„ã¡ã©ã‚„ã‚ŠãªãŠã—ã¦ãã ã•ã„
+208,vm-press, press,æŠ¼ã™
+209,vm-prev, Press 4 for the previous message,å‰ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ï¼”ã‚’æŠ¼ã—ã¦ãã ã•ã„
+210,vm-reachoper, press 0 to reach an operator,ã‚ªãƒšãƒ¬ãƒ¼ã‚¿ãƒ¼ã‚’å‘¼ã³å‡ºã™ã«ã¯ã‚¼ãƒ­ã‚’
+211,vm-rec-busy, After the tone say your busy message and then press the pound key.,ãƒˆãƒ¼ãƒ³ã®ã‚ã¨ã«ã‚ãªãŸã®ã€ã¯ãªã—ã¡ã‚…ã†ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+212,vm-received, received,å—ä¿¡ã—ã¾ã—ãŸ
+213,vm-rec-name, After the tone say your name and then press the pound key.,ãƒˆãƒ¼ãƒ³ã®ã‚ã¨ã«ã‚ãªãŸã®åå‰ã‚’è¨€ã£ã¦ã‹ã‚‰ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+214,vm-record-prepend," At the tone, please record an introduction to the forwarded message.  When done, press the pound sign.",ãƒˆãƒ¼ãƒ³ã®ã‚ã¨ã«è»¢é€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+215,vm-rec-temp," After the tone, say your temporary message, and then press the pound key.",ãƒˆãƒ¼ãƒ³ã®å¾Œã«ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+216,vm-rec-unv, After the tone say your unavailable message and then press the pound key.,ãƒˆãƒ¼ãƒ³ã®å¾Œã«ä¸åœ¨æ™‚ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+217,vm-reenterpassword, Please re-enter your password followed by the pound key.,ã‚‚ã†ã„ã¡ã©ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã—ã€æœ€å¾Œã«ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+218,vm-repaet, Press 5 to repeat the current message.,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ã‚‚ã†ä¸€åº¦å†ç”Ÿã™ã‚‹ã«ã¯ï¼•ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+219,vm-review, press 1 to accept this recording press 2 to listen to it press 3 to rerecord your message,ã“ã®éŒ²éŸ³ã§ã‚ˆã‘ã‚Œã°ï¼‘ã‚’ã€ã‚‚ã†ã„ã¡ã©èãã«ã¯ï¼’ã‚’ã€éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼“ã‚’
+220,vm-review-nonurgent, Press 4 to remove the urgent status of this message.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ç·Šæ€¥ã‚’è§£é™¤ã™ã‚‹ã«ã¯ï¼”ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+221,vm-review-urgent, Press 4 to mark this message as urgent.,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ç·Šæ€¥ã«ã™ã‚‹ã«ã¯ï¼”ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+222,vm-saved, saved,ä¿å­˜
+223,vm-savedto, saved to,ä¿å­˜å…ˆ
+224,vm-savefolder, Which folder should I save the message to?,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ä¿å­˜ã™ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ãƒ¼ã¯ï¼Ÿ
+225,vm-savemessage, or 9 to save this message,ä¿å­˜ã™ã‚‹ã«ã¯ï¼™ã‚’
+226,vm-saveoper," press 1 to accept this recording, otherwise, please continue to hold",ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã§ã‚ˆã‘ã‚Œã°ï¼‘ã‚’ã€ãã†ã§ãªã‘ã‚Œã°ãŠå¾…ã¡ãã ã•ã„
+227,vm-sorry, I'm sorry I did not understand your response.,å…¥åŠ›ãŒåˆ¤åˆ¥ã§ãã¾ã›ã‚“
+228,vm-star-cancel, press star to cancel,ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã«ã¯ã€ã“ã‚ã‚’
+229,vm-starmain,press star to return to the main menu,ãƒ¡ã‚¤ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã«æˆ»ã‚‹ã«ã¯ç±³ã‚’
+230,vm-tempgreetactive, Your temporary greeting is currently active,ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒæœ‰åŠ¹ã§ã™
+231,vm-tempgreeting, press 1 to record your temporary greeting,ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼‘ã‚’
+232,vm-tempgreeting2," press 1 to record your temporary greeting, or press 2 to erase your temporary greeting",ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼‘ã‚’ã€å‰Šé™¤ã™ã‚‹ã«ã¯ï¼’ã‚’
+233,vm-tempremoved, Your temporary greeting has been removed,ä¸€æ™‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯å‰Šé™¤ã•ã‚Œã¾ã—ãŸ
+234,vm-then-pound, then press pound,ã‚·ãƒ£ãƒ¼ãƒ—ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+235,vm-theperson, The person at extension,ã“ã®ãƒ¦ãƒ¼ã‚¶ãƒ¼ã®å†…ç·šã¯
+236,vm-tmpexists," There is a temporary greeting, which overrides your standard greetings.",ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¯ä¸€æ™‚ä¿å­˜ã§ã™ã€‚ã©ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã«é©ç”¨ã—ã¾ã™ã‹ï¼Ÿ
+237,vm-tocallback, press 2 to call the person who sent this message,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®é€ä¿¡è€…ã‚’å‘¼ã³å‡ºã™ã«ã¯ï¼’ã‚’
+238,vm-tocallnum, press 1 to call this number,ã“ã®ç•ªå·ã‚’å‘¼ã³å‡ºã™ã«ã¯ï¼‘ã‚’
+239,vm-tocancel, or pound to cancel.,ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã«ã¯ã‚·ãƒ£ãƒ¼ãƒ—ã‚’ã€‚
+240,vm-tocancelmsg, press star to cancel this message,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã™ã‚‹ã«ã¯ã€ã“ã‚ã‚’
+241,vm-toenternumber, press 1 to enter a number,ç•ªå·ã‚’å…¥åŠ›ã™ã‚‹ã«ã¯ï¼‘ã‚’
+242,vm-toforward,Press 8 to forward the message to another user,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è»¢é€ã™ã‚‹ã«ã¯8ã‚’
+243,vm-tohearenv,press 3 to hear the message envelope,ã“ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è©³ç´°ã‚’èãã«ã¯ï¼“ã‚’
+244,vm-tomakecall, press 4 to place an outgoing call,å¤–ç·šç™ºä¿¡ã™ã‚‹ã«ã¯ï¼”ã‚’
+245,vm-tooshort, your message is too short,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒçŸ­ã™ãã¾ã™
+246,vm-toreply,press 1 to send a reply,è¿”ä¿¡ã™ã‚‹ã«ã¯ï¼‘ã‚’
+247,vm-torerecord, press 3 to rerecord your message,ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’éŒ²éŸ³ã™ã‚‹ã«ã¯ï¼“ã‚’
+248,vm-undelete,Press 7 to undelete this message,å‰Šé™¤ã‚’å–ã‚Šæ¶ˆã™ã«ã¯ï¼—ã‚’
+249,vm-undeleted, Message undeleted.,å‰Šé™¤ã¯å–ã‚Šæ¶ˆã•ã‚Œã¾ã—ãŸ
+250,vm-unknown-caller, from an unknown caller,ä¸æ˜ãªç™ºä¿¡è€…
+251,vm-Urgent, urgent,æ€¥ã
+252,vm-whichbox," To leave a message, please enter a mailbox number.",ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ®‹ã™ã«ã¯ãƒ¡ãƒ¼ãƒ«ãƒœãƒƒã‚¯ã‚¹ç•ªå·ã‚’æŠ¼ã—ã¦ãã ã•ã„ã€‚
+253,vm-Work, work,ä»•äº‹
+254,vm-youhave, you have,ã‚ãªãŸã«ã¯
+255,letters/a,a,ã‚¨ãƒ¼
+256,letters/b,b,ãƒ“ãƒ¼
+257,letters/c,c,ã‚·ãƒ¼
+258,letters/f,d,ãƒ‡ã‚£ãƒ¼
+259,letters/e,e,ã‚¤ãƒ¼
+260,letters/f,f,ã‚¨ãƒ•
+261,letters/g,g,ã‚¸ãƒ¼
+262,letters/h,h,ã‚¨ã‚¤ãƒ
+263,letters/i,i,ã‚¢ã‚¤
+264,letters/j,j,ã‚¸ã‚§ã‚¤
+265,letters/k,k,ã‚±ã‚¤
+266,letters/l,l,ã‚¨ãƒ«
+267,letters/m,m,ã‚¨ãƒ 
+268,letters/n,n,ã‚¨ãƒŒ
+269,letters/o,o,ã‚ªãƒ¼
+270,letters/p,p,ãƒ”ãƒ¼
+271,letters/q,q,ã‚­ãƒ¥ãƒ¼
+272,letters/r,r,ã‚¢ãƒ¼ãƒ«
+273,letters/s,s,ã‚¨ã‚¹
+274,letters/t,t,ãƒ†ã‚£ãƒ¼
+275,letters/u,u,ãƒ¦ãƒ¼
+276,letters/v,v,ãƒ–ã‚¤
+277,letters/w,w,ãƒ€ãƒ–ãƒªãƒ¥ãƒ¼
+278,letters/x,x,ã‚¨ãƒƒã‚¯ã‚¹
+279,letters/y,y,ãƒ¯ã‚¤
+280,letters/z,z,ã‚¼ãƒƒãƒˆ
