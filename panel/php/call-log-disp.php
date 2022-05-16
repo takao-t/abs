@@ -12,7 +12,9 @@ $bl_addmsg = '';
           if(isset($_POST['blchecked'])) $p_yesno = trim($_POST['blchecked']);
           else $p_yesno = 'no';
           if($p_yesno == 'YES'){
-            AbspFunctions\put_db_item('ABS/blocklist', $p_cid, '1');
+            $nowdt = new DateTime('NOW');
+            $tmpdt = $nowdt->format('Y-m-d/H:i:s');
+            AbspFunctions\put_db_item('ABS/blocklist', $p_cid, $tmpdt);
             $bl_addmsg = $p_cid . " を着信拒否リストに登録しました";
           }
         }

@@ -106,6 +106,10 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
            $p_limit = trim($_POST['e_limit']);
            $limit_selected[$p_limit] = 'selected';
         }
+        $e_ext = AbspFunctions\get_db_item("ABS/EXT", $p_ext);
+        if($e_ext != ""){ //ログイン中なら警告を出しておく
+            $msg = "ログイン中";
+        }
     }
 
     if($_POST['function'] == 'tlogout'){ //端末ログアウト
@@ -127,6 +131,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 AbspFunctions\put_db_item('ABS/FAP', 'FLO', 'YES');
             }
         }
+    }
+
+    if($_POST['function'] == 'pgreload'){ //ページリロード
     }
 
 } // end of POST
@@ -327,7 +334,14 @@ EOT;
 
 } /* is_array  */
 echo "</table>";
-echo "<br>";
+
+echo <<<EOT
+<form action="" method="POST">
+  <input type="hidden" name="function" value="pgreload">
+  <input type="submit" class={$_(ABSPBUTTON)} value="更新">
+</form>
+<br>
+EOT;
 
 $flo = AbspFunctions\get_db_item('ABS/FAP', 'FLO');
 if($flo == 'NO'){
