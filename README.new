@@ -61,3 +61,6 @@
 ・(簡単な)IVR機能を実装しました
 
 ・添付の音声をGoogle TTSのものに変更しました。
+
+・Grandstream GRP2604Pに対応しました
+・Panasonic電話機が終了したためPanasonicは今後、積極対応しません。
