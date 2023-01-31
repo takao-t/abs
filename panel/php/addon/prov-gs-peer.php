@@ -43,6 +43,7 @@ $content = <<<EOT
     <P270>{$p_exten}</P270>
     <P3>{$p_exten}</P3>
     <P34>{$p_password}</P34>
+    <P271>1</P271>
   </config>
 </gs_provision>
 EOT;
