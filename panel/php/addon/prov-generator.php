@@ -4,9 +4,9 @@
 
 <?php
 
-// Panasonic
-include 'panadef.php';
-$vdef = 'PanaPhone';
+// Grandstream
+include 'gsphone.php';
+$vdef = 'GsPhone';
 
 $vendor = $vdef::VENDOR;
 
@@ -15,7 +15,7 @@ echo <<<EOT
 <table border=0 class="pure-table">
 EOT;
 
-$menu_counts = count(PanaPhone::TITLE);
+$menu_counts = count(GsPhone::TITLE);
 
 for($i=0;$i<$menu_counts;$i++){
 
@@ -42,13 +42,12 @@ echo <<<EOT
   </tr>
 EOT;
 }
-
 echo '</table>';
+echo '<br>';
 
-
-// Grandstream
-include 'gsphone.php';
-$vdef = 'GsPhone';
+// Panasonic
+include 'panadef.php';
+$vdef = 'PanaPhone';
 
 $vendor = $vdef::VENDOR;
 
@@ -57,7 +56,7 @@ echo <<<EOT
 <table border=0 class="pure-table">
 EOT;
 
-$menu_counts = count(GsPhone::TITLE);
+$menu_counts = count(PanaPhone::TITLE);
 
 for($i=0;$i<$menu_counts;$i++){
 
