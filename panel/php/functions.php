@@ -445,6 +445,13 @@ function create_target_list($option = '' , $selected = ''){
              }
          }
     }
+    //ローカルRING内線
+    $ext = $astman->GetDB("ABS/ERV", "localring");
+    if($ext!=""){
+        if($ext == $selected)
+            $select_list .= "<option value=\"$ext\" selected>$ext</option>\n";
+        else  $select_list .= "<option value=\"$ext\">$ext(L)</option>\n";
+    }
 
     $astman->Logout();
     return $select_list;
