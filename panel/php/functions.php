@@ -421,6 +421,18 @@ function create_target_list($option = '' , $selected = ''){
             else  $select_list .= "<option value=\"$ext\">$ext</option>\n";
         }
     }
+    //フリーアドレス内線
+    $fap_list = $astman->GetFamilyDB("ABS/FAP/UID");
+    if(!empty($fap_list)){
+        foreach($fap_list as $fap_ent){
+            if(strpos($fap_ent, '/EXT') !== false){
+                list($dummy, $fap_ext) = explode(':', $fap_ent, 2);
+                if($fap_ext == $selected)
+                    $select_list .= "<option value=\"$fap_ext\" selected>$fap_ext</option>\n";
+                else  $select_list .= "<option value=\"$fap_ext\">$fap_ext(F)</option>\n";
+            }
+        }
+    }
     //オプション指定があればグループも
     if($option == 'group'){
         for($i=1;$i<=16;$i++){
