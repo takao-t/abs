@@ -120,6 +120,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             AbspFunctions\del_db_item("ABS/EXT", $p_l_ext);
             AbspFunctions\del_db_item("ABS/ERV", $p_l_peer);
             AbspFunctions\del_db_item("ABS/LMT", $p_l_peer);
+            AbspFunctions\exec_cli_command("devstate change Custom:$p_l_peer NOT_INUSE");
         }
     }
 
@@ -130,6 +131,31 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             } else {
                 AbspFunctions\put_db_item('ABS/FAP', 'FLO', 'YES');
             }
+        }
+    }
+
+
+    if($_POST['function'] == 'fap_reg'){ //MAC登録
+        $p_macadd = trim($_POST['macadd']);
+        $p_peer = trim($_POST['peer']);
+        if($p_macadd != ''){
+            if(strpos($p_macadd, ':') === false){
+                $tmp_str = str_split($p_macadd, 2);
+                if(count($tmp_str) == 6){
+                    $p_macadd = sprintf("%2s:%2s:%2s:%2s:%2s:%2s", $tmp_str[0],$tmp_str[1],$tmp_str[2],$tmp_str[3],$tmp_str[4],$tmp_str[5]);
+                }
+            } else {
+                $tmp_str = explode(':', $p_macadd);
+                if(count($tmp_str) != 6) $p_macadd = '';
+            }
+            if($p_macadd != ''){
+                $p_macadd = strtoupper($p_macadd);
+                AbspFunctions\put_db_item("ABS/FAP/MAC", $p_peer, $p_macadd);
+            } else {
+                AbspFunctions\del_db_item("ABS/FAP/MAC", $p_peer);
+            }
+        } else {
+            AbspFunctions\del_db_item("ABS/FAP/MAC", $p_peer);
         }
     }
 
@@ -363,6 +389,58 @@ echo <<<EOT
 <input type="hidden" name="function" value="flogout">
 <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
+<hr>
+<h3>フリーアドレス端末管理(電話機設定ファイル生成用)</h3>
 EOT;
+
+$target = ASTDIR . '/' . 'pjsip_wizard.conf';
+$wizard_file = file_get_contents($target);
+$wizard_file = str_replace('(phone-defaults)', '', $wizard_file);
+$wizard_file = str_replace('(phone)', '', $wizard_file);
+$wizard_file = str_replace('(!)', '', $wizard_file);
+$wizard_file = parse_ini_string($wizard_file, true);
+
+echo '<table border=0 class="pure-table">';
+echo '<tr>';
+echo '<thead>';
+echo '<th>端末(ピア)名</th>';
+echo '<th>MACアドレス</th>';
+echo '<th></th>';
+echo '</thead>';
+echo '</tr>';
+
+for($i=1;$i<=$max_sip_phones;$i++){
+
+    $pp_name = 'FAP' . sprintf("%03d",$i);
+
+    //PJSIP
+    //$p_password = $wizard_file["$pp_name"]['inbound_auth/password'];
+    $n_mac = AbspFunctions\get_db_item('ABS/FAP/MAC', $pp_name);
+
+    if($i % 2 != 0){
+        $tr_odd_class = '';
+    } else {
+        $tr_odd_class = 'class="pure-table-odd"';
+    }
+
+echo <<<EOT
+<tr $tr_odd_class>
+<td align="right">
+$pp_name
+</td>
+<td>
+<form action="" method="post">
+<input type="text" size="16" name="macadd" value=$n_mac>
+</td>
+<td>
+<input type="hidden" name="function" value="fap_reg">
+<input type="hidden" name="peer" value=$pp_name>
+<input type="submit" class={$_(ABSPBUTTON)} value="登録">
+</form>
+</td>
+</tr>
+EOT;
+
+} /* end of for */
 
 ?>
