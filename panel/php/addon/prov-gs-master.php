@@ -16,6 +16,7 @@ $content = <<<EOT
     <P30>{$_POST['ntp_addr']}</P30>
     <P47>{$_POST['regi_addr']}:{$_POST['regi_port']}</P47>
     <P48>{$_POST['proxy_addr']}:{$_POST['proxy_port']}</P48>
+    <P81>1</P81>
     <P91>{$_POST['callwait']}</P91>
     <P104>{$_POST['ringtone']}</P104>
     <P122>1</P122>
