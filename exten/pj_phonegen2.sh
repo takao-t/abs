@@ -31,6 +31,7 @@ echo "endpoint/allow_subscribe = yes"
 echo "aor/max_contacts = 2"
 echo "aor/qualify_frequency = 30"
 echo "aor/authenticate_qualify = no"
+echo "aor/remove_existing = yes"
 echo ""
 
 
