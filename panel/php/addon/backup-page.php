@@ -55,7 +55,7 @@ $msg2 = '';
 
         if($_POST['function'] == 'confbackup'){
 
-            $cmd_line = 'cd ' . ASTDIR . ';' . 'tar cfz ' . BACKUPDIR . '/astconf-' . $current . '.tar.z' . ' *';
+            $cmd_line = 'cd ' . ASTDIR . ';' . 'tar cfz ' . BACKUPDIR . '/astconf-' . $current . '.tar.z' . ' --exclude="keys/*" *';
 
             $cmd_out = exec($cmd_line, $out_lines, $retval);
             if($retval == 0){
