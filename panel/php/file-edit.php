@@ -88,13 +88,15 @@ EOT;
 <select name="readfile" size="30">
 <?php
 $dir = opendir(ASTDIR);
-while (false !== ($file_list[] = readdir($dir)));
-closedir($dir);
-sort($file_list);
-foreach($file_list as $key=>$file){
-  $target = ASTDIR . '/' . $file;
-  if(is_file($target)) {
-    print "<option>$file</option>\n";
+if($dir !== FALSE){
+  while (false !== ($file_list[] = readdir($dir)));
+  closedir($dir);
+  sort($file_list);
+  foreach($file_list as $key=>$file){
+    $target = ASTDIR . '/' . $file;
+    if(is_file($target)) {
+      print "<option>$file</option>\n";
+    }
   }
 }
 
