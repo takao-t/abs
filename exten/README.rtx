@@ -100,6 +100,12 @@ SIPサーバアドレス [TAB] SIPドメイン
 Asterisk側はpjsip_trunk_hikari-rtx.conf.tmplをpjsip_trunk_hikari-rtx.confにコピー
 し、内容を編集してください。説明に書いてあるSIPサーバアドレスやドメイン等を設定
 します。
+加えてPJSIPのACLを設定してください。以下のようなエントリを足します。
+
+permit = メモしたネットワーク
+
+/なんとかまでちゃんと書きます。ACLに引っ掛かるとCLIに出るのですぐ気付きますが。
+
 
 設定が完了したらAsteriskを再起動し、CLIからpjsip show registrationsでレジがされ
 ているかどうかを確認します。
