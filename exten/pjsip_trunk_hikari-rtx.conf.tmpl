@@ -1,0 +1,70 @@
+;ひかり電話直収例
+; ひかり電話(東)のホームタイプのみで検証
+; readme.rtxを読むこと
+;
+;ヤマハ RTXを使って直収させる。終端はRTXに行わせNAT背後に置いた
+;Asteriskで発着信する
+;
+;ヤマハRTXのSIP-NATを使用するのでトランスポートは専用に設ける
+;ヤマハRTXのSIP-NATは5060決め打ちなので注意
+;
+;/etc/hostsにSIPサーバのIPアドレスを記述しておく必要あり
+;(libunbound付でコンパイルしたAsteriskが必要)
+;
+; ACLの設定が別途必要.ひかり電話のネットワークアドレスをACLに
+; 登録すること
+
+
+;トランスポート
+; SIPにポート5060を使用する(ヤマハが固定のため)
+; 他のトランスポートで5060を使っているものがあれば
+; そのトランスポートを使い
+; このトランスポートはコメントアウトする
+[hikari-tp]
+type = transport
+protocol = udp
+bind = 0.0.0.0:5060
+local_net = 192.168.0.0/16
+
+;AOR
+; Qualifyはしてはいけない
+[hikari-rtx]
+type = aor
+contact = sip:###SIPサーバのIPアドレスを書く###
+
+; IDENTIFY
+; SIPサーバからのIPアドレスのみで識別させる
+[hikari-rtx]
+type = identify
+endpoint = hikari-rtx
+match = ###SIPサーバのIPアドレスを書く###
+
+; REGISTER
+; 認証は必要ないので以下の内容だけ
+; トランスポートは明示指定すること
+[hikari-rtx]
+type = registration
+contact_user = ###自局番号を書く###
+transport = hikari-tp
+server_uri = sip:###SIPドメインを書く###
+client_uri = sip:###自局番号@SIPドメインを書く###
+
+; ENDPOINT
+; 認証は必要ない
+; トランスポートは明示指定すること
+[hikari-rtx]
+type = endpoint
+transport = hikari-tp
+context = from-hikari-rtx
+dtmf_mode = inband
+language = ja
+disallow = all
+allow = ulaw
+rtp_symmetric = no
+force_rport = no
+rewrite_contact = no
+direct_media = no
+send_pai = yes
+from_user = ###自局番号を書く###
+from_domain = ###SIPドメインを書く###
+aors = hikari-rtx

@@ -1,0 +1,115 @@
+・ひかり電話をヤマハRTXで収容
+
+ひかり電話をヤマハRTXを使って収容します。以下の条件があります。
+
+1) NGN機能(データコネクト)との併用はできません
+2) SIP-NATを使用します
+3) WAN側インタフェース(LAN2など)を他の用途に使っている場合には配慮が要ります
+4) WAN側インタフェースを直接使うのでpp経由のITSPには影響しないはずです
+
+・構成
+
+[ONU]=====[RTX]====[Asterisk]
+
+これだけで繋ぎます。要はインターネット接続に使用しているRTXの外側(WAN)を
+ひかり電話接続にも利用します。ONUから分岐させる必要はありません。
+なお、試験環境はRTX830ですのでWAN側インタフェースはLAN2として例示します。
+他の機種の場合には読み替えてください。
+
+・ひかり電話接続情報の取得
+
+RTXのコマンドで以下を実行します
+
+no ip lan2 address
+ngn type lan2 ntt
+ip lan2 address dhcp
+
+これでlan2にIPアドレスが割りあたり同時にひかり電話の情報も取得されます。
+以下のコマンドで取得された情報を確認します。
+
+show status dhcpc
+
+-----
+Interface: LAN2 primary
+            IP address: 自分のIPアドレス(あまり気にしなくていい)
+           DHCP server: DHCPサーバのアドレス(気にしなくていい)
+       Remaining lease: DHCPリースの残り時間(気にしなくていい)
+      (type) Client ID: DHCPのクライアントID(気にしなくていい)
+         SIP Server[1]: SIPサーバのIPアドレス(メモする)
+       Vender Specific: 210
+           MAC address: MACアドレス(気にしなくていい)
+            Tel number: 電話番号(ちょっと気にしておく)
+            SIP domain: SIPドメイン名(メモする)
+            HGW server: HGWのバージョンアップサーバ(気にしなくていい)
+       Statit Route[1]: [ネットワーク] gateway [ゲートウェイアドレス](メモする)
+Common information
+       Default gateway:
+-----
+
+これらがひかり電話のプロビジョン情報です。電話番号はまあ自分の番号忘れる人います？
+情報を取得したら以下のコマンドを投入してNGN機能をオフにします。
+
+no ip lan2 address
+ngn type lan2 off
+sip use off
+
+一旦この設定をsaveしてからRTXを再起動してください。コマンド投入だけではNGN機能
+は無効になりません。
+
+・RTX側の設定
+
+再起動したら以下のコマンドでLAN2をDHCP(クライアント)構成とし、NATでAsteriskが外
+に出られるようにします。
+
+ip lan2 address dhcp
+ip lan2 rip send off
+ip lan2 rip receive off
+ip lan2 nat descriptor 2000
+
+nat descriptor type 2000 masquerade
+nat descriptor address outer 2000 primary
+nat descriptor sip 2000 on
+nat descriptor masquerade static 2000 1 [AsteriskのLANアドレス] udp 5060
+nat descriptor masquerade static 2000 2 [AsteriskのLANアドレス] udp 10000-11000
+
+ひかり電話のネットワークへの経路を設定します
+
+ip route [メモしたネットワーク] gateway [メモしたゲートウェイアドレス]
+
+AsteriskのIPアドレスを動的にしている人はいないと思いますけど、このアドレスはLAN
+側のアドレスです。外へはRTXを経由して出るのでLANでOKです。
+UDPの範囲、10000-11000はrtp.confにあわせてください。外から来るRTPは全てAsterisk
+に飛ばします。
+そもそもこのネットワークはひかり電話のネットワークなので変なものは飛んでこないは
+ずです。
+これでRTX側の設定は完了です。
+
+・Asterisk側の設定
+
+Asteriskは/etc/hostsを読ませる(PJSIPに)ためにlibunbound付でコンパイルしなおして
+ください。Debian系ですとlinunbound-devをインストールしてからConfigure,makeをや
+りなおします。
+
+Asteriskを入れなおしたら /etc/hosts に以下の設定を入れます。nsswitch.confの確認
+もお忘れなく。
+
+-----/etc/hostsに以下を足す
+SIPサーバアドレス [TAB] SIPドメイン
+-----
+
+Asterisk側はpjsip_trunk_hikari-rtx.conf.tmplをpjsip_trunk_hikari-rtx.confにコピー
+し、内容を編集してください。説明に書いてあるSIPサーバアドレスやドメイン等を設定
+します。
+
+設定が完了したらAsteriskを再起動し、CLIからpjsip show registrationsでレジがされ
+ているかどうかを確認します。
+ABS上の設定では発信トランクにhikari-rtxを指定します。なお、発信者番号(発信CID)
+は必ずどこかで明示設定してください。プレフィクス発信、キー発信ともに発信者番号
+として自分の電話番号を設定しておいてください。
+なお最初はトランクがプルダウンでは出てこないと思います。手動でトランク名として
+hikari-rtxを入れてください。
+
+
+＊このファイルとともに配布されているABSのexten類はこの方式に対応しています。
+
+
