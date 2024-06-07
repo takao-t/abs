@@ -89,6 +89,12 @@ UDPの範囲、10000-11000はrtp.confにあわせてください。外から来�
 Asteriskは/etc/hostsを読ませる(PJSIPに)ためにlibunbound付でコンパイルしなおして
 ください。Debian系ですとlinunbound-devをインストールしてからConfigure,makeをや
 りなおします。
+==コンパイルできない/したくない場合==
+RTXをDNSサーバとして使用している場合、RTXに静的レコードを追加することで対応でき
+るかもしれません。
+dns static a ドメイン IPアドレス
+を実行して追加してみてください。
+====
 
 Asteriskを入れなおしたら /etc/hosts に以下の設定を入れます。nsswitch.confの確認
 もお忘れなく。
