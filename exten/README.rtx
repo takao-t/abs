@@ -105,6 +105,8 @@ Asterisk側はpjsip_trunk_hikari-rtx.conf.tmplをpjsip_trunk_hikari-rtx.confに�
 permit = メモしたネットワーク
 
 /なんとかまでちゃんと書きます。ACLに引っ掛かるとCLIに出るのですぐ気付きますが。
+設定ファイルを作ったならメインのpjsip.confでincludeしてください。ABSではトラン
+クはそれぞれ別ファイルにしてあります。
 
 
 設定が完了したらAsteriskを再起動し、CLIからpjsip show registrationsでレジがされ
