@@ -5,6 +5,7 @@ $msg = "";
 $p_msg = array();
 $n_msg = "";
 $lr_msg = "";
+$mc_msg = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -14,6 +15,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             AbspFunctions\put_db_item('ABS', 'EXTTECH', 'SIP');
         } else {
             AbspFunctions\put_db_item('ABS', 'EXTTECH', 'PJSIP');
+        }
+    }
+
+    if($_POST['function'] == 'e1xxconf'){ //E1xx設定
+        $p_e1xxuse = $_POST['e1xxuse'];
+        if($p_e1xxuse == 'YES'){
+            AbspFunctions\put_db_item('ABS', 'E1XXUSE', 'YES');
+        } else {
+            AbspFunctions\put_db_item('ABS', 'E1XXUSE', 'NO');
         }
     }
 
@@ -164,6 +174,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                 AbspFunctions\put_db_item('ABS/EXT', $p_lr_ext, 'localring');
                 AbspFunctions\put_db_item('ABS/ERV', 'localring', $p_lr_ext);
                 $lr_msg = '設定完了';
+            }
+        }
+    }
+
+    if($_POST['function'] == 'mcastset'){
+        $p_mcext = $_POST['mcext'];
+        $p_mclimit = $_POST['mclimit'];
+        $p_mctarget = $_POST['mctarget'];
+
+        AbspFunctions\put_db_item('ABS/LOCALTECH', 'mcast1', 'Local');
+        $c_mcext = AbspFunctions\get_db_item('ABS/ERV', 'mcast1');
+        if($p_mcext == ''){
+            if($c_mcext != ''){
+                AbspFunctions\del_db_item('ABS/EXT', $c_mcext);
+                AbspFunctions\del_db_item('ABS/ERV', 'mcast1');
+                AbspFunctions\del_db_item('ABS/MCAST1', 'TARGET');
+                $mc_msg = '削除完了';
+            }
+        } else {
+            $ck_peer = AbspFunctions\get_db_item('ABS/EXT', $p_mcext);
+            if($ck_peer != '' & ($p_mcext != $c_mcext)){
+                $mc_msg = '内線重複';
+            } else {
+                if($p_mctarget != ''){
+                    AbspFunctions\del_db_item('ABS/EXT', $c_mcext);
+                    AbspFunctions\put_db_item('ABS/EXT', $p_mcext, 'mcast1');
+                    AbspFunctions\put_db_item('ABS/ERV', 'mcast1', $p_mcext);
+                    AbspFunctions\put_db_item('ABS/MCAST1', 'LMT', $p_mclimit);
+                    AbspFunctions\put_db_item('ABS/MCAST1', 'TARGET', $p_mctarget);
+                    $mc_msg = '設定完了';
+                } else {
+                    $mc_msg = 'アドレス指定なし';
+                }
             }
         }
     }
@@ -325,6 +368,12 @@ EOT;
     $tech = AbspFunctions\get_db_item('ABS', 'EXTTECH');
     $tech_selected["$tech"] = "selected";
 
+//プレフィクス特番
+
+    $e1xx_selected = array('YES'=>'', 'NO'=>'');
+    $e1xxuse = AbspFunctions\get_db_item('ABS', 'E1XXUSE');
+    $e1xx_selected["$e1xxuse"] = "selected";
+
 //キー保留時点滅機能
     $khbl_use = AbspFunctions\get_db_item('ABS/KHBL', 'USE');
     if($khbl_use == '') $khbl_use = "0";
@@ -346,6 +395,18 @@ echo <<<EOT
     <input type="hidden" name="function" value="mydigits">
     <input type="text" size="2" name="mdigits" value=$mdigits> 桁 
     <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
+<h3>1xx特番発信機能(緊急/特番)</h3>
+プレフィクス発信時に1xxの特番発信を許可(例:0117など)するかどうかを設定します<br>
+プレフィクスに続けて緊急番号もダイヤルできますので設定と運用に注意してください<br>
+<form action="" method="post">
+  <input type="hidden" name="function" value="e1xxconf">
+    <select name="e1xxuse">
+      <option value="NO"   {$e1xx_selected['NO']}>使わない</option>
+      <option value="YES"  {$e1xx_selected['YES']}>使う</option>
+    </select>
+  <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <hr>
 <h3 id="exttech">内線テクノロジ</h3>
@@ -375,6 +436,14 @@ EOT;
         $spp_suse = '';
         $spp_nuse = 'selected';
     }
+
+    $mc_target = AbspFunctions\get_db_item('ABS/MCAST1', 'TARGET');
+    $mc_limit = AbspFunctions\get_db_item('ABS/MCAST1', 'LMT');
+    $mc_selected[1] ="";
+    $mc_selected[2] ="";
+    $mc_selected[3] ="";
+    $mc_selected[$mc_limit] ="selected";
+    $mc_ext = AbspFunctions\get_db_item('ABS/ERV', 'mcast1');
 
 echo <<<EOT
 </table>
@@ -445,6 +514,31 @@ echo <<<EOT
 ※電話機によってはうまく動作しません。間隔の最小値は2秒です。<br>
 　(2秒点灯、2秒消灯の繰り返し)
 <hr>
+<h3>マルチキャスト・ページング</h3>
+マルチキャスト・ページングを使用する際のアドレスとポートを指定します。<br>
+内線指定が空白の場合はマルチキャスト・ページングを使用しません。
+<form action="" method="post">
+    <input type="hidden" name="function" value="mcastset">
+ 内線番号 <input type="text" size="4" name="mcext" value=$mc_ext>
+規制値
+<select name="mclimit">
+  <option value="1" {$mc_selected['1']}>1</option>
+  <option value="2" {$mc_selected['2']}>2</option>
+  <option value="3" {$mc_selected['3']}>3</option>
+</select>
+&nbsp;&nbsp;
+ 送信先IPアドレス:ポート <input type="text" size="16" name="mctarget" value=$mc_target>
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+    <font color="red">$mc_msg</font>
+</form>
+<font size="-2">
+内線番号は既存と重複しない番号を指定します。この番号にダイヤルするとページングします(規制値以上の端末)。<br>
+アドレスはマルチキャストのIPアドレスを指定します(224.0.0.0～239.255.255.255)<br>
+AsteriskのMulticastRTPチャネルを使用するので到達性は保証されません。
+</font>
+<hr>
+
+    
 EOT;
 
 //エリア管理
