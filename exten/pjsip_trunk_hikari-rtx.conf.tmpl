@@ -46,6 +46,9 @@ match = ###SIPサーバのIPアドレスを書く###
 type = registration
 contact_user = ###自局番号を書く###
 transport = hikari-tp
+expiration = 3600
+fatal_retry_interval = 60
+forbidden_retry_interval = 60
 server_uri = sip:###SIPドメインを書く###
 client_uri = sip:###自局番号@SIPドメインを書く###
 
