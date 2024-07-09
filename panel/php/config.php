@@ -2,9 +2,15 @@
 
 //ブラウザUIで扱う最大値
 $max_keys = 16;
-$max_sip_phones = 32;
+//通常電話機とブラウザフォンの合計数
+$max_sip_phones = 64;
+//フリーアドレス電話機
+$max_fap_phones = 32;
 $max_group = 16;
 $max_pgroup = 8;
+//ブラウザフォンが使う範囲
+$brphone_min = 33;
+$brphone_max = 64;
 
 //ユーザ情報の場所(Webからアクセスできない位置へ)
 $uinfolocation = '/var/www/absp/';

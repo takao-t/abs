@@ -154,11 +154,17 @@ for($i=1;$i<=$max_sip_phones;$i++){
         $n_msg = '';
     }
 
+    //ブラウザフォン表示
+    $br_ind = "";
+    if( $i >= $brphone_min && $i <= $brphone_max){
+        $br_ind = "(B)";
+    }
+
 echo <<<EOT
   <form action="" method="post">
     <tr $tr_odd_class>
       <td>
-        phone$i 
+        phone$i $br_ind 
         <input type="hidden" name="p_exten" value="$p_exten">
         <input type="hidden" name="peer" value="$peer">
       </td>
@@ -198,7 +204,8 @@ EOT;
 } /* end of for */
 
 echo "</table>";
-echo '<font size="-1">MACアドレスは電話機設定ファイル自動生成に使用されます</font>';
+echo '<font size="-1">MACアドレスは電話機設定ファイル自動生成に使用されます</font><br>';
+echo '<font size="-1">(B)はブラウザフォン用のピアです</font>';
 
 
 //鳴動パターン

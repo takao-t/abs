@@ -80,6 +80,13 @@ EOT;
     }
     $i++;
 
+    if(empty($line[1])){
+        $line[2] = '';
+    }
+    if(empty($line[2])){
+        $line[2] = '';
+    }
+
 echo <<<EOT
 <tr $tr_odd_class>
 <td>

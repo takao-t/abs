@@ -25,6 +25,7 @@ if($tech == 'SIP'){
 }
 
 $wizard_file = str_replace('(phone-defaults)', '', $wizard_file);
+$wizard_file = str_replace('(browserphone-defaults)', '', $wizard_file);
 $wizard_file = str_replace('(phone)', '', $wizard_file);
 $wizard_file = str_replace('(!)', '', $wizard_file);
 $wizard_file = parse_ini_string($wizard_file, true);
@@ -79,7 +80,7 @@ echo '<th>パスワード</th>';
 echo '</thead>';
 echo '</tr>';
 
-for($i=1;$i<=$max_sip_phones;$i++){
+for($i=1;$i<=$max_fap_phones;$i++){
 
     $fap_p = sprintf("%03d",$i);
     if($tech == 'SIP'){
