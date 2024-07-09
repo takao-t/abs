@@ -1,0 +1,83 @@
+*ブラウザフォンを使用するための自己署名証明書を作成します
+ (注：ローカルIPでのみ使用する場合です.ABSはオンプレ以外の
+　　　環境での使用は想定していません。)
+
+配布されているmake_crt.shを実行し必要な項目を入力してください。
+
+作業ディレクトリ下にabs.key, absk.csr, abs.crt が生成されますので
+/etc/asterisk/keys の下 に配置してください。
+
+# mkdir /etc/asterisk/keys
+# mv abs.key /etc/asterisk/keys/.
+# mv abs.csr /etc/asterisk/keys/.
+# mv abs.crt /etc/asterisk/keys/.
+
+権限を適切に設定してください。
+
+# chown -R asterisk:asterisk /etc/asterisk/keys
+# chmod 700 /etc/asterisk/keys/
+# chmod 600 /etc/asterisk/keys/*
+
+http.conf を編集しコメントを外してTLS類を有効にします。
+httpsのポートはデフォルト5443にしてありますが不都合がある場合は別
+なポートを指定してください。
+
+-----
+[general]
+enabled=no
+;ブラウザフォンを使用する場合は以下のコメントを外すこと
+;事前に証明書類の生成と配置をお忘れなく
+tlsenable=yes
+tlsbindaddr=0.0.0.0:5443
+tlscertfile=/etc/asterisk/keys/abs.crt
+tlsprivatekey=/etc/asterisk/keys/abs.key
+enablestatic=yes
+sessionlimit=1000
+redirect=/ /static/index.html
+-----
+
+pjsip.confを編集し、WSSトランスポートを使用するようにしてください。
+
+----以下の個所
+;ブラウザフォン用トランスポート(Websocket)
+;使う場合にはコメントを外す
+#include "pjsip_wsstransport.conf"
+-----
+
+asteriskを再起動します。
+
+abs.crtファイルをブラウザフォンを使用したいPCへ転送し、chromeならば
+『信頼できるルート証明書』としてインポートしてください。インポートし
+たならば chrome を再起動します。
+
+InnovateAsteriskのブラウザフォンを使用する場合には以下のように行います。
+
+まず入手します
+
+git clone https://github.com/InnovateAsterisk/Browser-Phone.git
+
+ブラウザフォンをAsteriskのhttpディレクトリにコピーします
+
+# cd Browser-Phone/Phone
+# cp -r * /var/lib/asterisk/static-http/.
+# chown -R asterisk:asterisk /var/lib/asterisk/static-http/*
+
+/var/lib/asterisk/static-http/phone.jsを編集し以下を追加します(1947行目付近)。
+----------
+       sessionDescriptionHandlerFactoryOptions: {
+           peerConnectionConfiguration :{
+               bundlePolicy: BundlePolicy,
+               // certificates: undefined,
+               // iceCandidatePoolSize: 10,
+               // iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+               iceServers: [{ urls: "stun:stun.l.localhost.localdomain:19302" }], <=これを追加する
+               // iceTransportPolicy: "all",
+               // peerIdentity: undefined,
+               // rtcpMuxPolicy: "require",
+           },
+           iceGatheringTimeout: IceStunCheckTimeou
+----------
+
+InnovateAsteriskのブラウザフォンについてはVoIP-Info.jpに記載していますので参照してください。
+
+https://www.voip-info.jp/index.php/InnovateAsteriskBrowser-Phone
