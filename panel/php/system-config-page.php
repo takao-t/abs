@@ -5,6 +5,7 @@ $msg = "";
 $p_msg = array();
 $n_msg = "";
 $lr_msg = "";
+$mc_msg = "";
 
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
@@ -14,6 +15,15 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             AbspFunctions\put_db_item('ABS', 'EXTTECH', 'SIP');
         } else {
             AbspFunctions\put_db_item('ABS', 'EXTTECH', 'PJSIP');
+        }
+    }
+
+    if($_POST['function'] == 'e1xxconf'){ //E1xx設定
+        $p_e1xxuse = $_POST['e1xxuse'];
+        if($p_e1xxuse == 'YES'){
+            AbspFunctions\put_db_item('ABS', 'E1XXUSE', 'YES');
+        } else {
+            AbspFunctions\put_db_item('ABS', 'E1XXUSE', 'NO');
         }
     }
 
@@ -117,22 +127,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     
     }
 
+    if($_POST['function'] == 'radioconf'){ //無線GW設定
+        $p_radiogw = $_POST['radiogw'];
+
+        AbspFunctions\put_db_item('ABS', 'RADIOGW', $p_radiogw);
+    
+    }
+
     if($_POST['function'] == 'keysysinit'){ //キーシステム初期化
         AbspFunctions\exec_cli_command('channel originate Local/s@keysinit application NoCDR');
         $msg = '初期化完了';
     }
 
-    if($_POST['function'] == 'bllog'){
-    }
-
-    if($_POST['function'] == 'anonupdate'){
-    }
 
     if($_POST['function'] == 'cpbacktime'){
         $p_cpbt = trim($_POST['cpbt']);
         if($p_cpbt == "") $p_cpbt = 60;
         if(!ctype_digit($p_cpbt)) $p_cpbt = 60;
+        if($p_cpbt < 30) $p_cpbt =30;
         AbspFunctions\put_db_item('ABS', 'CPBT', $p_cpbt);
+    }
+
+    if($_POST['function'] == 'spbacktime'){
+        $p_spbt = trim($_POST['spbt']);
+        if($p_spbt == "") $p_spbt = 60;
+        if(!ctype_digit($p_spbt)) $p_spbt = 60;
+        if($p_spbt < 30) $p_spbt =30;
+        AbspFunctions\put_db_item('ABS', 'SPBT', $p_spbt);
+        $p_sppuse = trim($_POST['sppuse']);
+        if($p_sppuse == '1'){
+            AbspFunctions\put_db_item('ABS', 'SPBU', '1');
+        } else {
+            AbspFunctions\put_db_item('ABS', 'SPBU', '0');
+        }
     }
 
     if($_POST['function'] == 'localring'){
@@ -158,6 +185,39 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         }
     }
 
+    if($_POST['function'] == 'mcastset'){
+        $p_mcext = $_POST['mcext'];
+        $p_mclimit = $_POST['mclimit'];
+        $p_mctarget = $_POST['mctarget'];
+
+        AbspFunctions\put_db_item('ABS/LOCALTECH', 'mcast1', 'Local');
+        $c_mcext = AbspFunctions\get_db_item('ABS/ERV', 'mcast1');
+        if($p_mcext == ''){
+            if($c_mcext != ''){
+                AbspFunctions\del_db_item('ABS/EXT', $c_mcext);
+                AbspFunctions\del_db_item('ABS/ERV', 'mcast1');
+                AbspFunctions\del_db_item('ABS/MCAST1', 'TARGET');
+                $mc_msg = '削除完了';
+            }
+        } else {
+            $ck_peer = AbspFunctions\get_db_item('ABS/EXT', $p_mcext);
+            if($ck_peer != '' & ($p_mcext != $c_mcext)){
+                $mc_msg = '内線重複';
+            } else {
+                if($p_mctarget != ''){
+                    AbspFunctions\del_db_item('ABS/EXT', $c_mcext);
+                    AbspFunctions\put_db_item('ABS/EXT', $p_mcext, 'mcast1');
+                    AbspFunctions\put_db_item('ABS/ERV', 'mcast1', $p_mcext);
+                    AbspFunctions\put_db_item('ABS/MCAST1', 'LMT', $p_mclimit);
+                    AbspFunctions\put_db_item('ABS/MCAST1', 'TARGET', $p_mctarget);
+                    $mc_msg = '設定完了';
+                } else {
+                    $mc_msg = 'アドレス指定なし';
+                }
+            }
+        }
+    }
+
     if($_POST['function'] == 'licset'){ //ライセンスキー設定
         if(isset($_POST['lickey'])){
             $p_lickey = $_POST['lickey'];
@@ -174,6 +234,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $p_khbtime = trim($_POST['khbtime']);
             if($p_khbtime < 2) $p_khbtime = 2;
             AbspFunctions\put_db_item('ABS/KHBL', 'TIME', $p_khbtime);
+        }
+    }
+
+    if($_POST['function'] == 'mydigits'){ //自局番号桁数
+        if(isset($_POST['mdigits'])){
+            $p_mdigits = $_POST['mdigits'];
+            AbspFunctions\put_db_item('ABS', 'MDIGITS', $p_mdigits);
         }
     }
 
@@ -298,11 +365,21 @@ echo <<<EOT
 <hr>
 EOT;
 
+//電話番号桁数
+    $mdigits = AbspFunctions\get_db_item('ABS','MDIGITS');
+    if($mdigits == '') $mdigits = 10;
+
 //内線テクノロジ
 
     $tech_selected = array('SIP'=>'', 'PJSIP'=>'');
     $tech = AbspFunctions\get_db_item('ABS', 'EXTTECH');
     $tech_selected["$tech"] = "selected";
+
+//プレフィクス特番
+
+    $e1xx_selected = array('YES'=>'', 'NO'=>'');
+    $e1xxuse = AbspFunctions\get_db_item('ABS', 'E1XXUSE');
+    $e1xx_selected["$e1xxuse"] = "selected";
 
 //キー保留時点滅機能
     $khbl_use = AbspFunctions\get_db_item('ABS/KHBL', 'USE');
@@ -318,6 +395,27 @@ EOT;
     if($khbt == '') $khbt = "3";
 
 echo <<<EOT
+<h3>電話番号桁数(自局)</h3>
+着信時の番号判断に使用します(デフォルト:10桁)<br>
+例：03-1234-5678 ならば10桁
+<form action="" method="post">
+    <input type="hidden" name="function" value="mydigits">
+    <input type="text" size="2" name="mdigits" value=$mdigits> 桁 
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
+<h3>1xx特番発信機能(緊急/特番)</h3>
+プレフィクス発信時に1xxの特番発信を許可(例:0117など)するかどうかを設定します<br>
+プレフィクスに続けて緊急番号もダイヤルできますので設定と運用に注意してください<br>
+<form action="" method="post">
+  <input type="hidden" name="function" value="e1xxconf">
+    <select name="e1xxuse">
+      <option value="NO"   {$e1xx_selected['NO']}>使わない</option>
+      <option value="YES"  {$e1xx_selected['YES']}>使う</option>
+    </select>
+  <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
 <h3 id="exttech">内線テクノロジ</h3>
 <form action="" method="POST">
   <input type="hidden" name="function" value="extconf">
@@ -330,9 +428,29 @@ echo <<<EOT
 <br>
 EOT;
 
+//各設定値
     $lr_ext = AbspFunctions\get_db_item('ABS/ERV', 'localring');
     $cpbt = AbspFunctions\get_db_item('ABS', 'CPBT');
     if($cpbt == "") $cpbt = 60;
+    $spbt = AbspFunctions\get_db_item('ABS', 'SPBT');
+    if($spbt == "") $spbt = 60;
+    $t_sp = AbspFunctions\get_db_item('ABS', 'SPBU');
+    if($t_sp == '') $t_sp = "0";
+    if($t_sp == "1"){
+        $spp_suse = 'selected';
+        $spp_nuse = '';
+    } else {
+        $spp_suse = '';
+        $spp_nuse = 'selected';
+    }
+
+    $mc_target = AbspFunctions\get_db_item('ABS/MCAST1', 'TARGET');
+    $mc_limit = AbspFunctions\get_db_item('ABS/MCAST1', 'LMT');
+    $mc_selected[1] ="";
+    $mc_selected[2] ="";
+    $mc_selected[3] ="";
+    $mc_selected[$mc_limit] ="selected";
+    $mc_ext = AbspFunctions\get_db_item('ABS/ERV', 'mcast1');
 
 echo <<<EOT
 </table>
@@ -374,6 +492,19 @@ echo <<<EOT
     <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <hr>
+<h3>セルフパーク呼び戻し時間</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="spbacktime">
+    <input type="text" size="2" name="spbt" value=$spbt> 秒
+    &nbsp;
+    ピックアップ
+    <select name="sppuse">
+      <option value="1" $spp_suse>使う</option>
+      <option value="0"  $spp_nuse>使わない</option>
+    </select>
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
 <h3>キー保留時点滅機能</h3>
 キー保留時に保留しているキーを点滅させます。
 <form action="" method="post">
@@ -389,6 +520,44 @@ echo <<<EOT
 </form>
 ※電話機によってはうまく動作しません。間隔の最小値は2秒です。<br>
 　(2秒点灯、2秒消灯の繰り返し)
+<hr>
+<h3>マルチキャスト・ページング</h3>
+マルチキャスト・ページングを使用する際のアドレスとポートを指定します。<br>
+内線指定が空白の場合はマルチキャスト・ページングを使用しません。
+<form action="" method="post">
+    <input type="hidden" name="function" value="mcastset">
+ 内線番号 <input type="text" size="4" name="mcext" value=$mc_ext>
+規制値
+<select name="mclimit">
+  <option value="1" {$mc_selected['1']}>1</option>
+  <option value="2" {$mc_selected['2']}>2</option>
+  <option value="3" {$mc_selected['3']}>3</option>
+</select>
+&nbsp;&nbsp;
+ 送信先IPアドレス:ポート <input type="text" size="16" name="mctarget" value=$mc_target>
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+    <font color="red">$mc_msg</font>
+</form>
+<font size="-2">
+内線番号は既存と重複しない番号を指定します。この番号にダイヤルするとページングします(規制値以上の端末)。<br>
+アドレスはマルチキャストのIPアドレスを指定します(224.0.0.0～239.255.255.255)<br>
+AsteriskのMulticastRTPチャネルを使用するので到達性は保証されません。
+</font>
+<hr>
+
+    
+EOT;
+
+//無線GW設定
+    $radiogw = AbspFunctions\get_db_item('ABS', 'RADIOGW');
+
+echo <<<EOT
+<h3 id="radiogw">無線GW設定</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="radioconf">
+ エンドポイントとポート(複数時はカンマ区切り) <input type="text" size="16" name="radiogw" value=$radiogw>
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
 <hr>
 EOT;
 
