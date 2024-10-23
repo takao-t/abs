@@ -555,7 +555,7 @@ echo <<<EOT
 <h3 id="radiogw">無線GW設定</h3>
 <form action="" method="post">
     <input type="hidden" name="function" value="radioconf">
- エンドポイント(カンマ区切り) <input type="text" size="16" name="radiogw" value=$radiogw>
+ エンドポイントとポート(複数時はカンマ区切り) <input type="text" size="16" name="radiogw" value=$radiogw>
     <input type="submit" class={$_(ABSPBUTTON)} value="設定">
 </form>
 <hr>
