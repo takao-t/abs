@@ -127,6 +127,13 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     
     }
 
+    if($_POST['function'] == 'radioconf'){ //無線GW設定
+        $p_radiogw = $_POST['radiogw'];
+
+        AbspFunctions\put_db_item('ABS', 'RADIOGW', $p_radiogw);
+    
+    }
+
     if($_POST['function'] == 'keysysinit'){ //キーシステム初期化
         AbspFunctions\exec_cli_command('channel originate Local/s@keysinit application NoCDR');
         $msg = '初期化完了';
@@ -539,6 +546,19 @@ AsteriskのMulticastRTPチャネルを使用するので到達性は保証され
 <hr>
 
     
+EOT;
+
+//無線GW設定
+    $radiogw = AbspFunctions\get_db_item('ABS', 'RADIOGW');
+
+echo <<<EOT
+<h3 id="radiogw">無線GW設定</h3>
+<form action="" method="post">
+    <input type="hidden" name="function" value="radioconf">
+ エンドポイント(カンマ区切り) <input type="text" size="16" name="radiogw" value=$radiogw>
+    <input type="submit" class={$_(ABSPBUTTON)} value="設定">
+</form>
+<hr>
 EOT;
 
 //エリア管理
