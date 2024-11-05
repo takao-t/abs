@@ -61,11 +61,11 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
                     AbspFunctions\put_db_item("ABS/PINFO/$p_peer", 'MAC', $p_macadd);
                 } else {
                     AbspFunctions\del_db_item("ABS/PINFO/$p_peer", 'MAC');
-                    $notice_msg[$p_peer] = '';
+                    //$notice_msg[$p_peer] = '';
                 }
             } else {
                 AbspFunctions\del_db_item("ABS/PINFO/$p_peer", 'MAC');
-                $notice_msg[$p_peer] = '';
+                //$notice_msg[$p_peer] = '';
             }
          }
     }
