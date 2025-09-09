@@ -1,0 +1,227 @@
+・インストール方法
+
+以下はDebian 12(bookworm)ベースの環境でインストールする方法です。Raspberry Piもこの方法です。
+
+まずOSを入れ最新の状態にアップデートしておいてください。(apt -y update, apt -y upgrade)。
+作業は基本的にrootの権限が必要です。sudoしろなどはいちいち説明しませんので、特記なき場合にはroot権限で作業を行ってください。
+当たり前ではありますが、ネットワークの設定等も正しく行っておいてください。特にPBXで使用する場合にはIPアドレスは固定すると思いますので、固定しておいてください。また、ssh等でアクセスできる環境を想定していますので、sshも設定しておいてください。
+
+1. Asteriskのインストール
+
+-インストール手順はVoIp-Info.jpのWikiにもあります。https://www.voip-info.jp/index.php/Asterisk_22#%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB
+-以下をパッケージ追加します。Asteriskのコンパイルに必要です。
+-Raspberry Piのデフォルトインストールならば開発環境はインストールされていますが、以下のコマンドを実行しても、すでに入っているパッケージはそのままなので問題ありません。
+
+ apt -y install build-essential libedit-dev uuid-dev libxml2-dev libncurses-dev libsqlite3-dev sqlite3 libssl-dev subversion git net-tools dnsutils libsrtp2-dev libunbound-dev
+
+-Asteriskのソースをダウンロードします。ここではAsterisk 22を入れます。
+-ABS自体はAsterisk 18でも動作しますが、古いバージョンを入れる理由は特にはないでしょう。
+
+ wget https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-22-current.tar.gz
+
+-参考:githubからcloneしてきてもかまいませんが、ブランチによっては最新版(未リリース)なので注意
+
+-展開します。
+
+ tar zxvf asterisk-22-current.tar.gz
+
+-Asteriskを展開したディレクトリで作業します。
+
+ cd asterisk-22.5.2 (22の最新版が22.5.2の場合)
+
+-configureを実行します
+
+ ./configure --with-jansson-bundled
+
+-もし途中でエラーが出て失敗する場合には何か足りないものがあるはずです。
+
+-makeします。
+
+ make
+
+-完了したらmake install,make samples,make configします
+
+ make install
+ make samples
+ make config
+
+-インストールが完了したら以下のコマンドで asterisk:asterisk のユーザ/グループを登録します
+-応答が要求されたら適当に答えます
+
+ addgroup --gid 5060 asterisk
+ adduser --uid 5060 --gid 5060 asterisk --disabled-password
+
+-ディレクトリとファイルの所有者/グループをasteriskにします
+
+ chown -R asterisk:asterisk /var/log/asterisk
+ chown -R asterisk:asterisk /var/lib/asterisk
+ chown -R asterisk:asterisk /var/spool/asterisk
+ chown -R asterisk:asterisk /usr/lib/asterisk
+ chown -R asterisk:asterisk /etc/asterisk
+
+-Asteriskの実行ユーザ/グループを"asterisk"にします。/etc/default/asterisk ファイルを編集します(Debianの場合)。以下の個所のコメントを外します。
+
+ # Uncomment the following and set them to the user/groups that you
+ # want to run Asterisk as. NOTE: this requires substantial work to
+ # be sure that Asterisk's environment has permission to write the
+ # files required  for  its  operation, including logs, its comm
+ # socket, the asterisk database, etc.
+ AST_USER="asterisk"    <-ここ
+ AST_GROUP="asterisk"   <-ここ
+
+-Asteriskの音声ファイルも日本語化しておきましょう。コンパイルしたディレクトリとは別なディレクトリで以下を実行して日本語音声を入手します。
+
+ git clone https://github.com/takao-t/asterisk-sound-ja.git
+
+-cloneが終わったら、以下のコマンドで音声ファイルをコピーしておきます。
+
+ cp ./asterisk-sound-ja/core-sound-ja.tgz /var/lib/asterisk/sounds/.
+
+-ディレクトリを移動して展開します
+
+ cd /var/lib/asterisk/sounds
+ tar xvf core-sound-ja.tgz
+
+-展開し終わったらcore-sound-ja.tgzは要らないのですが、よほどディスク容量に困ってなければ置いたままでかまいません。
+-オーナ/グループを変更しておきます
+
+ chonw -R asterisk:asterisk /var/lib/asterisk/sounds/ja
+
+
+2. ABSのインストール
+
+-ABS「そのもの」はAsteriskのextenのかたまりなのですが、操作用のWebUI(ABS Panel)が付属するため、以下をインストールします。
+
+ apt install apache2 php php-mbstring php-sqlite3
+
+-githubから適当なディレクトリにcloneします。
+
+ git clone https://github.com/takao-t/abs.git
+
+-cloneしたディレクトリに移動し作業します。
+-まず/etc/asteriskを削除します。samplesで入れたサンプル設定が入っているだけなので通常は問題ないはずですが、もしも自分で設定した何かが入っている場合にはバックアップしてください。
+
+ rm -r /etc/asterisk/*
+
+-ABSのexten類をコピーします
+
+ cp -r exten/* /etc/asterisk/.
+
+-ABSのサウンドファイルをコピーします
+
+ cp sound/abs-sounds-ja.tgz /var/lib/asterisk/sounds/.
+
+-ABSのサウンドファイルを展開しておきます
+
+ cd /var/lib/asterisk/sounds
+ tar xvf abs-sounds-ja.tgz
+
+-/etc/asteriskに移動しファイルの権限を変更します。
+
+ cd /etc/asterisk
+ chown -R asterisk:asterisk *
+
+-初期のpjsip_wizard.confを生成します。pjsip_wizard.confは最初から入っていますが、パスワードが公開されているのと同じなので必ず初期pjsip_wizard.confを生成するようにしてください。
+
+ ./pj_phonegen.sh > pjsip_wizard.conf
+
+-Asteriskを起動します。起動したらCLIで動作していることを確認してください。
+
+ systemctl restart asterisk
+
+-Asteriskが正常に起動されていればAsteriskの設定は一旦ここまでです。
+-次にWebUIのインストールを行います。gitでcloneしたABSのディレクトリに戻ってください。
+-WebUIのトップディレクトリ(URL)を決めます。ここでは http://{IPアドレス}/absp とします。この場合、DebianのApache標準インストールでは/var/www/html/abspとなります。ここにWebUI関連のファイルをコピーします。
+
+ mkdir /var/www/html/absp
+ cp -r panel/* /var/www/html/absp/.
+ chown -R www-data:www-data /var/www/html/absp
+
+-これでほぼ使えるのですが、1点だけ確認しておきます。ABS PanelはAMI経由でAsteriskを操作します。デフォルトのインストールではユーザ名とパスワードが『決め打ち』になっていますが、AMIのbindがlocalhostだけになっているのでサーバを他の用途に使っておらず、ログインユーザもいないようなら問題はないのですが、他にログインユーザがいるような場合にはユーザとパスワードを変更してください。
+-/etc/asterisk/manager.confの次のセクションがWebUI用です。
+
+ ;ABS Panel接続情報
+ [abspadmin]
+ secret = amipass1234
+ deny=0.0.0.0/0.0.0.0
+ permit=127.0.0.0/255.0.0.0
+ read = system,call
+ write = system,all
+
+-この設定内容にあわせて/var/www/html/absp/php/amiauth.phpを修正します。
+
+ <?php
+ 
+ define('AMIUSERNAME', 'abspadmin');
+ define('AMIPASSWORD', 'amipass1234');
+ 
+ ?>
+
+-これで基本のインストールは終わりです。http://{IPアドレス}/abspにアクセスしてください。最初のユーザ登録画面が開きますので、ユーザ名とパスワードを登録してログインしてください。このユーザが最初の管理ユーザとなります。従来はファイルでユーザを管理していたため、最初の管理ユーザの設定はファイルで行う必要がありましたが、新しいWebUIではユーザ情報をAstDBに保存するようにしたため、このようにWebUIだけでユーザの新規登録が可能となっています。もし管理ユーザのパスワードがわからなくなってしまった場合には、AstDBから/ABS/PANELUSER/のキーにあるユーザ名を削除してください。
+
+*CLI> database show ABS/PANELUSER
+/ABS/PANELUSER/admin                                : ======hashed password======
+
+-このような形でユーザ情報が保存されています。
+-つまりAsteriskが動作していないとWebUIは使えません。
+
+
+3. オプション設定
+-ちょっと詳しい人向けの設定(オプション)
+
+-キャッシュ管理
+-新WebUIではセッションの管理を行っています。セッション情報は独自のKeyValue Sroreにキャッシュしていますが、KVSとかっこいい言い方をしても単なるファイルです。ただしAstDBと表現方法に互換のあるKVSを実装しています。基本のキャッシュ先はドキュメントのルート/cacheで、以下のようにセッションファイルと最終アクティビティ時刻が記録されます。
+
+ /var/www/html/absp# ls -l cache/
+ total 8
+ -rw-r--r-- 1 www-data www-data 13 Sep  5 09:19 ABS_PANELUSER_admin-last_activity
+ -rw-r--r-- 1 www-data www-data 34 Sep  5 09:19 ABS_PANELUSER_admin-session_id
+
+-最終アクティビティ時間はWebUIで何かを操作する度に記録されますので、ディスクI/Oやディスクの寿命を気にする場合にはこれをメモリ上に持つことができます。メモリ上に置くにはmemcachedを使用しますので、以下の手順で設定してください。
+
+ apt install memchached php-memcached
+ systemctl restart apache2
+
+-もしWebUIでログインしているなら、まずはログアウトします。ログアウトしてからphp/config.phpを編集します。デフォルトインストールなら以下のようにfileを指定している個所をコメントし、memcachedの設定のコメントを外すと動きます。
+
+ // キャッシュ設定 現在のところセッション情報保存にのみ使用
+ // 設定可能値はfileまたはmemcached
+ // memcached使用時はmemcachedのインストールとPHP拡張が必要
+ //define('CACHE_MODE', 'file');
+ // memcachedを使用する場合は以下の設定が必要
+ define('CACHE_MODE', 'memcached');
+ define('MEMCACHED_HOST', '127.0.0.1');
+ define('MEMCACHED_PORT', 11211)
+
+-動作しているかを確認するにはcache/の下にファイルが作成されておらず、かつWebUIの管理機能->システム設定でユーザ一覧を確認した際に「最終アクティビティ」の時刻が記録されており、何等かの操作をすることでこの時刻が更新されればセッション情報はmemcachedで保持されています。
+-WebUIはセッション情報以外はなるべく「書かない」ようにしてあります。情報はAMIでAstDBから取得しますが、AstDBに対して書き込むのは[設定]等がクリックされた場合だけです。
+-なお、memcachedが使えない場合にはファイルで保存するようにフォールバックします。
+-memcachedはご存じの通りin-memoryのvolatileなデータストアです。WebUIで使用しているのはブラウザのセッション情報だけなので問題にはなりません。またよほど多数のユーザを登録し多数ログインするなど極端なことをしない限りはサイズも問題にはなりません。
+-お勧めの方法ではありますが追加のコンポーネントが必要なことと「わかりやすさ」を優先しているため、デフォルトではfileモードを提供しています。
+
+-ファイル編集
+-WebUIからファイルの生成(トランク設定など)やAsteriskの設定ファイルを編集したい場合には以下の手順で権限類を調整する必要があります。ただし
+
+:Asteriskの設定がよくわかっていること
+:WebUIからAsteriskシステムのファイルを編集するリスク
+:もし他のWebページやコンテンツがある場合にAsteriskの設定が変更されるリスク
+:以下の手順で何をやっているのか理解できる
+
+-これらを理解した上で利用してください。
+
+-ABS PanelというかABS自体はAsteriskのAstDBに設定値を持つことで動作が決定されています。このため『Asteriskの設定ファイルを直接変更する』ということは行いません。例えば内線の割り当てや付け替えのような操作に関してはAsteriskの設定ファイルを触る必要はありません。ですが、トランク設定等、Asteriskの動作に関わる部分は「sshでログインしてファイルを直接編集する」ような「わかっている人が操作する」ことを前提にしています。とはいえ、これは面倒だという人がいるのも事実なのでWebUIにファイル編集機能を持たせてあります。
+
+-DebianではWebサーバはwww-data:www-dataというユーザ/グループで動作しています。Asteriskはここまでの設定であればasterisk:asteriskで動作します。WebUIからAsteriskの設定ファイルを編集させるには、Asteriskグループにwww-dataを所属させます。
+
+ usermod -aG asterisk www-data
+
+-Webサーバを再起動します
+
+ systemctl restart apache2
+
+-/etc/asteriskにグループでの書き込みを許可します
+
+ chmod -R g+w /etc/asterisk
+
+-WebUI(ABS Panel)にログインし、[管理機能]->[システム設定]から「ファイル編集機能」を有効にします。
+-[ツール]->[ファイル編集]でファイル編集機能を試します。新規作成の個所でsample.txt等のファイル名を入れ新規作成し、保存して正しくファイルが作成/編集できることを確認します。

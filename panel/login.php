@@ -1,119 +1,185 @@
-<!doctype html>
+<?php
+ob_start();
+session_start();
+define('ABS_PANEL_INCLUDED', true);
+
+require_once 'php/config.php';
+require_once 'php/astman.php';
+require_once 'php/functions.php';
+require_once 'php/abscache.php';
+
+$mycache = new absCache();
+
+$error_message = '';
+$reason = $_GET['reason'] ?? '';
+
+//ユーザリストを取得(配列リターン)
+$reg_users = AbspFunctions\get_db_family('ABS/PANELUSER');
+if(empty($reg_users)){
+    // ユーザーが一人でもいない場合には登録ページへ
+    header('Location: register.php');
+    exit;
+}
+
+
+if ($reason === 'session_expired') {
+    $error_message = 'セッションがタイムアウトしました。再度ログインしてください。';
+} elseif ($reason === 'concurrent_login') {
+    $error_message = 'このユーザは既に他の場所でログインしています。';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (empty($username) || empty($password)) {
+        $error_message = 'ユーザ名とパスワードを入力してください。';
+    } else {
+        $stored_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $username);
+        
+        if ($stored_hash !== '' && password_verify($password, $stored_hash)) {
+            // --- 同時ログイン制御 (先勝ち) ---
+            $existing_session_id = $mycache->get("ABS/PANELUSER/{$username}", 'session_id');
+            $last_activity_timestamp = $mycache->get("ABS/PANELUSER/{$username}", 'last_activity');
+            
+            $session_timeout_minutes = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
+            $session_lifetime_seconds = (int)$session_timeout_minutes * 60;
+            
+            $is_session_active = false;
+            if (!empty($existing_session_id) && !empty($last_activity_timestamp)) {
+                if ((time() - (int)$last_activity_timestamp) <= $session_lifetime_seconds) {
+                    $is_session_active = true;
+                }
+            }
+
+            if ($is_session_active) {
+                $error_message = 'このユーザは既に他の場所でログインしています。';
+            } else {
+                session_regenerate_id(true); 
+                $new_session_id = session_id();
+                $current_time = time();
+
+                // ログイン情報をキャッシュに保存
+                $mycache->set("ABS/PANELUSER/{$username}", 'session_id', $new_session_id);
+                $mycache->set("ABS/PANELUSER/{$username}", 'last_activity', $current_time);
+
+                $_SESSION['is_logged_in'] = true;
+                $_SESSION['username'] = $username;
+                $_SESSION['last_activity'] = $current_time;
+
+                header('Location: index.php');
+                exit;
+            }
+        } else {
+            $error_message = 'ユーザ名またはパスワードが正しくありません。';
+        }
+    }
+}
+?>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-    <title>ABS Panel</title>
-        <link rel="stylesheet" href="css/pure-min.css">
-        <!--[if lte IE 8]>
-            <link rel="stylesheet" href="css/layouts/side-menu-old-ie.css">
-        <![endif]-->
-        <!--[if gt IE 8]><!-->
-            <link rel="stylesheet" href="css/layouts/side-menu.css">
-        <!--<![endif]-->
-</head>
-<body>
-
-<div>
-    <style scoped>
-
-        .absp-button1 {
-            color: white;
-            border-radius: 6px;
-            font-size: 85%;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-            background: rgb(28, 184, 65);
+    <meta charset="UTF-8">
+    <title>ABSコントロールパネル - ログイン</title>
+    <link rel="stylesheet" href="style.min.css">
+    <style>
+        /* --- ログインページ専用ヘルプモーダル位置調整 --- */
+        #help-modal.help-modal-overlay {
+            position: fixed; /* 画面に固定 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            z-index: 1000;
+            box-sizing: border-box;
         }
-
+        #help-modal .help-modal-content {
+            background-color: var(--surface-color);
+            margin: 0;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
     </style>
-</div>
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <h2 style="position: relative;">
+            ABSコントロールパネル
+            <span id="login-help-icon" class="help-icon" style="position: absolute; right: 0; top: 5px;">?</span>
+        </h2>
+        
+        <?php if ($error_message): ?>
+            <div class="error"><?= htmlspecialchars($error_message, ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
 
-<?php
-if(!isset($uinfolocation)){
-    include 'php/config.php';
-}
+        <form action="login.php" method="post">
+            <div>
+                <label for="username">ユーザ名</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div>
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn">ログイン</button>
+        </form>
+    </div>
 
-$msg_info = '';
+    <!-- ===== ヘルプ用モーダルウィンドウのHTML構造 ===== -->
+    <div id="help-modal" class="help-modal-overlay" style="display: none;">
+        <div class="help-modal-content">
+            <span class="help-modal-close">&times;</span>
+            <div id="help-modal-body">
+                <!-- ヘルプコンテンツがここに挿入される -->
+            </div>
+        </div>
+    </div>
 
-if($_SERVER['REQUEST_METHOD'] === 'POST'){
-    if(isset($_POST['username'])) $uname = $_POST['username'];
-    else $uname = '';
-    if(isset($_POST['password'])) $upass = $_POST['password'];
-    else $upass = '';
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const helpIcon = document.getElementById('login-help-icon');
+    const modal = document.getElementById('help-modal');
+    const modalBody = document.getElementById('help-modal-body');
+    const closeModal = document.querySelector('.help-modal-close');
 
-    $ukey = $uname . ':abspanel:' . $upass;
-    $ukey = trim(md5($ukey));
+    if (!helpIcon || !modal || !closeModal) return;
 
-    $userinfo = $uinfolocation . '/' .  'userinfo.dat';
-    $user_temp = file_get_contents($userinfo);
-    $user_list = explode("\n", $user_temp);
+    // ヘルプアイコンクリック時の処理
+    helpIcon.addEventListener('click', () => {
+        fetch('help/login.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('ヘルプファイルの読み込みに失敗しました。');
+                }
+                return response.text();
+            })
+            .then(html => {
+                modalBody.innerHTML = html;
+                modal.style.display = 'flex';
+            })
+            .catch(error => {
+                modalBody.innerHTML = `<p style="color: #f44336;">${error.message}</p>`;
+                modal.style.display = 'flex';
+            });
+    });
 
-    foreach($user_list as $user_ent){
-      $msg_info = '<font color="red">ログイン失敗</font>';
-      $udata = json_decode($user_ent);
-      if($udata != ''){
-        if($udata->name === $uname){
-          $ufkey = trim($udata->key);
-          if($ufkey === $ukey){
-            @session_start();
-            $_SESSION['absp_session'] = "logged_in";
-            $_SESSION['absp_user'] = $uname;
-            if(strpos($_SERVER['HTTP_REFERER'], 'login.php') !== false)
-              @header('Location: index.php');
-              $msg_info = 'ログインしました';
-            } else {
-              @http_response_code(403);
-              sleep(1);
-            }
-          }
-       }
-    }//end foreach
-}
+    // 閉じるボタンクリック時の処理
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
 
-header('Content-Type: text/html; charset=UTF-8');
-
-echo <<<EOT
-<!DOCTYPE html>
-<title>login</title>
-<center>
-<h3>ABS Panel login</h3>
-<table border=0 class="pure-table">
-<form method="post" action="">
-  <tr>
-    <td>
-      Username :
-    </td>
-    <td>
-      <input type="text" name="username" value="">
-    </td>
-  </tr>
-  <tr>
-   <td>
-      Password : 
-   </td>
-   <td>
-      <input type="password" name="password" value="">
-   </td>
-  </tr>
-  <tr>
-    <td></td>
-    <td>$msg_info</td>
-  </tr>
-  <tr>
-    <td>
-    </td>
-    <td align="right">
-      <input type="hidden" name="token" value="<?=h(generate_token())?>">
-      <input type="submit" value="login">
-    </td>
-  </tr>
-</form>
-</table>
-</center>
-EOT;
-
-?>
+    // モーダルの外側クリック時の処理
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+</script>
 
 </body>
 </html>

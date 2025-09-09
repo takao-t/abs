@@ -1,0 +1,45 @@
+{
+    "model_name": "Panasonic マスター設定",
+    "filename": "Config-Master.cfg",
+    "settings": [
+        {
+            "key": "NTP_SERVER_NAME_1",
+            "label": "NTPサーバー",
+            "type": "text",
+            "default": "server_ip"
+        },
+        {
+            "key": "TIME_ZONE",
+            "label": "タイムゾーン",
+            "type": "select",
+            "default": "JST-9",
+            "options": {
+                "JST-9": "JST-9 (日本標準時)"
+            }
+        },
+        {
+            "key": "MASTER_CONFIG_SERVER_ADDRESS",
+            "label": "プロビジョニングサーバー",
+            "type": "text",
+            "default": "server_ip/pana"
+        },
+        {
+            "key": "VOIP_SIP_REGISTRAR_ADDRESS_1",
+            "label": "レジストラサーバー",
+            "type": "text",
+            "default": "server_ip"
+        },
+        {
+            "key": "VOIP_SIP_PROXY_ADDRESS_1",
+            "label": "プロキシサーバー",
+            "type": "text",
+            "default": "server_ip"
+        },
+        {
+            "key": "VOIP_SIP_PRESENCE_SERVER_ADDRESS_1",
+            "label": "プレゼンスサーバー",
+            "type": "text",
+            "default": "server_ip"
+        }
+    ]
+}

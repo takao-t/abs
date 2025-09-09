@@ -1,0 +1,40 @@
+{
+    "model_name": "KX-HDV230/330/430",
+    "filename_prefix": "Config-KX-HDV",
+    "filename_suffix": "N.cfg",
+    "key_type": "FLEX",
+    "key_count": 24,
+    "layout": {
+        "columns": 2,
+        "pages": 3
+    },
+    "params": {
+        "act": "FLEX_BUTTON_FACILITY_ACT",
+        "arg": "FLEX_BUTTON_FACILITY_ARG",
+        "quick": "FLEX_BUTTON_QUICK_DIAL",
+        "label": "FLEX_BUTTON_LABEL"
+    },
+    "functions": {
+        "none": "", "quick": "クイック", "line": "ライン", "blf": "BLF"
+    },
+    "func_values": {
+        "line": "X_PANASONIC_IPTEL_LINE",
+        "blf": "X_PANASONIC_IPTEL_BLF",
+        "quick": "X_PANASONIC_IPTEL_ONETOUCH"
+    },
+    "dss": {
+        "key_type": "DSS",
+        "key_count": 40,
+        "layout": {
+            "columns": 2,
+            "pages": 2,
+            "key_order_desc": true
+        },
+        "params": {
+            "act": "DSS_BUTTON_FACILITY_ACT",
+            "arg": "DSS_BUTTON_FACILITY_ARG",
+            "quick": "DSS_BUTTON_QUICK_DIAL",
+            "label": "DSS_BUTTON_LABEL"
+        }
+    }
+}

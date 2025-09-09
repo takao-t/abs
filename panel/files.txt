@@ -1,0 +1,21 @@
+・ファイルとディレクトリ
+
+audio/             : 音声ファイルの確認用を置く場合に使用
+cache/             : セッション情報のキャッシュに使用
+help/              : 各ページのヘルプファイル
+index.php          : トップページ&ページドライバ
+internalexten.txt  : 内部の予約内線情報
+login.php          : ログインページ
+logout.php         : ログアウト処理
+main.js            : メインのJavaScript
+menu.php           : メニュー項目(左カラム)と表示するファイルの設定
+menu-structure.php : メニュー構造定義
+pages/             : 各処理のページ
+php/               : 設定ファイル、関数等のPHP
+register.php       : 初期ユーザ登録ページ
+style.css          : スタイルシート(開発用)
+style.min.css      : スタイルシート(本番用)
+switch-theme.js    : テーマ切り替えJavaScript
+
+画面のカラー等を変更したい場合にはstyle.cssを編集し、ミニファイしてstyle.min.cssにしてください。
+ミニファイが必要なければ各PHPを修正してstyle.cssを使うようにしてください。

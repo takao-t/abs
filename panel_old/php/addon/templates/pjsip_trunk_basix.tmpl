@@ -1,0 +1,43 @@
+;トランク設定(Brastel BASIX) ##NUM##
+;
+
+[##TRUNKNAME##]
+type = aor
+contact = sip:##PROXY##
+qualify_frequency = 30
+authenticate_qualify = no
+
+[##TRUNKNAME##]
+type = identify
+endpoint = ##TRUNKNAME##
+match = ##PROXY##
+
+[##TRUNKNAME##]
+type = auth
+auth_type = userpass
+username = ##USERNAME##
+password = ##PASSWORD##
+
+[##TRUNKNAME##]
+type = registration
+transport = transport-udp
+outbound_auth = ##TRUNKNAME##
+server_uri = sip:##PROXY##
+client_uri = sip:##USERNAME##@##IPADDR##
+retry_interval = 60
+contact_user = ##EXTEN##
+
+[##TRUNKNAME##]
+type = endpoint
+context = incoming
+dtmf_mode = inband
+disallow = all
+allow = ulaw
+direct_media = no
+send_pai = yes
+inband_progress = yes
+from_user = ##USERNAME##
+from_domain = ##IPADDR##
+language = ja
+outbound_auth = ##TRUNKNAME##
+aors = ##TRUNKNAME##

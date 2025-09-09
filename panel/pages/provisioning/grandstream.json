@@ -1,0 +1,39 @@
+{
+    "vendor": "Grandstream",
+    "mac_prefixes": ["00:0B:82", "AC:A8:8E", "C0:74:AD"],
+    "links": [
+        {
+            "title": "マスターファイル",
+            "desc": "各機種共通マスターファイルの生成",
+            "page": "prov-gs-master"
+        },
+        {
+            "title": "端末(ピア)情報",
+            "desc": "各電話機のピア情報と内線情報ファイルの生成",
+            "page": "prov-gs-peer"
+        },
+        {
+            "title": "FA端末(ピア)情報",
+            "desc": "FA電話機のピア情報と内線情報ファイルの生成",
+            "page": "prov-gs-fap-peer"
+        },
+        {
+            "title": "GXP2130",
+            "desc": "GXP2130用キー情報生成",
+            "page": "prov-gs-keys",
+            "model": "gxp2130"
+        },
+        {
+            "title": "GXP2135",
+            "desc": "GXP2135用キー情報生成",
+            "page": "prov-gs-keys",
+            "model": "gxp2135"
+        },
+        {
+            "title": "GRP2604P",
+            "desc": "GRP2604P用キー情報生成",
+            "page": "prov-gs-keys",
+            "model": "grp2604p"
+        }
+    ]
+}

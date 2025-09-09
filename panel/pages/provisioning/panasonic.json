@@ -1,0 +1,35 @@
+{
+    "vendor": "パナソニック",
+    "mac_prefixes": ["00:80:F0", "BC:C3:42"],
+    "links": [
+        {
+            "title": "マスターファイル",
+            "desc": "各機種共通マスターファイルの生成",
+            "page": "prov-pana-master"
+        },
+        {
+            "title": "端末(ピア)情報",
+            "desc": "各電話機のピア情報と内線情報ファイルの生成",
+            "page": "prov-pana-peer-generator",
+            "type": "normal"
+        },
+        {
+            "title": "FA端末(ピア)情報",
+            "desc": "FA電話機のピア情報と内線情報ファイルの生成",
+            "page": "prov-pana-peer-generator",
+            "type": "fap"
+        },
+        {
+            "title": "KX-UT136",
+            "desc": "KX-UT136用キー情報生成",
+            "page": "prov-pana-keys",
+            "model": "kxut136"
+        },
+        {
+            "title": "KX-HDV230/330/430",
+            "desc": "KX-HDV230/330/430用キー情報生成",
+            "page": "prov-pana-keys",
+            "model": "kxhdv"
+        }
+    ]
+}

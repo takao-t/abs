@@ -1,0 +1,24 @@
+{
+    "model_name": "KX-UT136N",
+    "filename": "Config-KX-UT136N.cfg",
+    "key_type": "FLEX",
+    "key_count": 24,
+    "layout": {
+        "columns": 2,
+        "key_order_desc": true
+    },
+    "params": {
+        "act": "FLEX_BUTTON_FACILITY_ACT",
+        "arg": "FLEX_BUTTON_FACILITY_ARG",
+        "quick": "FLEX_BUTTON_QUICK_DIAL",
+        "label": "FLEX_BUTTON_FACILITY_LABEL"
+    },
+    "functions": {
+        "none": "", "quick": "クイック", "line": "ライン", "blf": "BLF"
+    },
+    "func_values": {
+        "line": "X_PANASONIC_IPTEL_DN",
+        "blf": "X_PANASONIC_IPTEL_CONTACT",
+        "quick": "X_PANASONIC_IPTEL_ONETOUCH"
+    }
+}
