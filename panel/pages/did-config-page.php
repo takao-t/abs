@@ -217,7 +217,7 @@ $d56_setting = AbspFunctions\get_db_item('ABS', 'D56');
         </select>
     </div>
     <div style="font-size: 0.9em; color: var(--secondary-text-color); margin: 0.5em 0;">
-        着信時のCIDに外線発信用プレフィクスを付加します (ダイヤルイン時はOGP1, キー着信時は*56x)。
+        着信時のCIDに外線発信用プレフィクスを付加します (ダイヤルイン時はプレフィクス1, キー着信時は*56x)。
     </div>
     <div class="form-inline-group">
         <input type="checkbox" name="d56opt" value="on" id="d56opt" <?= ($d56_setting === '1') ? 'checked' : '' ?>>

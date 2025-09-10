@@ -273,7 +273,7 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
     <div style="margin-top: 1em;">
         <button type="submit" class="btn btn-primary">設定変更</button>
     </div>
-    <small>注意: OGPでKEYが指定されている場合にはノーキーシステムは使用されません。</small>
+    <small>注意: プレフィクス設定でKEYが指定されている場合にはノーキーシステムは使用されません。</small>
 </form>
 
 <form action="#d56option" method="post">
