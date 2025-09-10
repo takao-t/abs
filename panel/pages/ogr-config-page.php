@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'ogpupdate':
             for ($i = 1; $i <= 2; $i++) {
                 $p_ogp_num = $_POST["ogp_num_$i"];
-                if (empty($p_ogp_num)) {
+                if ($p_ogp_num === '') {
                     AbspFunctions\del_db_tree("ABS/OGP$i");
                     AbspFunctions\del_db_item('ABS', "OGP$i");
                 } else {
@@ -20,12 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $p_ogp_route_num = $_POST["ogp_route_num_$i"];
                     $p_ogp_ogcid = $_POST["ogp_ogcid_$i"];
                     if (ctype_digit($p_ogp_num)) {
-                        AbspFunctions\put_db_item('ABS', "OGP$i", $p_ogp_num);
+                        AbspFunctions\put_db_item('ABS', "OGP$i", "$p_ogp_num");
                         AbspFunctions\del_db_item("ABS/OGP$i", 'KEY');
                         AbspFunctions\del_db_item("ABS/OGP$i", 'NKS');
-                        AbspFunctions\put_db_item("ABS/OGP$i", $p_ogp_route, ($p_ogp_route == 'NKS') ? "1" : $p_ogp_route_num);
+                        AbspFunctions\put_db_item("ABS/OGP$i", $p_ogp_route, ($p_ogp_route == 'NKS') ? "1" : "$p_ogp_route_num");
                     }
-                    if (empty($p_ogp_ogcid)) {
+                    if ($p_ogp_ogcid === '') {
                         AbspFunctions\del_db_item("ABS/OGP$i", 'OGCID');
                     } elseif (ctype_digit($p_ogp_ogcid)) {
                         AbspFunctions\put_db_item("ABS/OGP$i", 'OGCID', $p_ogp_ogcid);
@@ -120,15 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// (OGP設定は変更なし)
+// OGP設定
 $ogp_settings = [];
 for ($i = 1; $i <= 2; $i++) {
     $ogp_num = AbspFunctions\get_ogp_num($i);
     $ogp_settings[$i] = [
         'num' => $ogp_num,
-        'route' => !empty($ogp_num) ? AbspFunctions\get_ogp_route($i) : 'NKS',
-        'route_num' => !empty($ogp_num) ? AbspFunctions\get_ogp_routenum($i) : '',
-        'ogcid' => !empty($ogp_num) ? AbspFunctions\get_ogp_ogcid($i) : '',
+        'route' => ($ogp_num !== '') ? AbspFunctions\get_ogp_route($i) : 'NKS',
+        'route_num' => ($ogp_num !== '') ? AbspFunctions\get_ogp_routenum($i) : '',
+        'ogcid' => ($ogp_num !== '') ? AbspFunctions\get_ogp_ogcid($i) : '',
     ];
 }
 $aec_codes = AbspFunctions\get_aec_codes();
@@ -192,7 +192,7 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
             <tbody>
                 <?php foreach ($ogp_settings as $i => $ogp): ?>
                 <tr>
-                    <td>OGP<?= $i ?></td>
+                    <td>プレフィクス<?= $i ?></td>
                     <td><input type="text" name="ogp_num_<?= $i ?>" value="<?= htmlspecialchars($ogp['num'], ENT_QUOTES, 'UTF-8') ?>" class="input-xshort"></td>
                     <td>
                         <select name="ogp_route_<?= $i ?>" class="input-em6">
@@ -210,9 +210,11 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
     <div class="form-inline-group" style="margin-top: 1em;">
         <label for="aec_codes">市内局番 (カンマ区切り):</label>
         <input type="text" id="aec_codes" name="aec_codes" value="<?= htmlspecialchars($aec_codes, ENT_QUOTES, 'UTF-8') ?>" class="input-middle">
-        <button type="submit" class="btn btn-primary">設定変更</button>
     </div>
     <small>注意: NKS指定時には経路番号は'1'を指定してください。</small>
+    <div style="margin-top: 1em;">
+        <button type="submit" class="btn btn-primary">プレフィクスと市内局番を設定変更</button>
+    </div>
 </form>
 
 <form action="" method="post">
@@ -231,7 +233,7 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
             <tbody>
                 <?php foreach ($nks_settings as $i => $nks): ?>
                 <tr>
-                    <td>NKS<?= $i ?> (OGP<?= $i ?>に対応)</td>
+                    <td>NKS<?= $i ?> (プレフィクス<?= $i ?>に対応)</td>
                     <td>
                         <select name="nks_tech_<?= $i ?>" class="input-xmiddle">
                             <option value="PJSIP" <?= ($nks['tech'] == 'PJSIP') ? 'selected' : '' ?>>PJSIP</option>
