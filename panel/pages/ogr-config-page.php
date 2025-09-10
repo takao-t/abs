@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             $p_aec_codes = $_POST['aec_codes'];
-            if (empty($p_aec_codes)) {
+            if ($p_aec_codes === '') {
                 AbspFunctions\del_db_item("ABS", "AEC");
             } else {
                 AbspFunctions\put_db_item("ABS", "AEC", $p_aec_codes);
@@ -96,8 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'tpfxadd':
             $p_pfx = trim($_POST['pfx']);
             $p_pfxtrunk = trim($_POST['pfxtrunk']);
-            if (!empty($p_pfx) && !empty($p_pfxtrunk)) {
-                AbspFunctions\put_db_item('ABS/TRUNK/PFX', $p_pfxtrunk, $p_pfx);
+            if ($p_pfx !== '' && !empty($p_pfxtrunk)) {
+                AbspFunctions\put_db_item('ABS/TRUNK/PFX', $p_pfxtrunk, "$p_pfx");
                 $flash_message['text'] = 'トランクプレフィクスを追加しました。';
             } else {
                 $flash_message = ['type' => 'error', 'text' => 'トランク名とプレフィクスは必須です。'];
