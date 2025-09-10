@@ -10,6 +10,7 @@
 ;5060トランスポート
 [transport-rtx]
 type = transport
+protocol = udp
 bind = 0.0.0.0:5060
 local_net = 192.168.0.0/16
 
@@ -26,10 +27,10 @@ match = ##IPADDR##
 
 [##TRUNKNAME##]
 type = registration
-contact = ##EXTEN##
+contact_user = ##EXTEN##
 transport = transport-rtx
 expiration = 3600
-retry_interval = 60
+fatal_retry_interval = 60
 forbidden_retry_interval = 60
 server_uri = sip:##PROXY##
 client_uri = sip:##EXTEN##@##PROXY##
