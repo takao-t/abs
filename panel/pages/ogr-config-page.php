@@ -11,14 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($function) {
         case 'ogpupdate':
             for ($i = 1; $i <= 2; $i++) {
-                $p_ogp_num = $_POST["ogp_num_$i"];
+                $p_ogp_num = (string)$_POST["ogp_num_$i"];
                 if ($p_ogp_num === '') {
                     AbspFunctions\del_db_tree("ABS/OGP$i");
                     AbspFunctions\del_db_item('ABS', "OGP$i");
                 } else {
-                    $p_ogp_route = $_POST["ogp_route_$i"];
-                    $p_ogp_route_num = $_POST["ogp_route_num_$i"];
-                    $p_ogp_ogcid = $_POST["ogp_ogcid_$i"];
+                    $p_ogp_route = (string)$_POST["ogp_route_$i"];
+                    $p_ogp_route_num = (string)$_POST["ogp_route_num_$i"];
+                    $p_ogp_ogcid = (string)$_POST["ogp_ogcid_$i"];
                     if (ctype_digit($p_ogp_num)) {
                         AbspFunctions\put_db_item('ABS', "OGP$i", "$p_ogp_num");
                         AbspFunctions\del_db_item("ABS/OGP$i", 'KEY');
@@ -273,7 +273,7 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
     <div style="margin-top: 1em;">
         <button type="submit" class="btn btn-primary">設定変更</button>
     </div>
-    <small>注意: プレフィクス設定でKEYが指定されている場合にはノーキーシステムは使用されません。</small>
+    <small>注意: OGPでKEYが指定されている場合にはノーキーシステムは使用されません。</small>
 </form>
 
 <form action="#d56option" method="post">
