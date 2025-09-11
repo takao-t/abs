@@ -7,6 +7,7 @@ unset($_SESSION['flash_message']);
 ?>
 <h2>トップページ</h2>
 <p>左のメニューから設定したい項目を選択してください。各メニュー項目の概要は以下で確認できます。</p>
+<p>作業を終了する場合にはログアウトを実行してください。ログアウトしないと一定時間、他の場所からログインできなくなります。</p>
 
 <?php if ($flash_message): ?>
 <div class="notice-message" style="color: <?= $flash_message['type'] === 'error' ? '#f44336' : '#4CAF50' ?>; margin-bottom: 1.5em; font-weight: bold;">
@@ -68,8 +69,12 @@ unset($_SESSION['flash_message']);
         <div class="help-title">ツール</div>
         <div class="help-content">
             <p><strong>ファイル編集:</strong> Asteriskの設定ファイルを直接編集します（危険なため非推奨）。</p>
+            <p><strong>内線ヒント生成:</strong> BLF用の内線hintを生成します。</p>
             <p><strong>トランク設定:</strong> PJSIPトランク用の設定ファイルをテンプレートから生成します。</p>
             <p><strong>電話機設定ファイル:</strong> 電話機用の設定ファイル(プロビジョニング)を生成します。</p>
+            <p><strong>拠点間接続設定:</strong> 拠点間接続(IPアドレス直接指定のみ)の設定を行います。</p>
+            <p><strong>リモート内線設定:</strong> 拠点間接続で相手の内線をローカルな内線番号に割り当てます。</p>
+            <p><strong>バックアップ/リストア:</strong> ABSの設定内容をバックアップ/リストアします。</p>
         </div>
     </div>
 </div>

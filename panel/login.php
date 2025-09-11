@@ -16,9 +16,16 @@ $reason = $_GET['reason'] ?? '';
 //ユーザリストを取得(配列リターン)
 $reg_users = AbspFunctions\get_db_family('ABS/PANELUSER');
 if(empty($reg_users)){
-    // ユーザーが一人でもいない場合には登録ページへ
-    header('Location: register.php');
-    exit;
+    // ユーザリストが取得できない場合Asteriskが実行中かを確認
+    $ast_version = AbspFunctions\exec_cli_command('core show version');
+    if($ast_version === false){
+        $error_message = 'Asteriskが起動していないためログインできまません。システムをチェックしてください。';
+    }
+    else {
+        // ユーザーが一人もいない場合には登録ページへ
+        header('Location: register.php');
+        exit;
+    }
 }
 
 
@@ -32,47 +39,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (empty($username) || empty($password)) {
-        $error_message = 'ユーザ名とパスワードを入力してください。';
-    } else {
-        $stored_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $username);
-        
-        if ($stored_hash !== '' && password_verify($password, $stored_hash)) {
-            // --- 同時ログイン制御 (先勝ち) ---
-            $existing_session_id = $mycache->get("ABS/PANELUSER/{$username}", 'session_id');
-            $last_activity_timestamp = $mycache->get("ABS/PANELUSER/{$username}", 'last_activity');
-            
-            $session_timeout_minutes = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
-            $session_lifetime_seconds = (int)$session_timeout_minutes * 60;
-            
-            $is_session_active = false;
-            if (!empty($existing_session_id) && !empty($last_activity_timestamp)) {
-                if ((time() - (int)$last_activity_timestamp) <= $session_lifetime_seconds) {
-                    $is_session_active = true;
-                }
-            }
-
-            if ($is_session_active) {
-                $error_message = 'このユーザは既に他の場所でログインしています。';
-            } else {
-                session_regenerate_id(true); 
-                $new_session_id = session_id();
-                $current_time = time();
-
-                // ログイン情報をキャッシュに保存
-                $mycache->set("ABS/PANELUSER/{$username}", 'session_id', $new_session_id);
-                $mycache->set("ABS/PANELUSER/{$username}", 'last_activity', $current_time);
-
-                $_SESSION['is_logged_in'] = true;
-                $_SESSION['username'] = $username;
-                $_SESSION['last_activity'] = $current_time;
-
-                header('Location: index.php');
-                exit;
-            }
+    //Asteriskが実行中かを確認 
+    $ast_version = AbspFunctions\exec_cli_command('core show version');
+    if($ast_version !== false){
+        if (empty($username) || empty($password)) {
+            $error_message = 'ユーザ名とパスワードを入力してください。';
         } else {
-            $error_message = 'ユーザ名またはパスワードが正しくありません。';
+            $stored_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $username);
+        
+            if ($stored_hash !== '' && password_verify($password, $stored_hash)) {
+                // --- 同時ログイン制御 (先勝ち) ---
+                $existing_session_id = $mycache->get("ABS/PANELUSER/{$username}", 'session_id');
+                $last_activity_timestamp = $mycache->get("ABS/PANELUSER/{$username}", 'last_activity');
+            
+                $session_timeout_minutes = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
+                $session_lifetime_seconds = (int)$session_timeout_minutes * 60;
+            
+                $is_session_active = false;
+                if (!empty($existing_session_id) && !empty($last_activity_timestamp)) {
+                    if ((time() - (int)$last_activity_timestamp) <= $session_lifetime_seconds) {
+                        $is_session_active = true;
+                    }
+                }
+
+                if ($is_session_active) {
+                    $error_message = 'このユーザは既に他の場所でログインしています。';
+                } else {
+                    session_regenerate_id(true); 
+                    $new_session_id = session_id();
+                    $current_time = time();
+
+                    // ログイン情報をキャッシュに保存
+                    $mycache->set("ABS/PANELUSER/{$username}", 'session_id', $new_session_id);
+                    $mycache->set("ABS/PANELUSER/{$username}", 'last_activity', $current_time);
+
+                    $_SESSION['is_logged_in'] = true;
+                    $_SESSION['username'] = $username;
+                    $_SESSION['last_activity'] = $current_time;
+
+                    header('Location: index.php');
+                    exit;
+                }
+            } else {
+                $error_message = 'ユーザ名またはパスワードが正しくありません。';
+            }
         }
+    } else {
+        $error_message = 'Asteriskが起動していないためログインできまません。システムをチェックしてください。';
     }
 }
 ?>
