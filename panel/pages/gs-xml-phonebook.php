@@ -9,12 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $prefix = $_POST['prefix'] ?? '';
     $digit_threshold = (int)($_POST['digit_threshold'] ?? 8);
 
-    // 入力値の基本的な検証
-    if (!ctype_digit($prefix) && !empty($prefix)) {
-        $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'プレフィクスは数字で入力してください。'];
-        header('Location: index.php?page=gs-xml-phonebook');
-        exit;
-    }
+    // 入力値の基本的な検証(注:*571を使用するために無効化)
+    //if (!empty($prefix)) {
+    //    $_SESSION['flash_message'] = ['type' => 'error', 'text' => 'プレフィクスは数字で入力してください。'];
+    //    header('Location: index.php?page=gs-xml-phonebook');
+    //    exit;
+    //}
 
     // Asterisk DBから電話帳データを取得
     $pb_entries = AbspFunctions\get_db_family('cidname');
@@ -98,7 +98,7 @@ if ($flash_message) {
 <form method="POST" action="index.php?page=gs-xml-phonebook">
     <div class="form-inline-group">
         <label for="prefix">電話帳発信時のプレフィクス:</label>
-        <input type="text" id="prefix" name="prefix" class="input-short3" maxlength="4" pattern="[0-9]*">
+        <input type="text" id="prefix" name="prefix" class="input-short3" maxlength="4">
     </div>
     <div class="form-inline-group" style="margin-top: 1em;">
         <label for="digit_threshold">外線として扱う番号の桁数:</label>
