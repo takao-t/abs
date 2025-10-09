@@ -34,6 +34,12 @@
             "desc": "GRP2604P用キー情報生成",
             "page": "prov-gs-keys",
             "model": "grp2604p"
+        },
+        {
+            "title": "電話帳",
+            "desc": "GS用電話帳XML生成",
+            "page": "gs-xml-phonebook",
+            "model": "none"
         }
     ]
 }

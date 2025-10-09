@@ -103,6 +103,7 @@ $menuConfig = [
         'prov-gs-peer',
         'prov-gs-fap-peer',
         'prov-gs-keys',
+        'gs-xml-phonebook',
         'prov-pana-master',
         'prov-pana-peer-generator',
         'prov-pana-keys',
