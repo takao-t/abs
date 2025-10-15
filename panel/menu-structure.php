@@ -19,6 +19,7 @@ $menuConfig = [
                 ['page' => 'ext-config-page', 'text' => '内線情報設定'],
                 ['page' => 'group-config-page', 'text' => '内線グループ設定'],
                 ['page' => 'fap-config-page', 'text' => 'FAユーザ設定'],
+                ['page' => 'ext-io-page', 'text' => 'エクスポート/インポート'],
             ]
         ],
 
