@@ -23,7 +23,7 @@ function put_db_item($item_name, $key, $param){
         $astman = new AstMan();
         $astman->Login('localhost',AMIUSERNAME, AMIPASSWORD);
         if($param != ''){
-            $retval = $astman->PutDB($item_name, $key, $param);
+            $retval = $astman->PutDB($item_name, $key, "$param");
         } else {
             $retval = $astman->DelDB($item_name, $key);
         }
@@ -588,5 +588,3 @@ function get_aec_codes(){
     $retval = get_db_item("ABS", "AEC");
     return $retval;
 }
-
-?>
