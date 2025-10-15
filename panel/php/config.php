@@ -41,11 +41,11 @@ define('BACKUP_FAMILIES', [
 // キャッシュ設定 現在のところセッション情報保存にのみ使用
 // 設定可能値はfileまたはmemcached
 // memcached使用時はmemcachedのインストールとPHP拡張が必要
-//define('CACHE_MODE', 'file');
+define('CACHE_MODE', 'file');
 // memcachedを使用する場合は以下の設定が必要
-define('CACHE_MODE', 'memcached'); 
-define('MEMCACHED_HOST', '127.0.0.1');
-define('MEMCACHED_PORT', 11211);
+//define('CACHE_MODE', 'memcached'); 
+//define('MEMCACHED_HOST', '127.0.0.1');
+//define('MEMCACHED_PORT', 11211);
 
 //以下は修正しないこと
 $_ = function($str){return $str;};
