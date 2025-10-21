@@ -18,12 +18,13 @@ local_net = 192.168.0.0/16
 ;
 [##TRUNKNAME##]
 type = aor
-contact = sip:##IPADDR##
+contact = sip:##PROXY##
 
 [##TRUNKNAME##]
 type = identify
 endpoint = ##TRUNKNAME##
-match = ##IPADDR##
+match = ##PROXY##
+srv_lookups = no
 
 [##TRUNKNAME##]
 type = registration
@@ -52,3 +53,4 @@ tos_audio = 0xb8
 from_user = ##EXTEN##
 from_domain = ##PROXY##
 aors = ##TRUNKNAME##
+outbound_proxy = sip:##IPADDR##:5060\;lr
