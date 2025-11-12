@@ -18,6 +18,9 @@ if (file_exists($target_file)) {
     $file_error = "設定ファイル ({$target_file}) が見つかりません。";
 }
 
+// 正規表現（Unicode空白・制御文字トリム用）
+$trim_pattern = '/^[\s\p{C}]+|[\s\p{C}]+$/u';
+
 // 通常端末リストの作成
 $normal_peers = [];
 if ($config_data) {
@@ -44,6 +47,9 @@ if ($config_data) {
     }
 }
 
+// inputタグ用のインラインスタイル
+$input_style = "width: 100%; border: none; background-color: transparent; font-family: inherit; font-size: inherit; color: inherit; padding: 0; margin: 0; cursor: text;";
+
 ?>
 <h2>端末(エンドポイント)情報確認</h2>
 
@@ -60,7 +66,7 @@ if ($config_data) {
     <h3>通常端末</h3>
     <p>
        <strong>注意:</strong><br>
-       phone1～phone32は通常の電話機(ハード/ソフトフォン)、phone<?= htmlspecialchars(trim($brphone_min), ENT_QUOTES, 'UTF-8') ?>～phone<?= htmlspecialchars(trim($brphone_max), ENT_QUOTES, 'UTF-8') ?>はブラウザフォン用です。トランスポートが異なるので注意してください。
+       phone1～phone32は通常の電話機(ハード/ソフトフォン)、phone<?= htmlspecialchars(preg_replace($trim_pattern, '', $brphone_min), ENT_QUOTES, 'UTF-8') ?>～phone<?= htmlspecialchars(preg_replace($trim_pattern, '', $brphone_max), ENT_QUOTES, 'UTF-8') ?>はブラウザフォン用です。トランスポートが異なるので注意してください。
     </p>
     <div class="table-container">
         <table class="absp-table">
@@ -70,8 +76,10 @@ if ($config_data) {
             <tbody>
                 <?php foreach($normal_peers as $peer): ?>
                 <tr>
-                    <td><?= htmlspecialchars($peer['name'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($peer['password'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars(preg_replace($trim_pattern, '', $peer['name']), ENT_QUOTES, 'UTF-8') ?></td>
+                    <td>
+                        <input type="text" value="<?= htmlspecialchars(preg_replace($trim_pattern, '', $peer['password']), ENT_QUOTES, 'UTF-8') ?>" readonly style="<?= $input_style ?>">
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -87,8 +95,10 @@ if ($config_data) {
             <tbody>
                 <?php foreach($fap_peers as $peer): ?>
                 <tr>
-                    <td><?= htmlspecialchars(trim($peer['name']), ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars(trim($peer['password']), ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars(preg_replace($trim_pattern, '', $peer['name']), ENT_QUOTES, 'UTF-8') ?></td>
+                    <td>
+                        <input type="text" value="<?= htmlspecialchars(preg_replace($trim_pattern, '', $peer['password']), ENT_QUOTES, 'UTF-8') ?>" readonly style="<?= $input_style ?>">
+                    </td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
