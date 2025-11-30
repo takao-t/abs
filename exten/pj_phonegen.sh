@@ -116,7 +116,7 @@ done
 echo ";ビデオドアホン用(H.264 GS向け)"
 for i in 1 2
 do
-    echo "[doorphone$i](phone)"
+    echo "[doorphone$i](phone-defaults)"
     SALT=`date +%N`
     SECBASE="phone:$SALT:$i"
     SECRET=`echo $SECBASE | md5sum | cut -f1,1 -d' '`
