@@ -1,4 +1,7 @@
 <?php
+
+require_once 'php/config_session.php';
+
 ob_start();
 
 define('ABS_PANEL_INCLUDED', true);

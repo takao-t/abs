@@ -1,5 +1,7 @@
 <?php
 
+require_once 'php/config_session.php';
+
 session_start();
 
 if (isset($_SESSION['username'])) {

@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/config_session.php';
 // --- セキュリティと初期設定 ---
 session_start();
 define('ABS_PANEL_INCLUDED', true);
