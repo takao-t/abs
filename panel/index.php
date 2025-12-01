@@ -11,6 +11,7 @@ require_once 'php/config.php';
 require_once 'php/astman.php';
 require_once 'php/functions.php';
 require_once 'php/abscache.php';
+//require_once 'php/actionlogger.php';
 
 $mycache = new absCache();
 
@@ -132,9 +133,10 @@ if (isset($menuConfig['restricted_pages'][$currentPage])) {
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <title>ABSコントロールパネル</title>
-    <link rel="stylesheet" href="style.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">

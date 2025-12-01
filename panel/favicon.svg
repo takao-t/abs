@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0  0 64 64">
+  <rect x="0" y="0" width="64" height="64" rx="12" ry="12" fill="#e8731a"/>
+  
+  <text x="50%" y="55%" 
+        font-family="Arial, sans-serif" 
+        font-weight="bold" 
+        font-size="24" 
+        text-anchor="middle" 
+        dominant-baseline="middle" 
+        fill="#ffffff">
+    ABS 
+  </text>
+</svg>

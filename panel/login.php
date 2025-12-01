@@ -14,6 +14,7 @@ require_once 'php/config.php';
 require_once 'php/astman.php';
 require_once 'php/functions.php';
 require_once 'php/abscache.php';
+require_once 'php/actionlogger.php';
 
 $mycache = new absCache();
 
@@ -103,6 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['username'] = $username;
                         $_SESSION['last_activity'] = $current_time;
 
+                        //操作ログ
+                        try{
+                            $logger = new ActionLogger();
+                            $logger->Log($username, 'logged-in');
+                        } catch (\Exception $e){
+                            error_log('Failed to record log: ' . $e->getMessage());
+                        }
+
                         header('Location: index.php');
                         exit;
                     }
@@ -132,6 +141,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <meta charset="UTF-8">
     <title>ABSコントロールパネル - ログイン</title>
     <link rel="stylesheet" href="style.min.css">
