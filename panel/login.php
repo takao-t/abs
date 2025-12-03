@@ -103,14 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['username'] = $username;
                         $_SESSION['last_activity'] = $current_time;
 
-                        //操作ログ
-                        try{
-                            $logger = new ActionLogger();
-                            $logger->Log($username, 'logged-in');
-                        } catch (\Exception $e){
-                            error_log('Failed to record log: ' . $e->getMessage());
-                        }
-
                         header('Location: index.php');
                         exit;
                     }
