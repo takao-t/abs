@@ -11,7 +11,6 @@ require_once 'php/config.php';
 require_once 'php/astman.php';
 require_once 'php/functions.php';
 require_once 'php/abscache.php';
-//require_once 'php/actionlogger.php';
 
 $mycache = new absCache();
 
