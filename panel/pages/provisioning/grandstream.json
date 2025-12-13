@@ -1,6 +1,6 @@
 {
     "vendor": "Grandstream",
-    "mac_prefixes": ["00:0B:82", "AC:A8:8E", "C0:74:AD"],
+    "mac_prefixes": ["00:0B:82", "AC:A8:8E", "C0:74:AD", "14:4C:FF", "EC:74:D7"],
     "links": [
         {
             "title": "マスターファイル",
