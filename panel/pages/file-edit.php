@@ -3,8 +3,10 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // 制限するページの場合、直接指定されても読み込まない
-if (AbspFunctions\get_db_item('ABS/PANEL', 'PGRESTRICTED') !== 'NO') {
+if ($ami->getDbItem('ABS/PANEL', 'PGRESTRICTED') !== 'NO') {
     die("File Editor not permitted");
 }
 

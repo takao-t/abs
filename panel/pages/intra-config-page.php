@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 $flash_message = null;
 
@@ -12,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
     switch ($function) {
         case 'iopsetdigits':
             if (isset($_POST['iop_digits'])) {
-                AbspFunctions\put_db_item('ABS/IOP', 'DIGITS', trim($_POST['iop_digits']));
+                $ami->putDbItem('ABS/IOP', 'DIGITS', trim($_POST['iop_digits']));
                 $flash_message = ['type' => 'success', 'text' => '拠点番号の桁数を更新しました。'];
             }
             break;
@@ -25,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
             $p_iop_here_user = trim($_POST['iop_here_user'] ?? '');
             $p_iop_here_pass = trim($_POST['iop_here_pass'] ?? '');
 
-            AbspFunctions\put_db_item('ABS/IOP', 'HERE', $p_iop_here);
-            AbspFunctions\put_db_item("ABS/IOP/$p_iop_here", 'NAME', $p_iop_here_name);
+            $ami->putDbItem('ABS/IOP', 'HERE', $p_iop_here);
+            $ami->putDbItem("ABS/IOP/$p_iop_here", 'NAME', $p_iop_here_name);
 
             $filename = ASTDIR . '/pjsip_trunk_intra_me.conf';
             $fcontent = "[$p_iop_here_node]\n";
@@ -42,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
             // 対向情報削除
             if (isset($_POST['delent'])) {
                 $p_delent = $_POST['delent'];
-                AbspFunctions\del_db_tree("ABS/IOP/$p_delent");
+                $ami->delDbTree("ABS/IOP/$p_delent");
                 $flash_message = ['type' => 'success', 'text' => "拠点[{$p_delent}]を削除しました。"];
             }
             break;
@@ -78,9 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
                 $svfilename = ASTDIR . '/pjsip_trunk_intra_' . $p_iopp_ident . '.conf';
                 file_put_contents($svfilename, $content);
 
-                AbspFunctions\put_db_item("ABS/IOP/$p_iopp_num", 'NAME', $p_iopp_name);
-                AbspFunctions\put_db_item("ABS/IOP/$p_iopp_num", 'TECH', 'PJSIP');
-                AbspFunctions\put_db_item("ABS/IOP/$p_iopp_num", 'TRUNK', $p_iopp_ident);
+                $ami->putDbItem("ABS/IOP/$p_iopp_num", 'NAME', $p_iopp_name);
+                $ami->putDbItem("ABS/IOP/$p_iopp_num", 'TECH', 'PJSIP');
+                $ami->putDbItem("ABS/IOP/$p_iopp_num", 'TRUNK', $p_iopp_ident);
                 
                 $tfnam = basename($svfilename);
                 $flash_message = ['type' => 'success', 'text' => "{$tfnam} に接続情報を保存しました。pjsip.confに #include {$tfnam} を追加してください。"];
@@ -91,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
 
         case 'rgptset':
             // 鳴動パターン設定
-            AbspFunctions\put_db_item('ABS/IOP', 'RGPT', $_POST['rgpt']);
+            $ami->putDbItem('ABS/IOP', 'RGPT', $_POST['rgpt']);
             $flash_message = ['type' => 'success', 'text' => '鳴動パターンを更新しました。'];
             break;
     }
@@ -111,9 +113,9 @@ unset($_SESSION['flash_message']);
 // GET時処理
 
 // --- 自局情報の取得 ---
-$iop_digits = AbspFunctions\get_db_item('ABS/IOP', 'DIGITS') ?? '2';
-$iop_here = AbspFunctions\get_db_item('ABS/IOP', 'HERE') ?? '';
-$iop_here_name = !empty($iop_here) ? AbspFunctions\get_db_item("ABS/IOP/$iop_here", 'NAME') : '';
+$iop_digits = $ami->getDbItem('ABS/IOP', 'DIGITS') ?? '2';
+$iop_here = $ami->getDbItem('ABS/IOP', 'HERE') ?? '';
+$iop_here_name = !empty($iop_here) ? $ami->getDbItem("ABS/IOP/$iop_here", 'NAME') : '';
 
 $iop_here_node = '';
 $iop_here_user = '';
@@ -133,10 +135,10 @@ if (file_exists($me_config_file)) {
 }
 
 // --- 鳴動パターンの取得 ---
-$rgpt = AbspFunctions\get_db_item('ABS/IOP', 'RGPT') ?? '0';
+$rgpt = $ami->getDbItem('ABS/IOP', 'RGPT') ?? '0';
 
 // --- 対向拠点一覧の取得 ---
-$iops_raw = AbspFunctions\get_db_family('ABS/IOP');
+$iops_raw = $ami->getDbFamily('ABS/IOP');
 $iop_list = [];
 foreach ($iops_raw as $line) {
     if (strpos($line, '/') !== false) {

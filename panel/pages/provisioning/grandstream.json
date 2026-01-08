@@ -1,6 +1,6 @@
 {
     "vendor": "Grandstream",
-    "mac_prefixes": ["00:0B:82", "AC:A8:8E", "C0:74:AD", "14:4C:FF", "EC:74:D7"],
+    "mac_prefixes": ["14:4C:ff", "EC:74:D7", "00:0B:82", "AC:A8:8E", "C0:74:AD"],
     "links": [
         {
             "title": "マスターファイル",
@@ -8,14 +8,14 @@
             "page": "prov-gs-master"
         },
         {
-            "title": "端末(ピア)情報",
-            "desc": "各電話機のピア情報と内線情報ファイルの生成",
-            "page": "prov-gs-peer"
+            "title": "端末(エンドポイント)情報",
+            "desc": "各電話機のエンドポイント情報と内線情報ファイルの生成",
+            "page": "prov-gs-endpoint"
         },
         {
-            "title": "FA端末(ピア)情報",
-            "desc": "FA電話機のピア情報と内線情報ファイルの生成",
-            "page": "prov-gs-fap-peer"
+            "title": "FA端末(エンドポイント)情報",
+            "desc": "FA電話機のエンドポイント情報と内線情報ファイルの生成",
+            "page": "prov-gs-fap-endpoint"
         },
         {
             "title": "GXP2130",

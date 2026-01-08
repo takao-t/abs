@@ -3,14 +3,109 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+// =========================================================
+// 設定・定義
+// =========================================================
+
+// IVR処理の選択肢定義
+$ivr_selection = [
+    "ivr-item1"  => "通常着信処理",
+    "ivr-item2"  => "特定内線着信",
+    "ivr-item3"  => "特定キー着信",
+    "ivr-item4"  => "留守番録音",
+    "ivr-item5"  => "保留音",
+    "ivr-item6"  => "エコーバック",
+    "ivr-item7"  => "音声再生",
+    "ivr-item8"  => "音声会議",
+    "ivr-item9"  => "FAX受信",
+    "ivr-item10" => "カスタム2",
+    "ivr-item11" => "カスタム3",
+    "ivr-item12" => "カスタム4",
+];
+
+// =========================================================
+// ロジック関数 (View分離用)
+// =========================================================
+
+/**
+ * IVR処理番号一覧を取得・整形
+ * @param AbspFunctions\AbspManager $ami
+ * @param array $ivr_selection
+ * @return array
+ */
+function fetch_ivr_number_list($ami, $ivr_selection) {
+    $list = [];
+    $db_entries = $ami->getDbFamily('ABS/IVR/NUM'); // 旧 get_db_family
+
+    if (is_array($db_entries)) {
+        foreach ($db_entries as $line) {
+            // "Key : Value" 形式をパース
+            $parts = explode(' : ', $line, 2);
+            $pnum = trim($parts[0]);
+            
+            // 詳細情報の取得
+            // ダイレクト設定があるか確認 (ABS/IVR/DIR/$pnum/CTX)
+            $ivritem = $ami->getDbItem("ABS/IVR/DIR/$pnum", 'CTX');
+            
+            if (!empty($ivritem)) {
+                $list[] = [
+                    'number'    => $pnum,
+                    'type'      => 'ダイレクト',
+                    'item_key'  => $ivritem,
+                    'item_text' => $ivr_selection[$ivritem] ?? '不明',
+                    'value'     => $ami->getDbItem("ABS/IVR/DIR/$pnum", 'VAL'),
+                ];
+            } else {
+                $list[] = [
+                    'number'    => $pnum,
+                    'type'      => 'IVR',
+                    'item_key'  => '',
+                    'item_text' => '',
+                    'value'     => ''
+                ];
+            }
+        }
+    }
+    // 番号順にソート（必要に応じて）
+    ksort($list);
+    return $list;
+}
+
+/**
+ * IVRメニュー項目一覧(トーン0-9)を取得・整形
+ * @param AbspFunctions\AbspManager $ami
+ * @param array $ivr_selection
+ * @return array
+ */
+function fetch_ivr_menu_list($ami, $ivr_selection) {
+    $list = [];
+    for ($i = 0; $i <= 9; $i++) {
+        $ivritem = $ami->getDbItem("ABS/IVR/MENU/$i", 'CTX');
+        if (!empty($ivritem)) {
+            $list[] = [
+                'tone'      => $i,
+                'item_key'  => $ivritem,
+                'item_text' => $ivr_selection[$ivritem] ?? '不明',
+                'value'     => $ami->getDbItem("ABS/IVR/MENU/$i", 'VAL'),
+            ];
+        }
+    }
+    return $list;
+}
+
+// =========================================================
 // キャンセル処理
+// =========================================================
 if (isset($_GET['action']) && $_GET['action'] === 'cancel_menu_edit') {
     unset($_SESSION['edit_menu_data']);
-    // URLからクエリパラメータを削除してリダイレクト
+    unset($_SESSION['edit_number_data']); // ナンバー側のキャンセルも考慮
     header('Location: index.php?page=ivr-config-page');
     exit;
 }
+
+// =========================================================
 // POST時処理
+// =========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
     $function = $_POST['function'] ?? '';
@@ -20,10 +115,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'add_number':
         case 'update_number':
             $p_ivrnumber = trim($_POST['ivrnumber'] ?? '');
-            $p_ivrtype = $_POST['ivrtype'] ?? 'ivr';
-            $p_ivritem = $_POST['ivritem'] ?? '';
-            $p_ivrvalue = trim($_POST['ivrvalue'] ?? '');
-            $is_valid = true;
+            $p_ivrtype   = $_POST['ivrtype'] ?? 'ivr';
+            $p_ivritem   = $_POST['ivritem'] ?? '';
+            $p_ivrvalue  = trim($_POST['ivrvalue'] ?? '');
+            $is_valid    = true;
 
             if (empty($p_ivrnumber)) {
                 $flash_message = ['type' => 'error', 'text' => '着信番号は必須です。'];
@@ -34,14 +129,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($is_valid) {
-                AbspFunctions\put_db_item("ABS/IVR/NUM", $p_ivrnumber, "YES");
+                // 登録 (putDbItem)
+                $ami->putDbItem("ABS/IVR/NUM", $p_ivrnumber, "YES");
+                
                 if ($p_ivrtype == "direct" && !empty($p_ivritem)) {
-                    AbspFunctions\put_db_item("ABS/IVR/DIR/$p_ivrnumber", "CTX", $p_ivritem);
-                    AbspFunctions\put_db_item("ABS/IVR/DIR/$p_ivrnumber", "VAL", $p_ivrvalue);
+                    // ダイレクト設定
+                    $ami->putDbItem("ABS/IVR/DIR/$p_ivrnumber", "CTX", $p_ivritem);
+                    $ami->putDbItem("ABS/IVR/DIR/$p_ivrnumber", "VAL", $p_ivrvalue);
                 } else {
-                    AbspFunctions\del_db_tree("ABS/IVR/DIR/$p_ivrnumber");
+                    // IVRの場合はダイレクト設定ツリーを削除 (delDbTreeItem)
+                    $ami->delDbTreeItem("ABS/IVR/DIR/$p_ivrnumber");
                 }
-                $flash_message['text'] = ($function == 'add_number') ? "IVR処理番号 {$p_ivrnumber} を追加しました。" : "IVR処理番号 {$p_ivrnumber} を更新しました。";
+                
+                $action_text = ($function == 'add_number') ? "追加" : "更新";
+                $flash_message['text'] = "IVR処理番号 {$p_ivrnumber} を{$action_text}しました。";
             } else {
                 $_SESSION['form_data_number'] = $_POST;
             }
@@ -50,8 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'delete_number':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_ivrnumber = $_POST['d_ivrnumber'];
-                AbspFunctions\del_db_item("ABS/IVR/NUM", $p_d_ivrnumber);
-                AbspFunctions\del_db_tree("ABS/IVR/DIR/$p_d_ivrnumber");
+                // 削除 (delDbItem, delDbTreeItem)
+                $ami->delDbItem("ABS/IVR/NUM", $p_d_ivrnumber);
+                $ami->delDbTreeItem("ABS/IVR/DIR/$p_d_ivrnumber");
                 $flash_message['text'] = "IVR処理番号 {$p_d_ivrnumber} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
@@ -66,14 +168,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // --- IVRメニュー項目 ---
         case 'add_menu':
         case 'update_menu':
-            $p_tone = $_POST['tone'] ?? '';
-            $p_ivritem = $_POST['ivritem'] ?? '';
+            $p_tone     = $_POST['tone'] ?? '';
+            $p_ivritem  = $_POST['ivritem'] ?? '';
             $p_ivrvalue = trim($_POST['ivrvalue'] ?? '');
 
             if ($p_tone !== '' && !empty($p_ivritem)) {
-                AbspFunctions\put_db_item("ABS/IVR/MENU/$p_tone", "CTX", $p_ivritem);
-                AbspFunctions\put_db_item("ABS/IVR/MENU/$p_tone", "VAL", $p_ivrvalue);
-                 $flash_message['text'] = ($function == 'add_menu') ? "メニュー項目（トーン {$p_tone}）を追加しました。" : "メニュー項目（トーン {$p_tone}）を更新しました。";
+                $ami->putDbItem("ABS/IVR/MENU/$p_tone", "CTX", $p_ivritem);
+                $ami->putDbItem("ABS/IVR/MENU/$p_tone", "VAL", $p_ivrvalue);
+                
+                $action_text = ($function == 'add_menu') ? "追加" : "更新";
+                $flash_message['text'] = "メニュー項目（トーン {$p_tone}）を{$action_text}しました。";
             } else {
                  $flash_message = ['type' => 'error', 'text' => 'トーンと処理は必須です。'];
                  $_SESSION['form_data_menu'] = $_POST;
@@ -83,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'delete_menu':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_tone = $_POST['d_tone'];
-                AbspFunctions\del_db_tree("ABS/IVR/MENU/$p_d_tone");
+                $ami->delDbTreeItem("ABS/IVR/MENU/$p_d_tone");
                 $flash_message['text'] = "メニュー項目（トーン {$p_d_tone}）を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
@@ -98,13 +202,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // --- その他設定 ---
         case 'sftimeset':
             $p_sftim = ctype_digit($_POST['sfts'] ?? '') ? $_POST['sfts'] : '300';
-            AbspFunctions\put_db_item("ABS/IVR", "TIM", $p_sftim);
+            $ami->putDbItem("ABS/IVR", "TIM", $p_sftim);
             $flash_message['text'] = 'セーフティタイマを設定しました。';
             break;
 
         case 'rpinset':
             $p_rpin = ctype_digit($_POST['rpin'] ?? '') ? $_POST['rpin'] : '0000';
-            AbspFunctions\put_db_item("ABS/IVR", "RPIN", $p_rpin);
+            $ami->putDbItem("ABS/IVR", "RPIN", $p_rpin);
             $flash_message['text'] = 'メニュー音声録音PINを設定しました。';
             break;
     }
@@ -116,87 +220,49 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// GET時処理
+// =========================================================
+// GET時処理 (View用データの準備)
+// =========================================================
 
-// 音声フォーマット変換
+// 音声フォーマット変換 (既存動作維持)
 exec('audio/convert.sh abs-ivrmenu > /dev/null 2>&1');
 
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// IVR処理の選択肢
-$ivr_selection = [
-    "ivr-item1" => "通常着信処理", "ivr-item2" => "特定内線着信", "ivr-item3" => "特定キー着信",
-    "ivr-item4" => "留守番録音", "ivr-item5" => "保留音", "ivr-item6" => "エコーバック",
-    "ivr-item7" => "音声再生", "ivr-item8" => "音声会議", "ivr-item9" => "FAX受信",
-    "ivr-item10" => "カスタム2", "ivr-item11" => "カスタム3", "ivr-item12" => "カスタム4",
-];
-$ivr_opt_list_html = "";
-foreach ($ivr_selection as $key => $value) {
-    $ivr_opt_list_html .= "<option value=\"{$key}\">{$value}</option>\n";
-}
+// --- フォーム初期値の復元 ---
 
-// --- IVR処理番号フォームの準備 ---
+// IVR処理番号フォーム
 $form_defaults_number = ['ivrnumber' => '', 'ivrtype' => 'ivr', 'ivritem' => '', 'ivrvalue' => ''];
 $form_values_number = $_SESSION['form_data_number'] ?? $form_defaults_number;
 unset($_SESSION['form_data_number']);
 $is_edit_mode_number = false;
+
 if (isset($_SESSION['edit_number_data'])) {
     $is_edit_mode_number = true;
     $form_values_number = array_merge($form_defaults_number, $_SESSION['edit_number_data']);
     unset($_SESSION['edit_number_data']);
 }
 
-// --- IVR処理番号一覧の取得 ---
-$number_list = [];
-$db_entries = AbspFunctions\get_db_family('ABS/IVR/NUM');
-if (is_array($db_entries)) {
-    foreach ($db_entries as $line) {
-        list($pnum, ) = explode(' : ', $line, 2);
-        $pnum = trim($pnum);
-        $ivritem = AbspFunctions\get_db_item("ABS/IVR/DIR/$pnum", 'CTX');
-        if (!empty($ivritem)) {
-            $number_list[] = [
-                'number' => $pnum,
-                'type' => 'ダイレクト',
-                'item_key' => $ivritem,
-                'item_text' => $ivr_selection[$ivritem] ?? '不明',
-                'value' => AbspFunctions\get_db_item("ABS/IVR/DIR/$pnum", 'VAL'),
-            ];
-        } else {
-            $number_list[] = ['number' => $pnum, 'type' => 'IVR', 'item_key' => '', 'item_text' => '', 'value' => ''];
-        }
-    }
-}
-
-// --- IVRメニュー項目フォームの準備 ---
+// IVRメニュー項目フォーム
 $form_defaults_menu = ['tone' => '', 'ivritem' => '', 'ivrvalue' => ''];
 $form_values_menu = $_SESSION['form_data_menu'] ?? $form_defaults_menu;
 unset($_SESSION['form_data_menu']);
 $is_edit_mode_menu = false;
+
 if (isset($_SESSION['edit_menu_data'])) {
     $is_edit_mode_menu = true;
     $form_values_menu = array_merge($form_defaults_menu, $_SESSION['edit_menu_data']);
     unset($_SESSION['edit_menu_data']);
 }
 
-// --- IVRメニュー項目一覧の取得 ---
-$menu_list = [];
-for ($i = 0; $i <= 9; $i++) {
-    $ivritem = AbspFunctions\get_db_item("ABS/IVR/MENU/$i", 'CTX');
-    if (!empty($ivritem)) {
-        $menu_list[] = [
-            'tone' => $i,
-            'item_key' => $ivritem,
-            'item_text' => $ivr_selection[$ivritem] ?? '不明',
-            'value' => AbspFunctions\get_db_item("ABS/IVR/MENU/$i", 'VAL'),
-        ];
-    }
-}
+// --- リストデータの取得 (ロジック分離) ---
+$number_list = fetch_ivr_number_list($ami, $ivr_selection);
+$menu_list   = fetch_ivr_menu_list($ami, $ivr_selection);
 
 // --- その他設定の取得 ---
-$sft_setting = AbspFunctions\get_db_item("ABS/IVR", "TIM") ?: '300';
-$rpin_setting = AbspFunctions\get_db_item("ABS/IVR", "RPIN") ?: '0000';
+$sft_setting = $ami->getDbItem("ABS/IVR", "TIM") ?: '300';
+$rpin_setting = $ami->getDbItem("ABS/IVR", "RPIN") ?: '0000';
 
 ?>
 <h2>IVR設定</h2>
@@ -207,11 +273,11 @@ $rpin_setting = AbspFunctions\get_db_item("ABS/IVR", "RPIN") ?: '0000';
 </div>
 <?php endif; ?>
 
-
 <h3 id="number-list">IVR処理番号設定</h3>
 <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
     ここで指定した着信番号への着信のみがIVR処理の対象となります。「any」を指定すると全着信が対象です。
 </p>
+
 <form action="" method="POST" id="number-form">
     <input type="hidden" name="function" value="<?= $is_edit_mode_number ? 'update_number' : 'add_number' ?>">
     <div class="form-inline-group">
@@ -301,11 +367,13 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
+<hr>
 
 <h3 id="menu-list">IVRメニュー項目設定</h3>
 <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
     着信者がダイヤルした番号（トーン）に応じた処理を割り当てます。
 </p>
+
 <form action="" method="POST">
     <input type="hidden" name="function" value="<?= $is_edit_mode_menu ? 'update_menu' : 'add_menu' ?>">
     <div class="form-inline-group">
@@ -315,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <option value="<?= $i ?>" <?= ((string)$form_values_menu['tone'] === (string)$i) ? 'selected' : '' ?>><?= $i ?></option>
             <?php endfor; ?>
         </select>
-        <?php if ($is_edit_mode_menu): // disabledなselectの値はPOSTされないため、hiddenで送信 ?>
+        <?php if ($is_edit_mode_menu): ?>
         <input type="hidden" name="tone" value="<?= htmlspecialchars($form_values_menu['tone'], ENT_QUOTES, 'UTF-8') ?>">
         <?php endif; ?>
 
@@ -374,6 +442,8 @@ document.addEventListener('DOMContentLoaded', function() {
         </tbody>
     </table>
 </div>
+
+<hr>
 
 <h3>その他設定</h3>
 <form action="" method="POST" class="form-inline-group" style="margin-bottom: 1.5em;">

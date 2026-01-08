@@ -3,6 +3,9 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+// index.php で生成された $ami インスタンスを利用
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
@@ -11,23 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     switch ($function) {
         case 'cllog': // 着信ログ設定
             if (isset($_POST['clogsw']) && $_POST['clogsw'] === 'on') {
-                AbspFunctions\put_db_item('ABS', 'ILOG', '1');
+                $ami->putDbItem('ABS', 'ILOG', '1');
             } else {
-                AbspFunctions\del_db_item('ABS', 'ILOG');
+                $ami->delDbItem('ABS', 'ILOG');
             }
             break;
 
         case 'bllog': // 拒否ログ設定
             if (isset($_POST['blogsw']) && $_POST['blogsw'] === 'on') {
-                AbspFunctions\put_db_item('ABS/BLC', 'LOG', '1');
+                $ami->putDbItem('ABS/BLC', 'LOG', '1');
             } else {
-                AbspFunctions\del_db_item('ABS/BLC', 'LOG');
+                $ami->delDbItem('ABS/BLC', 'LOG');
             }
             break;
 
         case 'dologrot': // ログ・ローテーション実行
             if (isset($_POST['logrchk']) && $_POST['logrchk'] === 'YES') {
-                AbspFunctions\exec_cli_command('channel originate Local/s@create-logdb application NoCDR');
+                // CLIコマンド経由でローテーション実行
+                $ami->execCliCommand('channel originate Local/s@create-logdb application NoCDR');
                 $flash_message['text'] = "ローテーションを実行しました。";
             } else {
                  $flash_message = ['type' => 'error', 'text' => '実行するにはチェックボックスをオンにしてください。'];
@@ -37,9 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'logverctl': // ログバージョン切り替え
             $p_dbver = trim($_POST['dbver'] ?? '');
             if ($p_dbver !== '' && ctype_digit($p_dbver)) {
-                AbspFunctions\put_db_item('ABS', 'CLOGVER', $p_dbver);
+                $ami->putDbItem('ABS', 'CLOGVER', $p_dbver);
             } else {
-                AbspFunctions\del_db_item('ABS', 'CLOGVER'); // 空が選択されたら現在ログ
+                // 空が選択されたら現在ログ
+                $ami->delDbItem('ABS', 'CLOGVER');
             }
             break;
     }
@@ -55,12 +60,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// 設定値の取得
-$clogver_setting = AbspFunctions\get_db_item('ABS', 'CLOGVER') ?: '';
-$clogsw_setting = AbspFunctions\get_db_item('ABS', 'ILOG') === '1';
-$blogsw_setting = AbspFunctions\get_db_item('ABS/BLC', 'LOG') === '1';
+// 設定値の取得 (AMI経由)
+$clogver_setting = $ami->getDbItem('ABS', 'CLOGVER') ?: '';
+$clogsw_setting  = $ami->getDbItem('ABS', 'ILOG') === '1';
+$blogsw_setting  = $ami->getDbItem('ABS/BLC', 'LOG') === '1';
 
-// ログ概要の取得
+// ログ概要の取得 (SQLite直接アクセス)
+// ※ログの中身自体はAMIではなくファイルシステム上のSQLiteを参照するため、ここは変更なし
 $log_summary_list = [];
 $dbfile_base = CLOGDB; // config.phpで定義
 
@@ -76,6 +82,7 @@ for ($i = 0; $i < 10; $i++) {
     if (file_exists($dbfile)) {
         try {
             $logdb = new SQLite3($dbfile, SQLITE3_OPEN_READONLY);
+            // ビジー待機を防ぐためタイムアウト設定等は環境依存ですが、参照のみなのでそのまま
             $count_total = $logdb->querySingle("SELECT count(*) FROM abslog");
 
             if ($count_total > 0) {

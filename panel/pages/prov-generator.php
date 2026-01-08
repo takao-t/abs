@@ -67,5 +67,5 @@ if ($json_files) {
 
 <h3 style="font-size: 1em; color: var(--secondary-text-color);">MACアドレス ベンダーコードについて</h3>
 <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
-    端末(ピア)情報を生成する際、対象ベンダーの一覧に電話機が表示されない場合は、<code>pages/provisioning/</code>内の各JSONファイルにある<code>mac_prefixes</code>のリストを編集してください。
+    端末(エンドポイント)情報を生成する際、対象ベンダーの一覧に電話機が表示されない場合は、<code>pages/provisioning/</code>内の各JSONファイルにある<code>mac_prefixes</code>のリストを編集してください。
 </p>

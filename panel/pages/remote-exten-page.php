@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
     $function = $_POST['function'];
@@ -27,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
                 $is_valid = false;
             } else {
                 // 内線番号の重複チェック
-                $existing_peer = AbspFunctions\get_db_item('ABS/EXT', $p_localexten);
-                if ($existing_peer !== '') {
+                $existing_endpoint = $ami->getDbItem('ABS/EXT', $p_localexten);
+                if ($existing_endpoint !== '') {
                     $error_msg = "内線番号[{$p_localexten}]は既に使用されています。";
                     $is_valid = false;
                 }
@@ -36,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
             
             if ($is_valid) {
                 $remote_exten = 'R' . $p_iopnum . $p_iopexten;
-                AbspFunctions\put_db_item('ABS/EXT', $p_localexten, $remote_exten);
+                $ami->putDbItem('ABS/EXT', $p_localexten, $remote_exten);
                 $_SESSION['flash_message'] = ['type' => 'success', 'text' => "リモート内線[{$p_localexten}]を登録しました。"];
             } else {
                 $_SESSION['flash_message'] = ['type' => 'error', 'text' => $error_msg];
@@ -48,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
             $deleted_count = 0;
             if (isset($_POST['delete_exts']) && is_array($_POST['delete_exts'])) {
                 foreach ($_POST['delete_exts'] as $exten_to_delete) {
-                    AbspFunctions\del_db_item('ABS/EXT', $exten_to_delete);
+                    $ami->delDbItem('ABS/EXT', $exten_to_delete);
                     $deleted_count++;
                 }
             }
@@ -69,8 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function'])) {
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-$iop_entries = AbspFunctions\get_db_family('ABS/IOP');
-$here_iop_num = AbspFunctions\get_db_item('ABS/IOP', 'HERE');
+$iop_entries = $ami->getDbFamily('ABS/IOP');
+$here_iop_num = $ami->getDbItem('ABS/IOP', 'HERE');
 $iop_options = [];
 foreach ($iop_entries as $line) {
     if (strpos($line, "/NAME") === false) continue;
@@ -85,23 +87,23 @@ foreach ($iop_entries as $line) {
 }
 ksort($iop_options);
 
-$all_extens = AbspFunctions\get_db_family('ABS/EXT');
-$iop_digits = AbspFunctions\get_db_item('ABS/IOP', 'DIGITS') ?? 2; // デフォルトは2桁
+$all_extens = $ami->getDbFamily('ABS/EXT');
+$iop_digits = $ami->getDbItem('ABS/IOP', 'DIGITS') ?? 2; // デフォルトは2桁
 $remote_extens = [];
 
 foreach ($all_extens as $line) {
     if (strpos($line, "/") !== false) continue; // サブキーを持つエントリは除外
     
-    list($exten, $peer) = explode(":", $line, 2);
+    list($exten, $endpoint) = explode(":", $line, 2);
     $exten = trim($exten);
-    $peer = trim($peer);
+    $endpoint = trim($endpoint);
 
     // 'R'で始まるものだけをリモート内線として抽出
-    if (strpos($peer, "R") === 0) {
+    if (strpos($endpoint, "R") === 0) {
         $remote_extens[] = [
             'exten' => $exten,
-            'iop_site' => substr($peer, 1, $iop_digits),
-            'iop_exten' => substr($peer, 1 + $iop_digits)
+            'iop_site' => substr($endpoint, 1, $iop_digits),
+            'iop_exten' => substr($endpoint, 1 + $iop_digits)
         ];
     }
 }

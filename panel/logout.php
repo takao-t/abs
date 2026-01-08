@@ -7,8 +7,6 @@ session_start();
 if (isset($_SESSION['username'])) {
     // ABSのファンクション類を読み込み
     require_once 'php/config.php';
-    require_once 'php/astman.php';
-    require_once 'php/functions.php';
     require_once 'php/abscache.php';
     $username = $_SESSION['username'];
     $mycache = new absCache();

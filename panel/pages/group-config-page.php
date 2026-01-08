@@ -1,13 +1,31 @@
 <?php
+/**
+ * group-config-page.php
+ * * 内線グループ設定ページ
+ * * Refactored for AbspManager Class
+ */
+
 if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
-$notice_msg_g = [];
-$notice_msg_p = [];
+global $ami;
+global $max_group, $max_pgroup;
+
+// セッションからメッセージを復元 (GET時)
+$notice_msg_g = $_SESSION['notice_msg_g'] ?? [];
+$notice_msg_p = $_SESSION['notice_msg_p'] ?? [];
+
+// 一度表示したらクリア
+unset($_SESSION['notice_msg_g']);
+unset($_SESSION['notice_msg_p']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $message = '';
+    
+    // 保存用配列を初期化 (上書きされないように注意)
+    // 実際にはリダイレクトするので、ここで処理した結果をSESSIONに入れる
+    $new_notice_msg_g = [];
+    $new_notice_msg_p = [];
 
     // ===== 内線グループ設定の処理 =====
 
@@ -23,24 +41,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $p_bnl    = $_POST['bnl'][$p_grp] ?? '0';
         $p_bnt    = $_POST['bnt'][$p_grp] ?? '';
 
-        $group_info_set = [ 'member' => $p_member, 'group' => $p_grp, 'mode' => $p_mode, 'exten' => $p_exten, 'timeout' => $p_timeout, 'ovr' => $p_ovr, 'bnl' => $p_bnl, 'bnt' => $p_bnt ];
+        $group_info_set = [ 
+            'member' => $p_member, 
+            'group' => $p_grp, 
+            'mode' => $p_mode, 
+            'exten' => $p_exten, 
+            'timeout' => $p_timeout, 
+            'ovr' => $p_ovr, 
+            'bnl' => $p_bnl, 
+            'bnt' => $p_bnt 
+        ];
 
         // FDとの重複チェック
         $e_exists = false;
         if (trim($p_exten) !== '') {
-            $entry = AbspFunctions\get_db_family('ABS/FAP/UID');
+            $entry = $ami->getFamilyDB('ABS/FAP/UID');
             if (is_array($entry)) {
                 foreach ($entry as $line) {
-                    list($uid, $ent) = explode('/', $line, 2);
-                    list($cat, $val) = explode(':', $ent, 2);
-                    if (trim($cat) == 'EXT' && trim($val) == $p_exten) { $e_exists = true; break; }
+                    // "UID/KEY : VALUE" 形式をパース
+                    $parts = explode('/', $line, 2);
+                    if (count($parts) < 2) continue;
+                    
+                    $remain = $parts[1]; // KEY : VALUE
+                    list($cat_part, $val_part) = explode(':', $remain, 2);
+                    
+                    if (trim($cat_part) == 'EXT' && trim($val_part) == $p_exten) { 
+                        $e_exists = true; 
+                        break; 
+                    }
                 }
             }
         }
+
         if ($e_exists) {
-            $notice_msg_g[$p_grp] = "エラー: 内線番号がFDと重複";
+            $new_notice_msg_g[$p_grp] = "エラー: 内線番号がFDと重複";
         } else {
-            $notice_msg_g[$p_grp] = AbspFunctions\set_group_info($group_info_set);
+            $new_notice_msg_g[$p_grp] = $ami->setGroupInfo($group_info_set);
         }
     }
     // 一括保存ボタンが押された場合
@@ -48,21 +84,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $p_members = $_POST['grp_member'] ?? [];
         $p_extens  = $_POST['exten'] ?? [];
 
+        // FD内線リスト取得
         $fd_extens = [];
-        // ... 一括保存時の重複チェックロジックをここに配置) ...
+        $entry = $ami->getFamilyDB('ABS/FAP/UID');
+        if (is_array($entry)) {
+            foreach ($entry as $line) {
+                $parts = explode('/', $line, 2);
+                if (count($parts) < 2) continue;
+                list($cat_part, $val_part) = explode(':', $parts[1], 2);
+                if (trim($cat_part) == 'EXT') {
+                    $fd_extens[] = trim($val_part);
+                }
+            }
+        }
 
         foreach ($p_members as $grp_id => $member) {
+            $p_exten = $_POST['exten'][$grp_id] ?? '';
+            
+            // 重複チェック
+            if (trim($p_exten) !== '' && in_array(trim($p_exten), $fd_extens)) {
+                 $new_notice_msg_g[$grp_id] = "エラー: 内線番号がFDと重複";
+                 continue;
+            }
+
             $group_info_set = [
                 'member'  => $member,
                 'group'   => $grp_id,
                 'mode'    => $_POST['mode'][$grp_id] ?? 'RA',
-                'exten'   => $_POST['exten'][$grp_id] ?? '',
+                'exten'   => $p_exten,
                 'timeout' => $_POST['timeout'][$grp_id] ?? '',
                 'ovr'     => $_POST['ovr'][$grp_id] ?? '0',
                 'bnl'     => $_POST['bnl'][$grp_id] ?? '0',
                 'bnt'     => $_POST['bnt'][$grp_id] ?? '',
             ];
-            $notice_msg_g[$grp_id] = AbspFunctions\set_group_info($group_info_set);
+            $new_notice_msg_g[$grp_id] = $ami->setGroupInfo($group_info_set);
         }
     }
 
@@ -72,22 +127,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_pgrp'])) {
         $p_pgrp = key($_POST['update_pgrp']);
         $p_member = $_POST['pgrp_member'][$p_pgrp] ?? '';
-        $notice_msg_p[$p_pgrp] = AbspFunctions\set_pgrp_member($p_pgrp, $p_member);
+        $new_notice_msg_p[$p_pgrp] = $ami->setPgrpMember($p_pgrp, $p_member);
     }
     // 一括保存ボタンが押された場合
     elseif (isset($_POST['update_all_pgrps'])) {
         $p_members = $_POST['pgrp_member'] ?? [];
         foreach ($p_members as $pgrp_id => $member) {
-            $notice_msg_p[$pgrp_id] = AbspFunctions\set_pgrp_member($pgrp_id, $member);
+            $new_notice_msg_p[$pgrp_id] = $ami->setPgrpMember($pgrp_id, $member);
         }
     }
+
+    // セッションに保存してリダイレクト
+    $_SESSION['notice_msg_g'] = $new_notice_msg_g;
+    $_SESSION['notice_msg_p'] = $new_notice_msg_p;
+
     header('Location: index.php?page=group-config-page');
     exit;
-
 }
 
-$flash_message = $_SESSION['flash_message'] ?? '';
-unset($_SESSION['flash_message']);
 ?>
 <h2>内線グループ設定</h2>
 
@@ -110,7 +167,9 @@ unset($_SESSION['flash_message']);
     <tbody>
         <?php for ($i = 1; $i <= $max_group; $i++): ?>
             <?php
-            $group_info = AbspFunctions\get_group_info($i);
+            // クラスから情報を取得
+            $group_info = $ami->getGroupInfo($i);
+            
             $member = $group_info['member'] ?? '';
             $timeout = $member != '' ? ($group_info['timeout'] ?? '') : '';
             $mode = $member != '' ? ($group_info['mode'] ?? 'RA') : '';
@@ -118,6 +177,7 @@ unset($_SESSION['flash_message']);
             $ovr = $member != '' ? ($group_info['ovr'] ?? '0') : '0';
             $bnl = $member != '' ? ($group_info['bnl'] ?? '0') : '0';
             $bnt = $member != '' ? ($group_info['bnt'] ?? '') : '';
+            
             $msg = $notice_msg_g[$i] ?? '';
             ?>
             <tr>
@@ -176,7 +236,8 @@ unset($_SESSION['flash_message']);
     <tbody>
         <?php for ($i = 1; $i <= $max_pgroup; $i++): ?>
             <?php
-            $pgrp_member = AbspFunctions\get_pgrp_member($i);
+            // クラスから情報を取得
+            $pgrp_member = $ami->getPgrpMember($i);
             $msg = $notice_msg_p[$i] ?? '';
             ?>
             <tr>

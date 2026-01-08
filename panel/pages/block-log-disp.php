@@ -3,13 +3,15 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // ページネーション設定
 $items_per_page = 20;
 $current_page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
 $offset = ($current_page - 1) * $items_per_page;
 
 // DBファイルパスの決定
-$dbver = trim(AbspFunctions\get_db_item('ABS', 'CLOGVER'));
+$dbver = trim($ami->getDbItem('ABS', 'CLOGVER'));
 $dbfile = CLOGDB . (!empty($dbver) ? ".{$dbver}" : '');
 
 $log_entries = [];

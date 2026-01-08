@@ -1,53 +1,71 @@
 <?php
-require_once __DIR__ . '/config_session.php';
-// --- セキュリティと初期設定 ---
-session_start();
-define('ABS_PANEL_INCLUDED', true);
+/**
+ * download-extensions-csv.php
+ * 内線設定CSVエクスポート (PJSIP対応)
+ */
 
-// ログインしていない場合は処理を中断
+require_once __DIR__ . '/config_session.php';
+session_start();
+
+// ログインチェック
 if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     header('HTTP/1.0 403 Forbidden');
     die("Access denied.");
 }
 
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/astman.php';
-require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/AbspManager.php'; // クラスファイルの読み込み
 
-// 文字エンコーディングをUTF-8に設定
+use AbspFunctions\AbspManager;
+
+// 文字エンコーディング設定
 mb_internal_encoding('UTF-8');
+
+// --- AMI接続の確立 (このスクリプト専用) ---
+// config.php で定義されている定数を使用
+$ami = new AbspManager(AMI_HOST, AMI_USER, AMI_PASS, AMI_PORT);
 
 // --- CSV生成とダウンロード処理 ---
 
-// 1. HTTPヘッダーを送信してダウンロードを指示
+// 1. HTTPヘッダー送信
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename="extensions_' . date('Ymd') . '.csv"');
 
 // 2. 出力ストリームを開く
 $output = fopen('php://output', 'w');
 
-// 3. ヘッダー行を書き込む
+// 3. ヘッダー行 (順不同可だが、テンプレートとして使いやすい順序に)
 fputcsv($output, ['endpoint', 'exten', 'limit', 'ogcid', 'pgrp', 'macadd']);
 
-// 4. config.phpで定義されている$max_sip_phonesを使い、全ピアの情報を取得して書き込む
+// 4. データ取得ループ
+// config.php で定義されている $max_sip_phones を使用
 for ($i = 1; $i <= $max_sip_phones; $i++) {
-    $peer = "phone{$i}";
-    $peer_info = AbspFunctions\get_peer_info($peer);
-    $macadd = AbspFunctions\get_db_item("ABS/PINFO/{$peer}", 'MAC');
+    // 表示上の名前 (phone1)
+    $bare_endpoint = "phone{$i}";
+    
+    // DB検索用のキー (PJSIP/phone1)
+    $endpoint_key = "PJSIP/" . $bare_endpoint;
+    
+    // 情報を取得
+    $info = $ami->getEndpointInfo($endpoint_key);
+    
+    // MACアドレス取得 & フォーマット (AA:BB:...)
+    $raw_mac = $ami->getDbItem("ABS/PINFO/{$bare_endpoint}", 'MAC');
+    $formatted_mac = $ami->formatMacAddress($raw_mac);
     
     $row = [
-        $peer,
-        $peer_info['exten'] ?? '',
-        $peer_info['limit'] ?? '0',
-        $peer_info['ogcid'] ?? '',
-        $peer_info['pgrp'] ?? '',
-        $macadd ?? ''
+        $bare_endpoint,             // endpoint (PJSIP/ は付けない)
+        $info['exten'] ?? '',       // exten
+        $info['limit'] ?? '0',      // limit
+        $info['ogcid'] ?? '',       // ogcid
+        $info['pgrp']  ?? '',       // pgrp
+        $formatted_mac              // macadd
     ];
+    
     fputcsv($output, $row);
 }
 
-// 5. ストリームを閉じる
+// 5. 終了処理
 fclose($output);
-
-// 6. スクリプトを終了
+// $ami のデストラクタでログアウト処理が行われます
 exit;

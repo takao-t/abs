@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['backup_file'])) {
 
@@ -32,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['backup_file'])) {
 
         foreach ($families_to_delete as $family) {
             $command = "database deltree {$family}";
-            AbspFunctions\exec_cli_command($command); // 戻り値のチェックは省略 (必要なら追加)
+            $ami->execCliCommand($command); // 戻り値のチェックは省略 (必要なら追加)
         }
     }
 
@@ -52,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['backup_file'])) {
             list(, $family, $key) = explode('/', $full_key_path, 3);
             
             $command = sprintf("database put %s %s \"%s\"", $family, $key, addslashes($value));
-            $output = AbspFunctions\exec_cli_command($command);
+            $output = $ami->execCliCommand($command);
 
             $is_success = strpos($output, 'Response: Success') === 0 && strpos($output, 'Updated database successfully') !== false;
             if ($is_success) {

@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
@@ -25,10 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             
             if ($is_valid) {
-                $tmp_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $n_username);
+                $tmp_hash = $ami->getDbItem('ABS/PANELUSER', $n_username);
                 if($tmp_hash !== '' && password_verify($n_opasswd, $tmp_hash)){
                     $hashed_pass = password_hash($n_npasswd1, PASSWORD_DEFAULT);
-                    AbspFunctions\put_db_item('ABS/PANELUSER', $n_username, $hashed_pass);
+                    $ami->putDbItem('ABS/PANELUSER', $n_username, $hashed_pass);
                     $flash_message['text'] = "ユーザ {$n_username} のパスワードを更新しました。";
                 } else {
                     $flash_message = ['type' => 'error', 'text' => '現在のパスワードが正しくありません。'];
@@ -48,14 +50,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($n_npasswd1 !== $n_npasswd2) {
                 $flash_message = ['type' => 'error', 'text' => 'パスワードが一致しません。'];
                 $is_valid = false;
-            } elseif (AbspFunctions\get_db_item('ABS/PANELUSER', $n_username) !== '') {
+            } elseif ($ami->getDbItem('ABS/PANELUSER', $n_username) !== '') {
                 $flash_message = ['type' => 'error', 'text' => 'そのユーザ名は既に使用されています。'];
                 $is_valid = false;
             }
 
             if ($is_valid) {
                 $hashed_pass = password_hash($n_npasswd1, PASSWORD_DEFAULT);
-                AbspFunctions\put_db_item('ABS/PANELUSER', $n_username, $hashed_pass);
+                $ami->putDbItem('ABS/PANELUSER', $n_username, $hashed_pass);
                 $flash_message['text'] = "ユーザ {$n_username} を追加しました。";
             }
             break;
@@ -65,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($new_entry)) {
                 // validation (簡易的)
                 if (preg_match('/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})(\/\d{1,2})?$/', $new_entry)) {
-                    $current_acl_string = AbspFunctions\get_db_item('ABS/PANEL', 'ACL') ?? '';
+                    $current_acl_string = $ami->getDbItem('ABS/PANEL', 'ACL') ?? '';
                     $acl_list = !empty($current_acl_string) ? explode(',', $current_acl_string) : [];
                     
                     if (!in_array($new_entry, $acl_list)) {
                         $acl_list[] = $new_entry;
-                        AbspFunctions\put_db_item('ABS/PANEL', 'ACL', implode(',', $acl_list));
+                        $ami->putDbItem('ABS/PANEL', 'ACL', implode(',', $acl_list));
                         $flash_message['text'] = 'ACLエントリを追加しました。';
                     } else {
                         $flash_message = ['type' => 'error', 'text' => 'そのエントリは既に追加されています。'];
@@ -86,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'acl_delete':
             $entry_to_delete = $_POST['acl_entry_to_delete'] ?? '';
             if (!empty($entry_to_delete)) {
-                $current_acl_string = AbspFunctions\get_db_item('ABS/PANEL', 'ACL') ?? '';
+                $current_acl_string = $ami->getDbItem('ABS/PANEL', 'ACL') ?? '';
                 $acl_list = !empty($current_acl_string) ? explode(',', $current_acl_string) : [];
                 
                 // 削除対象のエントリを除外した新しい配列を作成
@@ -94,18 +96,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     return $entry !== $entry_to_delete;
                 });
 
-                AbspFunctions\put_db_item('ABS/PANEL', 'ACL', implode(',', $new_acl_list));
+                $ami->putDbItem('ABS/PANEL', 'ACL', implode(',', $new_acl_list));
                 $flash_message['text'] = 'ACLエントリを削除しました。';
             }
             break;
 
         case 'licset': //ライセンスキー設定
-            AbspFunctions\put_db_item('ABS', 'LIC', $_POST['lickey'] ?? '');
+            $ami->putDbItem('ABS', 'LIC', $_POST['lickey'] ?? '');
             break;
             
         case 'endisedit':
             $value = $_POST['editor_enabled'] ?? 'NO';
-            AbspFunctions\put_db_item('ABS/PANEL', 'PGRESTRICTED', $value);
+            $ami->putDbItem('ABS/PANEL', 'PGRESTRICTED', $value);
             $flash_message['text'] = 'ファイル編集機能の設定を保存しました。';
             break;
 
@@ -113,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $timeout_minutes = filter_input(INPUT_POST, 'session_timeout', FILTER_VALIDATE_INT);
 
             if ($timeout_minutes !== false && $timeout_minutes >= 5) {
-                AbspFunctions\put_db_item('ABS/PANEL', 'SESSION_TIMEOUT', $timeout_minutes);
+                $ami->putDbItem('ABS/PANEL', 'SESSION_TIMEOUT', $timeout_minutes);
                 $flash_message['text'] = "セッションタイムアウトを{$timeout_minutes}分に設定しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '無効な値です。5分以上の半角数字を入力してください。'];
@@ -171,19 +173,20 @@ function get_network_interfaces(): array {
 $network_interfaces = get_network_interfaces();
 $system_info = php_uname();
 $uptime_info = exec('uptime');
-$asterisk_info_ar[] = explode("\n", AbspFunctions\exec_cli_command('core show version'),);
-$asterisk_info = str_replace('Output: ', '', $asterisk_info_ar[0][2]);
+// AMI経由でAsteriskバージョン取得
+$asterisk_info_ar[] = explode("\n", $ami->execCliCommand('core show version'),);
+$asterisk_info = str_replace('Output: ', '', $asterisk_info_ar[0][2] ?? '');
 
 // ユーザーリストの読み込み
 date_default_timezone_set('Asia/Tokyo');
 $user_list = [];
-$user_dbent_raw = AbspFunctions\get_db_family('ABS/PANELUSER');
+$user_dbent_raw = $ami->getFamilyDB('ABS/PANELUSER');
+
 if (is_array($user_dbent_raw)) {
     foreach($user_dbent_raw as $line){
         if (strpos($line, ':') !== false) {
             $username = trim(explode(':', $line, 2)[0]);
             if (strpos($username, '/') === false) {
-                //$user_activity_time = AbspFunctions\get_db_item('ABS/PANELUSER/' . $username, 'last_activity');
                 $user_activity_time = $mycache->get('ABS/PANELUSER/' . $username, 'last_activity');
                 $act_val = intval($user_activity_time);
                 if($act_val === 0){
@@ -202,13 +205,13 @@ if (is_array($user_dbent_raw)) {
     sort($user_list);
 }
 
-$current_acl_string = AbspFunctions\get_db_item('ABS/PANEL', 'ACL') ?? '';
+$current_acl_string = $ami->getDbItem('ABS/PANEL', 'ACL') ?? '';
 $acl_list = !empty($current_acl_string) ? explode(',', $current_acl_string) : [];
 
 // 各種設定値の取得
-$lickey_setting = AbspFunctions\get_db_item('ABS', 'LIC') ?? '';
-$file_editor_setting = AbspFunctions\get_db_item('ABS/PANEL', 'PGRESTRICTED') ?? 'NO';
-$current_timeout = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
+$lickey_setting = $ami->getDbItem('ABS', 'LIC') ?? '';
+$file_editor_setting = $ami->getDbItem('ABS/PANEL', 'PGRESTRICTED') ?? 'NO';
+$current_timeout = $ami->getDbItem('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
 
 ?>
 <h2>システム設定</h2>
@@ -391,7 +394,7 @@ $current_timeout = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 
 <h3>ファイル編集機能</h3>
 <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
     <strong style="color: #f44336;">セキュリティリスク:</strong> この機能を制限なしにすると、Web UIからサーバー上のファイルを直接編集できるようになります。
-    セキュリティ上の理由から、通常は「制限する」を強く推奨します。
+    セキュリティ上の理由から、通常は「制限する」を推奨します。
 </p>
 <form action="index.php?page=system-config-page" method="post" class="form-inline-group">
     <input type="hidden" name="function" value="endisedit">

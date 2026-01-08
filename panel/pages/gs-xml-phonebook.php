@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POSTリクエスト処理 (電話帳ファイルの生成)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // フォームから送信された値を取得
@@ -17,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //}
 
     // Asterisk DBから電話帳データを取得
-    $pb_entries = AbspFunctions\get_db_family('cidname');
+    $pb_entries = $ami->getDbFamily('cidname');
 
     // 文字列としてXMLを生成
     $xml_content = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
@@ -77,7 +79,7 @@ $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
 // Asterisk DBから現在の電話帳データを取得して表示用に使用
-$pb_entries = AbspFunctions\get_db_family('cidname');
+$pb_entries = $ami->getDbFamily('cidname');
 
 ?>
 <h2>Grandstream 用電話帳生成</h2>

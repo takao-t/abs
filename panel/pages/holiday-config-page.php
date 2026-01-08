@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
@@ -10,10 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($function) {
         case 'modh': // 祝・休設定（チェックボックス）
-            AbspFunctions\exec_cli_command('database deltree HOLIDAYS/JAPAN');
+            $ami->execCliCommand('database deltree HOLIDAYS/JAPAN');
             if (!empty($_POST['day'])) {
                 foreach ($_POST['day'] as $d_line) {
-                    AbspFunctions\put_db_item('HOLIDAYS/JAPAN', trim($d_line), '1');
+                    $ami->putDbItem('HOLIDAYS/JAPAN', trim($d_line), '1');
                 }
             }
             $flash_message['text'] = '休業日の設定を更新しました。';
@@ -23,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $p_ndate = trim($_POST['ndate'] ?? '');
             $p_nname = trim($_POST['nname'] ?? '休日');
             if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $p_ndate)) {
-                AbspFunctions\put_db_item('HOLIDAYS/JAPANBASE', $p_ndate, $p_nname);
+                $ami->putDbItem('HOLIDAYS/JAPANBASE', $p_ndate, $p_nname);
                  $flash_message['text'] = "独自データ {$p_ndate}: {$p_nname} を追加/更新しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '日付はYYYY-MM-DD形式で入力してください。'];
@@ -33,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'deldate': // データ削除
             $p_ddate = trim($_POST['ddate'] ?? '');
             if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $p_ddate)) {
-                AbspFunctions\del_db_item('HOLIDAYS/JAPAN', $p_ddate);
-                AbspFunctions\del_db_item('HOLIDAYS/JAPANBASE', $p_ddate);
+                $ami->delDbItem('HOLIDAYS/JAPAN', $p_ddate);
+                $ami->delDbItem('HOLIDAYS/JAPANBASE', $p_ddate);
                 $flash_message['text'] = "データ {$p_ddate} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '日付はYYYY-MM-DD形式で入力してください。'];
@@ -47,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($page === false) {
                 $flash_message = ['type' => 'error', 'text' => '祝日・休日情報の取得に失敗しました。URLを確認してください。'];
             } else {
-                AbspFunctions\exec_cli_command('database deltree HOLIDAYS'); // 全データ初期化
+                $ami->execCliCommand('database deltree HOLIDAYS'); // 全データ初期化
                 $page = mb_convert_encoding($page, "UTF-8", "SJIS");
                 $page = str_replace('/', '-', $page);
                 $holidays = explode("\n", $page);
@@ -58,8 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     list($day, $name) = explode(',', str_replace('"', '', trim($line)), 2);
                     list($p_y, ) = explode('-', $day, 2);
                     if ($p_y >= $this_y) {
-                        AbspFunctions\put_db_item('HOLIDAYS/JAPANBASE', $day, $name);
-                        AbspFunctions\put_db_item('HOLIDAYS/JAPAN', $day, '1');
+                        $ami->putDbItem('HOLIDAYS/JAPANBASE', $day, $name);
+                        $ami->putDbItem('HOLIDAYS/JAPAN', $day, '1');
                     }
                 }
                 $flash_message['text'] = '祝日・休日情報を内閣府の公開データから更新しました。';
@@ -80,11 +82,11 @@ unset($_SESSION['flash_message']);
 
 // 祝日リストの取得
 $base_holidays = [];
-$db_base_list = AbspFunctions\get_db_family('HOLIDAYS/JAPANBASE');
+$db_base_list = $ami->getDbFamily('HOLIDAYS/JAPANBASE');
 
 // 有効な祝日のリストを読み込み、高速アクセスのためにキーを日付にした配列を作成
 $active_holidays = [];
-$db_active_list = AbspFunctions\get_db_family('HOLIDAYS/JAPAN');
+$db_active_list = $ami->getDbFamily('HOLIDAYS/JAPAN');
 if (is_array($db_active_list)) {
     foreach ($db_active_list as $line) {
         $day = trim(explode(' : ', $line, 2)[0]);

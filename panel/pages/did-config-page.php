@@ -3,6 +3,9 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+// $ami インスタンスは index.php で生成済みと仮定
+// global $ami; // 必要に応じて
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
@@ -25,10 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($is_valid) {
-                AbspFunctions\put_db_item('ABS/DID', $p_didnumber, $p_target);
-                $flash_message['text'] = ($function == 'newadd') ? "着信番号 {$p_didnumber} を追加しました。" : "着信番号 {$p_didnumber} を更新しました。";
+                $ami->putDbItem('ABS/DID', $p_didnumber, $p_target);
+                $action_text = ($function === 'newadd') ? "追加" : "更新";
+                $flash_message['text'] = "着信番号 {$p_didnumber} を{$action_text}しました。";
             } else {
-                // バリデーションエラーがあった場合、入力値をセッションに保存
                 $_SESSION['form_data'] = $_POST;
             }
             break;
@@ -37,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'entdel':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_didnumber = $_POST['d_didnumber'];
-                AbspFunctions\del_db_item('ABS/DID', $p_d_didnumber);
+                $ami->delDbItem('ABS/DID', $p_d_didnumber);
                 $flash_message['text'] = "着信番号 {$p_d_didnumber} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
@@ -50,25 +53,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'didnumber' => $_POST['e_didnumber'],
                 'target' => $_POST['e_target']
             ];
-            $flash_message = null; // 編集モードに入るだけなのでメッセージは不要
+            $flash_message = null;
             break;
 
         // 鳴動パターン設定
         case 'rgptset':
             $p_rgpt = $_POST['rgpt'];
-            AbspFunctions\put_db_item('ABS/DID', 'RGPT', $p_rgpt);
+            $ami->putDbItem('ABS/DID', 'RGPT', $p_rgpt);
             $flash_message['text'] = 'ダイヤルイン時鳴動パターンを設定しました。';
             break;
 
         // 着信時プレフィクス付加設定
         case 'pfxadd':
             $p_apfx = $_POST['apfx'] ?? '0';
-            AbspFunctions\put_db_item('ABS', 'APF', $p_apfx);
+            $ami->putDbItem('ABS', 'APF', $p_apfx);
 
             if (isset($_POST['d56opt']) && $_POST['d56opt'] === 'on') {
-                AbspFunctions\put_db_item('ABS', 'D56', '1');
+                $ami->putDbItem('ABS', 'D56', '1');
             } else {
-                AbspFunctions\del_db_item('ABS', 'D56');
+                $ami->delDbItem('ABS', 'D56');
             }
             $flash_message['text'] = '着信時外線捕捉プレフィクス設定を更新しました。';
             break;
@@ -82,11 +85,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// GET時処理
+// GET時処理: 表示用データの準備
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// フォームの初期値と設定
+// フォームの初期値
 $form_defaults = ['didnumber' => '', 'target' => ''];
 $form_values = $_SESSION['form_data'] ?? $form_defaults;
 unset($_SESSION['form_data']);
@@ -98,27 +101,34 @@ if (isset($_SESSION['edit_did_data'])) {
     unset($_SESSION['edit_did_data']);
 }
 
-// 着信先選択肢を生成
-$target_selectors = AbspFunctions\create_target_list('group', $form_values['target']);
+// 着信先リスト配列の生成 (ViewとLogicの分離)
+$target_options = $ami->getExtAndGroupList();
 
 // 登録済着信番号一覧を取得
 $did_list = [];
-$db_entries = AbspFunctions\get_db_family('ABS/DID');
+$db_entries = $ami->getDbFamily('ABS/DID');
+
 if (is_array($db_entries)) {
     foreach ($db_entries as $line) {
-        list($pnam, $target) = explode(' : ', $line, 2);
-        $pnam = trim($pnam);
-        $target = trim($target);
-        if ($pnam !== 'RGPT' && $pnam !== 'TCS' && $pnam != 'THS') { // 除外する項目
-             $did_list[] = ['did' => $pnam, 'target' => $target];
+        // AMIの戻り値は "Key : Value" 形式 (AbspManagerでPrefix除去済と仮定)
+        $parts = explode(' : ', $line, 2);
+        if (count($parts) === 2) {
+            $pnam = trim($parts[0]);
+            $target = trim($parts[1]);
+            // 除外する管理用キー
+            if ($pnam !== 'RGPT' && $pnam !== 'TCS' && $pnam !== 'THS') { 
+                 $did_list[] = ['did' => $pnam, 'target' => $target];
+            }
         }
     }
 }
+// 着信番号順にソート (anyは最後にするなどの工夫が必要ならここでusort)
+ksort($did_list); 
 
 // 各種設定値を取得
-$rgpt_setting = AbspFunctions\get_db_item('ABS/DID', 'RGPT') ?: '0';
-$apfx_setting = AbspFunctions\get_db_item('ABS', 'APF') ?: '0';
-$d56_setting = AbspFunctions\get_db_item('ABS', 'D56');
+$rgpt_setting = $ami->getDbItem('ABS/DID', 'RGPT') ?: '0';
+$apfx_setting = $ami->getDbItem('ABS', 'APF') ?: '0';
+$d56_setting  = $ami->getDbItem('ABS', 'D56');
 
 ?>
 <h2>ダイヤルイン着信設定</h2>
@@ -138,7 +148,12 @@ $d56_setting = AbspFunctions\get_db_item('ABS', 'D56');
 
         <label for="target">着信先:</label>
         <select id="target" name="target">
-            <?= $target_selectors ?>
+            <option value="">選択してください</option>
+            <?php foreach ($target_options as $opt): ?>
+                <option value="<?= htmlspecialchars($opt['value'], ENT_QUOTES, 'UTF-8') ?>">
+                    <?= htmlspecialchars($opt['label'], ENT_QUOTES, 'UTF-8') ?>
+                </option>
+            <?php endforeach; ?>
         </select>
 
         <button type="submit" class="btn btn-primary"><?= $is_edit_mode ? '更新' : '追加' ?></button>

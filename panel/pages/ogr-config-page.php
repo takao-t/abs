@@ -1,5 +1,8 @@
 <?php
-if (!defined('ABS_PANEL_INCLUDED')) {
+// index.php で生成された $ami インスタンスを使用
+global $ami;
+
+if (!defined('ABS_PANEL_INCLUDED') || !is_object($ami)) {
     die("Direct access is not permitted.");
 }
 
@@ -13,30 +16,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             for ($i = 1; $i <= 2; $i++) {
                 $p_ogp_num = (string)$_POST["ogp_num_$i"];
                 if ($p_ogp_num === '') {
-                    AbspFunctions\del_db_tree("ABS/OGP$i");
-                    AbspFunctions\del_db_item('ABS', "OGP$i");
+                    $ami->delDbTreeItem("ABS/OGP$i");
+                    $ami->delDbItem('ABS', "OGP$i");
                 } else {
                     $p_ogp_route = (string)$_POST["ogp_route_$i"];
                     $p_ogp_route_num = (string)$_POST["ogp_route_num_$i"];
                     $p_ogp_ogcid = (string)$_POST["ogp_ogcid_$i"];
                     if (ctype_digit($p_ogp_num)) {
-                        AbspFunctions\put_db_item('ABS', "OGP$i", "$p_ogp_num");
-                        AbspFunctions\del_db_item("ABS/OGP$i", 'KEY');
-                        AbspFunctions\del_db_item("ABS/OGP$i", 'NKS');
-                        AbspFunctions\put_db_item("ABS/OGP$i", $p_ogp_route, ($p_ogp_route == 'NKS') ? "1" : "$p_ogp_route_num");
+                        $ami->putDbItem('ABS', "OGP$i", "$p_ogp_num");
+                        $ami->delDbItem("ABS/OGP$i", 'KEY');
+                        $ami->delDbItem("ABS/OGP$i", 'NKS');
+                        $ami->putDbItem("ABS/OGP$i", $p_ogp_route, ($p_ogp_route == 'NKS') ? "1" : "$p_ogp_route_num");
                     }
                     if ($p_ogp_ogcid === '') {
-                        AbspFunctions\del_db_item("ABS/OGP$i", 'OGCID');
+                        $ami->delDbItem("ABS/OGP$i", 'OGCID');
                     } elseif (ctype_digit($p_ogp_ogcid)) {
-                        AbspFunctions\put_db_item("ABS/OGP$i", 'OGCID', $p_ogp_ogcid);
+                        $ami->putDbItem("ABS/OGP$i", 'OGCID', $p_ogp_ogcid);
                     }
                 }
             }
             $p_aec_codes = $_POST['aec_codes'];
             if ($p_aec_codes === '') {
-                AbspFunctions\del_db_item("ABS", "AEC");
+                $ami->delDbItem("ABS", "AEC");
             } else {
-                AbspFunctions\put_db_item("ABS", "AEC", $p_aec_codes);
+                $ami->putDbItem("ABS", "AEC", $p_aec_codes);
             }
             break;
 
@@ -48,26 +51,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $p_nks_trunk = !empty($direct_input) ? $direct_input : $dropdown_selection;
 
                 if (empty($p_nks_trunk)) {
-                    AbspFunctions\del_db_tree("ABS/NKS$i");
+                    $ami->delDbTreeItem("ABS/NKS$i");
                 } else {
                     $p_nks_tech = $_POST["nks_tech_$i"];
                     $p_nks_type = $_POST["nks_type_$i"];
-                    AbspFunctions\put_db_item("ABS/NKS$i", "TRUNK", $p_nks_trunk);
-                    AbspFunctions\put_db_item("ABS/NKS$i", "TECH", $p_nks_tech);
+                    $ami->putDbItem("ABS/NKS$i", "TRUNK", $p_nks_trunk);
+                    $ami->putDbItem("ABS/NKS$i", "TECH", $p_nks_tech);
                     if ($p_nks_type == 'none') {
-                        AbspFunctions\del_db_item("ABS/NKS$i", "TYP");
+                        $ami->delDbItem("ABS/NKS$i", "TYP");
                     } else {
-                        AbspFunctions\put_db_item("ABS/NKS$i", "TYP", $p_nks_type);
+                        $ami->putDbItem("ABS/NKS$i", "TYP", $p_nks_type);
                     }
                 }
             }
             break;
 
-        // (他のcaseは変更なし)
         case 'd56update':
-            AbspFunctions\put_db_item('ABS', 'D56', (isset($_POST['d56opt']) && $_POST['d56opt'] == 'on') ? '1' : '');
+            $ami->putDbItem('ABS', 'D56', (isset($_POST['d56opt']) && $_POST['d56opt'] == 'on') ? '1' : '');
             for ($i = 1; $i <= 4; $i++) {
-                AbspFunctions\put_db_item('ABS/D57KEY', "$i", $_POST["d57key_$i"]);
+                $ami->putDbItem('ABS/D57KEY', "$i", $_POST["d57key_$i"]);
             }
             break;
 
@@ -77,9 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($p_tssw_cid) && !empty($p_tssw_trunk)) {
                 $p_tssw_tech = $_POST['tssw_tech'];
                 $p_tssw_type = $_POST['tssw_type'];
-                AbspFunctions\put_db_item('ABS/TSSW', $p_tssw_cid, $p_tssw_trunk);
-                AbspFunctions\put_db_item("ABS/TSSW/$p_tssw_cid", 'TECH', $p_tssw_tech);
-                AbspFunctions\put_db_item("ABS/TSSW/$p_tssw_cid", 'TYP', $p_tssw_type);
+                $ami->putDbItem('ABS/TSSW', $p_tssw_cid, $p_tssw_trunk);
+                $ami->putDbItem("ABS/TSSW/$p_tssw_cid", 'TECH', $p_tssw_tech);
+                $ami->putDbItem("ABS/TSSW/$p_tssw_cid", 'TYP', $p_tssw_type);
                 $flash_message['text'] = 'トランクスイッチャを追加しました。';
             } else {
                  $flash_message = ['type' => 'error', 'text' => '発信CIDとトランクは必須です。'];
@@ -88,8 +90,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'tsswdel':
             $p_delcid = trim($_POST['delcid']);
-            AbspFunctions\del_db_tree("ABS/TSSW/$p_delcid");
-            AbspFunctions\del_db_item("ABS/TSSW", $p_delcid);
+            $ami->delDbTreeItem("ABS/TSSW/$p_delcid");
+            $ami->delDbItem("ABS/TSSW", $p_delcid);
             $flash_message['text'] = 'トランクスイッチャを削除しました。';
             break;
 
@@ -97,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $p_pfx = trim($_POST['pfx']);
             $p_pfxtrunk = trim($_POST['pfxtrunk']);
             if ($p_pfx !== '' && !empty($p_pfxtrunk)) {
-                AbspFunctions\put_db_item('ABS/TRUNK/PFX', $p_pfxtrunk, "$p_pfx");
+                $ami->putDbItem('ABS/TRUNK/PFX', $p_pfxtrunk, "$p_pfx");
                 $flash_message['text'] = 'トランクプレフィクスを追加しました。';
             } else {
                 $flash_message = ['type' => 'error', 'text' => 'トランク名とプレフィクスは必須です。'];
@@ -106,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'tpfxdel':
             $p_pfxtrunk = trim($_POST['pfxtrunk']);
-            AbspFunctions\del_db_item('ABS/TRUNK/PFX', $p_pfxtrunk);
+            $ami->delDbItem('ABS/TRUNK/PFX', $p_pfxtrunk);
             $flash_message['text'] = 'トランクプレフィクスを削除しました。';
             break;
     }
@@ -120,51 +122,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
+// 共通データの取得
+// トランク一覧を取得 (Logicでは配列のみ返し、ViewでHTML生成する)
+$trunk_list = $ami->getTrunkList(); 
+
 // OGP設定
 $ogp_settings = [];
 for ($i = 1; $i <= 2; $i++) {
-    $ogp_num = AbspFunctions\get_ogp_num($i);
+    $ogp_num = $ami->getOgpNum($i);
     $ogp_settings[$i] = [
         'num' => $ogp_num,
-        'route' => ($ogp_num !== '') ? AbspFunctions\get_ogp_route($i) : 'NKS',
-        'route_num' => ($ogp_num !== '') ? AbspFunctions\get_ogp_routenum($i) : '',
-        'ogcid' => ($ogp_num !== '') ? AbspFunctions\get_ogp_ogcid($i) : '',
+        'route' => ($ogp_num !== '') ? $ami->getOgpRoute($i) : 'NKS',
+        'route_num' => ($ogp_num !== '') ? $ami->getOgpRouteNum($i) : '',
+        'ogcid' => ($ogp_num !== '') ? $ami->getOgpOgcid($i) : '',
     ];
 }
-$aec_codes = AbspFunctions\get_aec_codes();
+$aec_codes = $ami->getAecCodes();
 
 // NKS設定
 $nks_settings = [];
-$trunk_options_html_all = AbspFunctions\create_trunk_list('', ''); // 判定用に全ての選択肢を取得
-for ($i = 1; $i <= 2; $i++) {
-    $trunk = AbspFunctions\get_nks_trunk($i);
 
-    // 保存済みのトランク名が、選択肢の中に含まれているかを確認
-    $is_in_options = true;
+for ($i = 1; $i <= 2; $i++) {
+    $trunk = $ami->getNksTrunk($i);
+
+    // 保存済みのトランク名が、選択肢(API取得リスト)の中に含まれているかを確認
+    $is_in_options = false;
     if (!empty($trunk)) {
-        // value="trunk名" という文字列が含まれているかで判定
-        if (strpos($trunk_options_html_all, "value=\"".htmlspecialchars($trunk, ENT_QUOTES, 'UTF-8')."\"") === false) {
-            $is_in_options = false;
+        if (in_array($trunk, $trunk_list)) {
+            $is_in_options = true;
         }
     }
 
     $nks_settings[$i] = [
         'trunk' => $trunk,
-        'tech' => !empty($trunk) ? AbspFunctions\get_nks_tech($i) : 'PJSIP',
-        'type' => !empty($trunk) ? AbspFunctions\get_nks_type($i) : 'none',
-        'is_trunk_in_options' => $is_in_options, // 判定結果を保存
+        'tech' => !empty($trunk) ? $ami->getNksTech($i) : 'PJSIP',
+        'type' => !empty($trunk) ? $ami->getNksType($i) : 'none',
+        'is_trunk_in_options' => $is_in_options,
     ];
 }
 
-// (特番設定以降は変更なし)
-$d56_checked = AbspFunctions\get_db_item('ABS', "D56") == "1";
+// D56/D57設定
+$d56_checked = $ami->getDbItem('ABS', "D56") == "1";
 $d57_keys = [];
 for ($i = 1; $i <= 4; $i++) {
-    $d57_keys[$i] = AbspFunctions\get_db_item('ABS/D57KEY', "$i");
+    $d57_keys[$i] = $ami->getDbItem('ABS/D57KEY', "$i");
 }
-$tssw_list = AbspFunctions\create_tssw_list();
-$trunk_options_html = AbspFunctions\create_trunk_list();
-$tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
+
+// TSSW設定
+$tssw_list = $ami->getTsswList();
+
+// トランクプレフィクス設定
+$tpfxs = $ami->getDbFamily('ABS/TRUNK/PFX');
 
 ?>
 <h2>発信設定</h2>
@@ -195,13 +203,13 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
                     <td>プレフィクス<?= $i ?></td>
                     <td><input type="text" name="ogp_num_<?= $i ?>" value="<?= htmlspecialchars($ogp['num'], ENT_QUOTES, 'UTF-8') ?>" class="input-xshort"></td>
                     <td>
-                        <select name="ogp_route_<?= $i ?>" class="input-em6">
+                        <select name="ogp_route_<?= $i ?>" id="ogp_route_<?= $i ?>" class="input-em6">
                             <option value="NKS" <?= ($ogp['route'] == 'NKS') ? 'selected' : '' ?>>NKS</option>
                             <option value="KEY" <?= ($ogp['route'] == 'KEY') ? 'selected' : '' ?>>KEY</option>
                         </select>
                     </td>
-                    <td><input type="text" name="ogp_route_num_<?= $i ?>" value="<?= htmlspecialchars($ogp['route_num'], ENT_QUOTES, 'UTF-8') ?>" class="input-short"></td>
-                    <td><input type="text" name="ogp_ogcid_<?= $i ?>" value="<?= htmlspecialchars($ogp['ogcid'], ENT_QUOTES, 'UTF-8') ?>" class="input-short2"></td>
+                     <td><input type="text" name="ogp_route_num_<?= $i ?>" id="ogp_route_num_<?= $i ?>" value="<?= htmlspecialchars($ogp['route_num'], ENT_QUOTES, 'UTF-8') ?>" class="input-short"></td>
+                     <td><input type="text" name="ogp_ogcid_<?= $i ?>" value="<?= htmlspecialchars($ogp['ogcid'], ENT_QUOTES, 'UTF-8') ?>" class="input-short2"></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -211,7 +219,7 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
         <label for="aec_codes">市内局番 (カンマ区切り):</label>
         <input type="text" id="aec_codes" name="aec_codes" value="<?= htmlspecialchars($aec_codes, ENT_QUOTES, 'UTF-8') ?>" class="input-middle">
     </div>
-    <small>注意: NKS指定時には経路番号は'1'を指定してください。</small>
+    <small>注意: NKS指定時には経路番号は'1'を指定しますが自動設定されます。</small>
     <div style="margin-top: 1em;">
         <button type="submit" class="btn btn-primary">プレフィクスと市内局番を設定変更</button>
     </div>
@@ -244,14 +252,23 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
                         <div class="form-inline-group" style="gap: 0.5em;">
                             <?php if ($nks['is_trunk_in_options']): ?>
                                 <select name="nks_trunk_<?= $i ?>" class="input-middle">
-                                    <?= AbspFunctions\create_trunk_list('', $nks['trunk']) ?>
+                                    <option value="">選択してください</option>
+                                    <?php foreach ($trunk_list as $t_item): ?>
+                                        <option value="<?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>" <?= ($t_item == $nks['trunk']) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                                 <input type="text" name="nks_trunk_di_<?= $i ?>" class="input-middle" placeholder="新規直接入力...">
                             <?php else: ?>
                                 <input type="text" name="nks_trunk_di_<?= $i ?>" class="input-middle" value="<?= htmlspecialchars($nks['trunk'], ENT_QUOTES, 'UTF-8') ?>">
                                 <select name="nks_trunk_<?= $i ?>" class="input-middle">
                                     <option value="">↓ または選択肢から選ぶ</option>
-                                    <?= $trunk_options_html_all ?>
+                                    <?php foreach ($trunk_list as $t_item): ?>
+                                        <option value="<?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>">
+                                            <?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
                             <?php endif; ?>
                         </div>
@@ -325,9 +342,9 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
         <tbody>
             <?php if (!empty($tssw_list)): ?>
                 <?php foreach ($tssw_list as $cid):
-                    $trunk = AbspFunctions\get_db_item("ABS/TSSW", $cid);
-                    $tech = AbspFunctions\get_db_item("ABS/TSSW/$cid", 'TECH');
-                    $type = AbspFunctions\get_db_item("ABS/TSSW/$cid", 'TYP');
+                    $trunk = $ami->getDbItem("ABS/TSSW", $cid);
+                    $tech = $ami->getDbItem("ABS/TSSW/$cid", 'TECH');
+                    $type = $ami->getDbItem("ABS/TSSW/$cid", 'TYP');
                 ?>
                 <tr>
                     <td><?= htmlspecialchars($cid, ENT_QUOTES, 'UTF-8') ?></td>
@@ -375,7 +392,14 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
                     </td>
                     <td>
                         <div class="form-inline-group" style="gap: 0.5em;">
-                           <select name="tssw_trunks" class="input-middle"><?= $trunk_options_html ?></select>
+                           <select name="tssw_trunks" class="input-middle">
+                               <option value=""></option>
+                               <?php foreach ($trunk_list as $t_item): ?>
+                                   <option value="<?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>">
+                                       <?= htmlspecialchars($t_item, ENT_QUOTES, 'UTF-8') ?>
+                                   </option>
+                               <?php endforeach; ?>
+                           </select>
                            <input type="text" name="tssw_trunkd" class="input-middle" placeholder="直接入力...">
                         </div>
                     </td>
@@ -438,3 +462,34 @@ $tpfxs = AbspFunctions\get_db_family('ABS/TRUNK/PFX');
         <button type="submit" class="btn">設定</button>
     </div>
 </form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // プレフィクス設定の行数（現在は2）
+    const ogpCount = 2;
+
+    for (let i = 1; i <= ogpCount; i++) {
+        const routeSelect = document.getElementById('ogp_route_' + i);
+        const routeNumInput = document.getElementById('ogp_route_num_' + i);
+
+        if (!routeSelect || !routeNumInput) continue;
+
+        // 値を変更する関数
+        const updateRouteNum = () => {
+            if (routeSelect.value === 'NKS') {
+                routeNumInput.value = '1';
+                routeNumInput.readOnly = true; // NKSのときは変更不可にする（オプション）
+                routeNumInput.style.backgroundColor = "#909090"; // グレーアウトで見かけも変更
+            } else {
+                routeNumInput.readOnly = false;
+                routeNumInput.style.backgroundColor = "";
+            }
+        };
+
+        // ページ読み込み時に一度実行（初期状態の反映）
+        updateRouteNum();
+
+        // 変更時に実行
+        routeSelect.addEventListener('change', updateRouteNum);
+    }
+});
+</script>

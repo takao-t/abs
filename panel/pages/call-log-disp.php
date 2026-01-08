@@ -3,13 +3,15 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function']) && $_POST['function'] == 'bladd') {
     $p_cid = trim($_POST['blcid'] ?? '');
     if (!empty($p_cid) && isset($_POST['blchecked']) && $_POST['blchecked'] === 'YES') {
         $nowdt = new DateTime('NOW');
         $tmpdt = $nowdt->format('Y-m-d/H:i:s');
-        AbspFunctions\put_db_item('ABS/blocklist', $p_cid, $tmpdt);
+        $ami->putDbItem('ABS/blocklist', $p_cid, $tmpdt);
         $_SESSION['flash_message'] = ['type' => 'success', 'text' => "{$p_cid} を着信拒否リストに登録しました。"];
     }
     header('Location: ' . $_SERVER['REQUEST_URI']);
@@ -26,7 +28,7 @@ $current_page = isset($_GET['p']) ? max(1, (int)$_GET['p']) : 1;
 $offset = ($current_page - 1) * $items_per_page;
 
 // DBファイルパスの決定
-$dbver = trim(AbspFunctions\get_db_item('ABS', 'CLOGVER'));
+$dbver = trim($ami->getDbItem('ABS', 'CLOGVER'));
 $dbfile = CLOGDB . (!empty($dbver) ? ".{$dbver}" : '');
 
 $log_entries = [];
@@ -58,14 +60,14 @@ if (!file_exists($dbfile)) {
         while ($row = $res->fetchArray(SQLITE3_ASSOC)) {
             // 着信先の詳細情報を取得
             $dest_info = '';
-            if (AbspFunctions\get_db_item('ABS/TRUNK/' . $row['DESTNUM'] , 'KEY') !== "") $dest_info = '(キー着信)';
-            elseif (AbspFunctions\get_db_item('ABS/DID' , $row['DESTNUM']) !== "") $dest_info = "(ダイヤルイン)";
-            elseif (AbspFunctions\get_db_item('ABS/IVR/DIR/' . $row['DESTNUM'], 'CTX') !== "") $dest_info = "(IVRダイレクト)";
-            elseif (AbspFunctions\get_db_item('ABS/IVR/NUM' , $row['DESTNUM']) !== "") $dest_info = "(IVR)";
+            if ($ami->getDbItem('ABS/TRUNK/' . $row['DESTNUM'] , 'KEY') !== "") $dest_info = '(キー着信)';
+            elseif ($ami->getDbItem('ABS/DID' , $row['DESTNUM']) !== "") $dest_info = "(ダイヤルイン)";
+            elseif ($ami->getDbItem('ABS/IVR/DIR/' . $row['DESTNUM'], 'CTX') !== "") $dest_info = "(IVRダイレクト)";
+            elseif ($ami->getDbItem('ABS/IVR/NUM' , $row['DESTNUM']) !== "") $dest_info = "(IVR)";
             
             $row['dest_info'] = $dest_info;
-            $row['cid_name'] = AbspFunctions\get_db_item('cidname', $row['NUMBER']) ?: '';
-            $row['is_blocked'] = AbspFunctions\get_db_item('ABS/blocklist', $row['NUMBER']) !== "";
+            $row['cid_name'] = $ami->getDbItem('cidname', $row['NUMBER']) ?: '';
+            $row['is_blocked'] = $ami->getDbItem('ABS/blocklist', $row['NUMBER']) !== "";
             $log_entries[] = $row;
         }
         $logdb->close();

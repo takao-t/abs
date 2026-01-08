@@ -1,5 +1,8 @@
 <?php
-if (!defined('ABS_PANEL_INCLUDED')) {
+// index.php で生成された $ami インスタンスを使用
+global $ami;
+
+if (!defined('ABS_PANEL_INCLUDED') || !is_object($ami)) {
     die("Direct access is not permitted.");
 }
 
@@ -25,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($is_valid) {
-                AbspFunctions\put_db_item('cidname', $p_cidnumber, $p_cidname);
+                // cidnameファミリーに登録
+                $ami->putDbItem('cidname', $p_cidnumber, $p_cidname);
                 $flash_message['text'] = ($function == 'newadd') ? "番号 {$p_cidnumber} を追加しました。" : "番号 {$p_cidnumber} を更新しました。";
             } else {
                 $_SESSION['form_data'] = $_POST;
@@ -36,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'entdel':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_cidnumber = $_POST['d_cidnumber'];
-                AbspFunctions\del_db_item('cidname', $p_d_cidnumber);
+                $ami->delDbItem('cidname', $p_d_cidnumber);
                 $flash_message['text'] = "番号 {$p_d_cidnumber} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
@@ -49,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'cidnumber' => $_POST['e_cidnumber'],
                 'cidname' => $_POST['e_cidname']
             ];
-            $flash_message = null; // メッセージは不要
+            $flash_message = null; // 編集モード遷移時はメッセージ不要
             break;
     }
 
@@ -67,17 +71,16 @@ unset($_SESSION['flash_message']);
 
 // 履歴ページなどからのGETリクエストで編集モードに入る処理
 if (isset($_GET['post_pnum'])) {
-    // AdHoc: 元のコードにあった履歴ページからの遷移チェック（必要に応じてコメント解除）
-    // $ref_url = explode('/', $_SERVER['HTTP_REFERER'] ?? '');
-    // if(end($ref_url) == 'index.php?page=call-log-disp.php'){
-        $pnum = trim($_GET['post_pnum']);
-        $pname = AbspFunctions\get_db_item('cidname', $pnum);
-        // 着信拒否リストに載っている場合は、その旨を名前に表示する（元のロジックを維持）
-        if (AbspFunctions\get_db_item('ABS/blocklist', $pnum) == '1') {
-            $pname = '【着信拒否中】';
-        }
-        $_SESSION['edit_cid_data'] = ['cidnumber' => $pnum, 'cidname' => $pname];
-    // }
+    $pnum = trim($_GET['post_pnum']);
+    
+    // CID名を取得
+    $pname = $ami->getDbItem('cidname', $pnum);
+    
+    // 着信拒否リストに載っている場合は、その旨を名前に表示する
+    if ($ami->getDbItem('ABS/blocklist', $pnum) == '1') {
+        $pname = '【着信拒否中】';
+    }
+    $_SESSION['edit_cid_data'] = ['cidnumber' => $pnum, 'cidname' => $pname];
 }
 
 // フォームの初期値と設定
@@ -94,13 +97,24 @@ if (isset($_SESSION['edit_cid_data'])) {
 
 // 登録済み一覧の取得
 $cid_list = [];
-$db_entries = AbspFunctions\get_db_family('cidname');
+$db_entries = $ami->getDbFamily('cidname');
+
 if (is_array($db_entries)) {
     foreach ($db_entries as $line) {
-        list($pnum, $pname) = explode(' : ', $line, 2);
-        $cid_list[] = ['number' => trim($pnum), 'name' => trim($pname)];
+        // AMI戻り値 "Number : Name" を分割
+        $parts = explode(' : ', $line, 2);
+        
+        if (count($parts) === 2) {
+            $cid_list[] = [
+                'number' => trim($parts[0]),
+                'name'   => trim($parts[1])
+            ];
+        }
     }
 }
+
+// 番号順などでソートしたければここで行う（現在はDB取得順）
+// sort($cid_list); 
 
 ?>
 <h2>発信者名(CID)管理</h2>
@@ -156,10 +170,11 @@ if (is_array($db_entries)) {
                                 <input type="hidden" name="e_cidname" value="<?= htmlspecialchars($cid_entry['name'], ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="btn btn-row">編集</button>
                             </form>
-                            <form action="" method="POST" style="margin: 0;" onsubmit="if(!this.delcb.checked) { alert('削除するにはチェックボックスをオンにしてください。'); return false; } return confirm('番号 <?= htmlspecialchars($cid_entry['number'], ENT_QUOTES, 'UTF-8') ?> を本当に削除しますか？');">
+                            
+                            <form action="" method="POST" style="margin: 0;" class="delete-form" data-cidnumber="<?= htmlspecialchars($cid_entry['number'], ENT_QUOTES, 'UTF-8') ?>">
                                 <input type="hidden" name="function" value="entdel">
                                 <input type="hidden" name="d_cidnumber" value="<?= htmlspecialchars($cid_entry['number'], ENT_QUOTES, 'UTF-8') ?>">
-                                <input type="checkbox" name="delcb" value="yes" title="削除するにはチェックを入れてください">
+                                <input type="checkbox" name="delcb" value="yes" class="delete-checkbox" title="削除するにはチェックを入れてください">
                                 <button type="submit" class="btn btn-row">削除</button>
                             </form>
                         </div>
@@ -170,3 +185,27 @@ if (is_array($db_entries)) {
         </tbody>
     </table>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 削除フォームの送信制御
+    const deleteForms = document.querySelectorAll('.delete-form');
+    
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const checkbox = this.querySelector('.delete-checkbox');
+            const cidNum = this.dataset.cidnumber;
+
+            if (!checkbox.checked) {
+                e.preventDefault();
+                alert('削除するにはチェックボックスをオンにしてください。');
+                return;
+            }
+
+            if (!confirm(`番号 ${cidNum} を本当に削除しますか？`)) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>

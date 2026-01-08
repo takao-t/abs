@@ -3,12 +3,15 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $p_command = $_POST['command'] ?? '';
     
     // 実行結果と実行したコマンドをセッションに保存
-    $_SESSION['last_command_output'] = AbspFunctions\exec_cli_command($p_command);
+    // 静的呼び出しをインスタンスメソッドに変更
+    $_SESSION['last_command_output'] = $ami->execCliCommand($p_command);
     $_SESSION['last_command_run'] = $p_command;
 
     header('Location: index.php?page=exec-cmd-page');
@@ -16,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // GET時処理
-// セッションから前回の実行結果を取得し、セッション変数は破棄する
 $last_command = $_SESSION['last_command_run'] ?? '';
 $command_output_raw = $_SESSION['last_command_output'] ?? '';
 unset($_SESSION['last_command_run'], $_SESSION['last_command_output']);
@@ -26,7 +28,7 @@ $formatted_output = '';
 if ($command_output_raw) {
     // 最初に全体をHTMLエスケープして安全性を確保
     $safe_output = htmlspecialchars($command_output_raw, ENT_QUOTES, 'UTF-8');
-    // その後で、行先頭のOutput:を削除(他に整形したいものがあればここへ)
+    // Output: を削除
     $formatted_output = str_replace(
         ['Output: ', ],
         ['', ],

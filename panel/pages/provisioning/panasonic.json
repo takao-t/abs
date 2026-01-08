@@ -8,15 +8,15 @@
             "page": "prov-pana-master"
         },
         {
-            "title": "端末(ピア)情報",
-            "desc": "各電話機のピア情報と内線情報ファイルの生成",
-            "page": "prov-pana-peer-generator",
+            "title": "端末(エンドポイント)情報",
+            "desc": "各電話機のエンドポイント情報と内線情報ファイルの生成",
+            "page": "prov-pana-endpoint-generator",
             "type": "normal"
         },
         {
-            "title": "FA端末(ピア)情報",
-            "desc": "FA電話機のピア情報と内線情報ファイルの生成",
-            "page": "prov-pana-peer-generator",
+            "title": "FA端末(エンドポイント)情報",
+            "desc": "FA電話機のエンドポイント情報と内線情報ファイルの生成",
+            "page": "prov-pana-endpoint-generator",
             "type": "fap"
         },
         {

@@ -3,12 +3,14 @@ session_start();
 $error_message = '';
 
 require_once 'php/config.php';
-require_once 'php/astman.php';
-require_once 'php/functions.php';
+require_once 'php/AbspManager.php';
+
+// --- AMI接続インスタンス化 ---
+$ami = new \AbspFunctions\AbspManager(AMI_HOST, AMI_USER, AMI_PASS, AMI_PORT);
 
 //ユーザの存在有無チェック
-function user_exists() {
-    $users = AbspFunctions\get_db_family('ABS/PANELUSER');
+function user_exists($ami) { // 引数に $ami を渡す形に変更
+    $users = $ami->getFamilyDB('ABS/PANELUSER');
     if(empty($users)){
         return false;
     } else {
@@ -16,7 +18,7 @@ function user_exists() {
     }
 }
 
-if (user_exists()) {
+if (user_exists($ami)) {
     // ユーザーが一人でもいる場合にはログインページへ
     header('Location: login.php');
     exit;
@@ -37,10 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // パスワードハッシュを生成
 	$hashed_pass = password_hash($password, PASSWORD_DEFAULT);
         // AstDBにユーザ名とハッシュを登録
-        AbspFunctions\put_db_item('ABS/PANELUSER', $username, $hashed_pass);
+        $ami->putDbItem('ABS/PANELUSER', $username, $hashed_pass);
 
         // 保存されたハッシュが取得できなければAstDBへの保存が失敗しているのでエラー
-        $stored_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $username); 
+        $stored_hash = $ami->getDbItem('ABS/PANELUSER', $username); 
+        
         if($stored_hash == $hashed_pass){
             $result = true;
         } else {

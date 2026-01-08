@@ -1,0 +1,54 @@
+;ひかりRTX/NVR用テンプレート ##NUM##
+;pjsip.confにtransportを設定しておくこと
+;RTX/NVRの設定を事前に正しく行っておくこと
+;特にヤマハのSIP-NATは5060でしか動作しないので注意
+;このテンプレートではトランスポートをtransport-rtxとしてこのファイル内で定義している
+;他に5060を使っているものがあれば、そちらを使うこと
+;ACLはエリアによって異なるので調整のこと
+;
+
+;5060トランスポート
+[transport-rtx]
+type = transport
+protocol = udp
+bind = 0.0.0.0:5060
+local_net = 192.168.0.0/16
+
+;ひかり電話RTX
+;
+[##TRUNKNAME##]
+type = aor
+contact = sip:##IPADDR##
+
+[##TRUNKNAME##]
+type = identify
+endpoint = ##TRUNKNAME##
+match = ##IPADDR##
+
+[##TRUNKNAME##]
+type = registration
+contact_user = ##EXTEN##
+transport = transport-rtx
+expiration = 3600
+fatal_retry_interval = 60
+forbidden_retry_interval = 60
+server_uri = sip:##PROXY##
+client_uri = sip:##EXTEN##@##PROXY##
+
+[##TRUNKNAME##]
+type = endpoint
+transport = transport-rtx
+context = from-hikari-rtx
+dtmf_mode = inband
+language = ja
+disallow = all
+allow = ulaw
+rtp_symmetric = no
+force_rport = no
+rewrite_contact = no
+direct_media = no
+send_pai = yes
+tos_audio = 0xb8
+from_user = ##EXTEN##
+from_domain = ##PROXY##
+aors = ##TRUNKNAME##

@@ -1,5 +1,8 @@
 <?php
-if (!defined('ABS_PANEL_INCLUDED')) {
+// index.php で生成された $ami インスタンスを使用
+global $ami;
+
+if (!defined('ABS_PANEL_INCLUDED') || !is_object($ami)) {
     die("Direct access is not permitted.");
 }
 
@@ -16,21 +19,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $p_pname = trim($_POST['pname'] ?? '');
             $is_valid = true;
 
+            // バリデーション
             if (strlen($p_qnum) !== 3 || !ctype_digit($p_qnum) || (int)$p_qnum > 299) {
                 $flash_message = ['type' => 'error', 'text' => '短縮番号は3桁の数字（000～299）で指定してください。'];
                 $is_valid = false;
             } elseif (empty($p_pnum)) {
                 $flash_message = ['type' => 'error', 'text' => '電話番号は必須です。'];
                 $is_valid = false;
-            } elseif (AbspFunctions\get_db_item('ABS/quickdial', $p_qnum) !== "") {
+            } elseif ($ami->getDbItem('ABS/quickdial', $p_qnum) !== "") {
                 // 重複チェック
                 $flash_message = ['type' => 'error', 'text' => "短縮番号 {$p_qnum} は既に使用されています。変更する場合は一覧から「編集」ボタンを押してください。"];
                 $is_valid = false;
             }
 
             if ($is_valid) {
-                AbspFunctions\put_db_item('ABS/quickdial', $p_qnum, $p_pnum);
-                AbspFunctions\put_db_item('cidname', $p_pnum, $p_pname);
+                $ami->putDbItem('ABS/quickdial', $p_qnum, $p_pnum);
+                // 名前解決用のCIDNAMEにも登録
+                $ami->putDbItem('cidname', $p_pnum, $p_pname);
                 $flash_message['text'] = "短縮番号 {$p_qnum} を追加しました。";
             } else {
                 $_SESSION['form_data'] = $_POST;
@@ -47,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $flash_message = ['type' => 'error', 'text' => '電話番号は必須です。'];
                 $_SESSION['form_data'] = $_POST;
             } else {
-                AbspFunctions\put_db_item('ABS/quickdial', $p_qnum, $p_pnum);
-                AbspFunctions\put_db_item('cidname', $p_pnum, $p_pname);
+                $ami->putDbItem('ABS/quickdial', $p_qnum, $p_pnum);
+                $ami->putDbItem('cidname', $p_pnum, $p_pname);
                 $flash_message['text'] = "短縮番号 {$p_qnum} を更新しました。";
             }
             break;
@@ -57,14 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'entdel':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_qnum = $_POST['d_qnum'];
-                AbspFunctions\del_db_item('ABS/quickdial', $p_d_qnum);
+                $ami->delDbItem('ABS/quickdial', $p_d_qnum);
+                // 補足: cidnameは他の用途でも使う可能性があるため、ここでは削除しない仕様を維持
                 $flash_message['text'] = "短縮番号 {$p_d_qnum} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
             }
             break;
 
-        // 編集モードへの移行
+        // 編集モードへの移行 (Session経由でデータを渡す)
         case 'entedi':
             $_SESSION['edit_qd_data'] = [
                 'qnum' => $_POST['e_qnum'],
@@ -76,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // プレフィックス設定
         case 'ogpset':
-            AbspFunctions\put_db_item('ABS/quickdial', 'PFX', $_POST['qdogp'] ?? '0');
+            $ami->putDbItem('ABS/quickdial', 'PFX', $_POST['qdogp'] ?? '0');
             $flash_message['text'] = 'クイックダイヤル時のプレフィクスを設定しました。';
             break;
     }
@@ -94,7 +100,10 @@ $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
 // プレフィックス設定値を取得
-$qdpfx_setting = AbspFunctions\get_db_item('ABS/quickdial', 'PFX') ?: '0';
+$qdpfx_setting = $ami->getDbItem('ABS/quickdial', 'PFX');
+if ($qdpfx_setting === '') {
+    $qdpfx_setting = '0';
+}
 
 // フォームの初期値と設定
 $form_defaults = ['qnum' => '', 'pnum' => '', 'pname' => ''];
@@ -110,22 +119,30 @@ if (isset($_SESSION['edit_qd_data'])) {
 
 // 登録済み一覧の取得
 $qd_list = [];
-$db_entries = AbspFunctions\get_db_family('ABS/quickdial');
+$db_entries = $ami->getDbFamily('ABS/quickdial');
+
 if (is_array($db_entries)) {
     foreach ($db_entries as $line) {
-        list($qnum, $pnum) = explode(' : ', $line, 2);
-        $qnum = trim($qnum);
-        if (ctype_digit($qnum)) { // PFXキーは除外
-            $pnum = trim($pnum);
-            $qd_list[] = [
-                'qnum' => $qnum,
-                'pnum' => $pnum,
-                'pname' => AbspFunctions\get_db_item('cidname', $pnum) ?: '',
-            ];
+        // AMIの戻り値 "Key : Value" を分解
+        // getDbFamilyの結果はプレフィクスが除去されているため、"001 : 090..." のようになる
+        $parts = explode(' : ', $line, 2);
+        
+        if (count($parts) === 2) {
+            $qnum = trim($parts[0]);
+            $pnum = trim($parts[1]);
+
+            // 数字キーのみ対象（PFXなどの設定キーを除外）
+            if (ctype_digit($qnum)) { 
+                $qd_list[] = [
+                    'qnum'  => $qnum,
+                    'pnum'  => $pnum,
+                    'pname' => $ami->getDbItem('cidname', $pnum), // 名前解決
+                ];
+            }
         }
     }
 }
-// 短縮番号でソート
+// 短縮番号順にソート
 sort($qd_list);
 
 ?>
@@ -203,10 +220,11 @@ sort($qd_list);
                                 <input type="hidden" name="e_pname" value="<?= htmlspecialchars($qd_entry['pname'], ENT_QUOTES, 'UTF-8') ?>">
                                 <button type="submit" class="btn btn-row">編集</button>
                             </form>
-                            <form action="" method="POST" style="margin: 0;" onsubmit="if(!this.delcb.checked) { alert('削除するにはチェックボックスをオンにしてください。'); return false; } return confirm('短縮番号 <?= htmlspecialchars($qd_entry['qnum'], ENT_QUOTES, 'UTF-8') ?> を本当に削除しますか？');">
+                            
+                            <form action="" method="POST" style="margin: 0;" class="delete-form" data-qnum="<?= htmlspecialchars($qd_entry['qnum'], ENT_QUOTES, 'UTF-8') ?>">
                                 <input type="hidden" name="function" value="entdel">
                                 <input type="hidden" name="d_qnum" value="<?= htmlspecialchars($qd_entry['qnum'], ENT_QUOTES, 'UTF-8') ?>">
-                                <input type="checkbox" name="delcb" value="yes" title="削除するにはチェックを入れてください">
+                                <input type="checkbox" name="delcb" value="yes" class="delete-checkbox" title="削除するにはチェックを入れてください">
                                 <button type="submit" class="btn btn-row">削除</button>
                             </form>
                         </div>
@@ -217,3 +235,27 @@ sort($qd_list);
         </tbody>
     </table>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 削除フォームの送信イベントを制御
+    const deleteForms = document.querySelectorAll('.delete-form');
+    
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const checkbox = this.querySelector('.delete-checkbox');
+            const qnum = this.dataset.qnum;
+
+            if (!checkbox.checked) {
+                e.preventDefault();
+                alert('削除するにはチェックボックスをオンにしてください。');
+                return;
+            }
+
+            if (!confirm(`短縮番号 ${qnum} を本当に削除しますか？`)) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>

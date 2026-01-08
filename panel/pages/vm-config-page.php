@@ -1,5 +1,8 @@
 <?php
-if (!defined('ABS_PANEL_INCLUDED')) {
+// index.php で生成された $ami インスタンスを使用
+global $ami;
+
+if (!defined('ABS_PANEL_INCLUDED') || !is_object($ami)) {
     die("Direct access is not permitted.");
 }
 
@@ -9,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $function = $_POST['function'] ?? '';
 
     if ($function == 'vm_settings') {
-        AbspFunctions\put_db_item('ABS/VM', 'PIN', $_POST['pin'] ?? '');
-        AbspFunctions\put_db_item('ABS/VM', 'RPIN', $_POST['rpin'] ?? '');
+        $ami->putDbItem('ABS/VM', 'PIN', $_POST['pin'] ?? '');
+        $ami->putDbItem('ABS/VM', 'RPIN', $_POST['rpin'] ?? '');
     } else {
         $flash_message = null; // No action taken
     }
@@ -27,15 +30,18 @@ $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
 // 音声フォーマット変換
+// (注意: audio/convert.sh に実行権限が必要です)
 exec('audio/convert.sh abs-tcmessage abs-tcrmessage > /dev/null 2>&1');
 
 // PIN設定値を取得
-$pin_setting = AbspFunctions\get_db_item('ABS/VM', 'PIN') ?: '';
-$rpin_setting = AbspFunctions\get_db_item('ABS/VM', 'RPIN') ?: '';
+$pin_setting = $ami->getDbItem('ABS/VM', 'PIN');
+$rpin_setting = $ami->getDbItem('ABS/VM', 'RPIN');
 
 // 音声ファイルのパスと最終更新日時
 $tcmessage_path = 'audio/abs-tcmessage.mp3';
 $tcrmessage_path = 'audio/abs-tcrmessage.mp3';
+
+// file_exists 等はPHP標準関数なのでそのまま使用
 $tcmessage_mtime = file_exists($tcmessage_path) ? date("Y-m-d H:i:s", filemtime($tcmessage_path)) : '不明';
 $tcrmessage_mtime = file_exists($tcrmessage_path) ? date("Y-m-d H:i:s", filemtime($tcrmessage_path)) : '不明';
 

@@ -11,20 +11,24 @@ const MAX_LOGIN_ATTEMPTS = 3; // 最大試行回数
 const LOCKOUT_TIME_SECONDS = 300; // ロック時間(秒)
 
 require_once 'php/config.php';
-require_once 'php/astman.php';
-require_once 'php/functions.php';
 require_once 'php/abscache.php';
+//require_once 'php/actionlogger.php';
+require_once 'php/AbspManager.php';
 
 $mycache = new absCache();
+// --- AMI接続インスタンス化 ---
+$ami = new \AbspFunctions\AbspManager(AMI_HOST, AMI_USER, AMI_PASS, AMI_PORT);
 
 $error_message = '';
 $reason = $_GET['reason'] ?? '';
 
 //ユーザリストを取得(配列リターン)
-$reg_users = AbspFunctions\get_db_family('ABS/PANELUSER');
+$reg_users = $ami->getFamilyDB('ABS/PANELUSER');
+
 if(empty($reg_users)){
     // ユーザリストが取得できない場合Asteriskが実行中かを確認
-    $ast_version = AbspFunctions\exec_cli_command('core show version');
+    $ast_version = $ami->execCliCommand('core show version');
+
     if($ast_version === false){
         $error_message = 'Asteriskが起動していないためログインできまません。システムをチェックしてください。';
     }
@@ -60,12 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = $_POST['password'] ?? '';
 
         //Asteriskが実行中かを確認 
-        $ast_version = AbspFunctions\exec_cli_command('core show version');
+        $ast_version = $ami->execCliCommand('core show version');
+
         if($ast_version !== false){
             if (empty($username) || empty($password)) {
                 $error_message = 'ユーザ名とパスワードを入力してください。';
             } else {
-                $stored_hash = AbspFunctions\get_db_item('ABS/PANELUSER', $username);
+                $stored_hash = $ami->getDbItem('ABS/PANELUSER', $username);
             
                 if ($stored_hash !== '' && password_verify($password, $stored_hash)) {
                     // --- ログイン成功時の処理 ---
@@ -78,7 +83,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $existing_session_id = $mycache->get("ABS/PANELUSER/{$username}", 'session_id');
                     $last_activity_timestamp = $mycache->get("ABS/PANELUSER/{$username}", 'last_activity');
                 
-                    $session_timeout_minutes = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT') ?? 30;
+                    $session_timeout_minutes = $ami->getDbItem('ABS/PANEL', 'SESSION_TIMEOUT');
+                    if(empty($session_timeout_minutes)) $session_timeout_minutes = 30; // フォールバック処理
+
                     $session_lifetime_seconds = (int)$session_timeout_minutes * 60;
                 
                     $is_session_active = false;
@@ -102,6 +109,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $_SESSION['is_logged_in'] = true;
                         $_SESSION['username'] = $username;
                         $_SESSION['last_activity'] = $current_time;
+
+                        //操作ログ
+                        //try{
+                        //    $logger = new ActionLogger();
+                        //    $logger->Log($username, 'logged-in');
+                        //} catch (\Exception $e){
+                        //    error_log('Failed to record log: ' . $e->getMessage());
+                        //}
 
                         header('Location: index.php');
                         exit;

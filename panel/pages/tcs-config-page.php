@@ -1,5 +1,8 @@
 <?php
-if (!defined('ABS_PANEL_INCLUDED')) {
+// index.php で生成された $ami インスタンスを使用
+global $ami;
+
+if (!defined('ABS_PANEL_INCLUDED') || !is_object($ami)) {
     die("Direct access is not permitted.");
 }
 
@@ -10,54 +13,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     switch ($function) {
         case 'tccset': // 時間外制御設定
-            AbspFunctions\put_db_item('ABS', 'TCC', $_POST['tccval'] ?? '0');
+            $ami->putDbItem('ABS', 'TCC', $_POST['tccval'] ?? '0');
             break;
 
         case 'tdisset': // ダイヤルイン時間外制御設定
-            AbspFunctions\put_db_item('ABS/DID', 'TCS', $_POST['tdiss'] ?? '1');
+            $ami->putDbItem('ABS/DID', 'TCS', $_POST['tdiss'] ?? '1');
             break;
 
         case 'thdisset': // ダイヤルイン時休日制御
-            AbspFunctions\put_db_item('ABS/DID', 'THS', $_POST['thdiss'] ?? '1');
+            $ami->putDbItem('ABS/DID', 'THS', $_POST['thdiss'] ?? '1');
             break;
 
         case 'tcspecset': // 時刻情報設定
-            $p_twday = '';
             $days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+            $selected_days = [];
+            
             foreach($days as $day) {
-                if(isset($_POST[$day])) $p_twday .= '&' . $_POST[$day];
+                if(isset($_POST[$day])) {
+                    $selected_days[] = $_POST[$day];
+                }
             }
-            $p_twday = ltrim($p_twday, '&');
+            // 配列を '&' で結合 (例: mon&tue&wed)
+            $p_twday = implode('&', $selected_days);
+            
             $p_tstart = $_POST['tstart'] ?? '09:00';
             $p_tend = $_POST['tend'] ?? '17:00';
+            
+            // AsteriskのTime書式: time,days,dayofmonth,month
             $p_tcspec = "{$p_tstart}-{$p_tend},{$p_twday},*,*";
-            AbspFunctions\put_db_item('ABS', 'TCSPEC', $p_tcspec);
+            $ami->putDbItem('ABS', 'TCSPEC', $p_tcspec);
             break;
 
         case 'tchset': // 祝日・休日制御
-            AbspFunctions\put_db_item('ABS', 'TCHC', $_POST['tchval'] ?? '0');
+            $ami->putDbItem('ABS', 'TCHC', $_POST['tchval'] ?? '0');
             break;
 
         case 'tctset': // トグル切り替え設定
-            AbspFunctions\put_db_item('ABS', 'TCT', $_POST['tctval'] ?? '0');
+            $ami->putDbItem('ABS', 'TCT', $_POST['tctval'] ?? '0');
             break;
 
         case 'tcpinset': // PINセット
-            AbspFunctions\put_db_item('ABS', 'TCPIN', $_POST['tcpin'] ?? '');
+            $ami->putDbItem('ABS', 'TCPIN', $_POST['tcpin'] ?? '');
             break;
 
         case 'wtiset': // 待機時間設定
-            AbspFunctions\put_db_item('ABS', 'WTI', $_POST['wtival'] ?? '10');
+            $ami->putDbItem('ABS', 'WTI', $_POST['wtival'] ?? '10');
             break;
 
         case 'tcovr': // 時間外迂回設定
-            AbspFunctions\put_db_item('ABS', 'TCPBRP', trim($_POST['tcpbrp'] ?? '1'));
-            AbspFunctions\put_db_item('ABS', 'TCOVRPIN', trim($_POST['tcovrpin'] ?? ''));
-            AbspFunctions\put_db_item('ABS', 'TCOVREXT', trim($_POST['tcovrext'] ?? ''));
+            $ami->putDbItem('ABS', 'TCPBRP', trim($_POST['tcpbrp'] ?? '1'));
+            $ami->putDbItem('ABS', 'TCOVRPIN', trim($_POST['tcovrpin'] ?? ''));
+            $ami->putDbItem('ABS', 'TCOVREXT', trim($_POST['tcovrext'] ?? ''));
             break;
         
         default:
-            $flash_message = null; // No action taken
+            $flash_message = null;
             break;
     }
 
@@ -72,31 +82,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// 各種設定値を取得 (デフォルト値付きで安全に)
-$tcc_setting = AbspFunctions\get_db_item('ABS', 'TCC') ?: '0';
-$tdis_setting = AbspFunctions\get_db_item('ABS/DID', 'TCS') ?: '1';
-$thdis_setting = AbspFunctions\get_db_item('ABS/DID', 'THS') ?: '1';
-$tch_setting = AbspFunctions\get_db_item('ABS', 'TCHC') ?: '0';
-$tct_setting = AbspFunctions\get_db_item('ABS', 'TCT') ?: '0';
-$tcpin_setting = AbspFunctions\get_db_item('ABS', 'TCPIN') ?: '';
-$wti_setting = AbspFunctions\get_db_item('ABS', 'WTI') ?: '10';
-$tcpbrp_setting = AbspFunctions\get_db_item('ABS', 'TCPBRP') ?: '1';
-$tcovrpin_setting = AbspFunctions\get_db_item('ABS', 'TCOVRPIN') ?: '';
-$tcovrext_setting = AbspFunctions\get_db_item('ABS', 'TCOVREXT') ?: '';
+// 各種設定値を取得
+$tcc_setting = $ami->getDbItem('ABS', 'TCC');
+if ($tcc_setting === '') $tcc_setting = '0';
+
+$tdis_setting = $ami->getDbItem('ABS/DID', 'TCS');
+if ($tdis_setting === '') $tdis_setting = '1';
+
+$thdis_setting = $ami->getDbItem('ABS/DID', 'THS');
+if ($thdis_setting === '') $thdis_setting = '1';
+
+$tch_setting = $ami->getDbItem('ABS', 'TCHC');
+if ($tch_setting === '') $tch_setting = '0';
+
+$tct_setting = $ami->getDbItem('ABS', 'TCT');
+if ($tct_setting === '') $tct_setting = '0';
+
+$tcpin_setting = $ami->getDbItem('ABS', 'TCPIN');
+
+$wti_setting = $ami->getDbItem('ABS', 'WTI');
+if ($wti_setting === '') $wti_setting = '10';
+
+$tcpbrp_setting = $ami->getDbItem('ABS', 'TCPBRP');
+if ($tcpbrp_setting === '') $tcpbrp_setting = '1';
+
+$tcovrpin_setting = $ami->getDbItem('ABS', 'TCOVRPIN');
+$tcovrext_setting = $ami->getDbItem('ABS', 'TCOVREXT');
 
 // 時刻・曜日設定のパース
-$tcspec = AbspFunctions\get_db_item('ABS', 'TCSPEC');
+$tcspec = $ami->getDbItem('ABS', 'TCSPEC');
+$stime_setting = '09:00';
+$etime_setting = '17:00';
+$twday_setting = 'mon&tue&wed&thu&fri'; // デフォルト
+
 if (!empty($tcspec)) {
-    list($ttime, $twday_setting) = explode(',', $tcspec, 3);
-    list($stime_setting, $etime_setting) = explode('-', $ttime, 2);
-} else {
-    $stime_setting = '09:00';
-    $etime_setting = '17:00';
-    $twday_setting = 'mon&tue&wed&thu&fri';
+    // データ形式: 09:00-17:00,mon&tue,*,*
+    $parts = explode(',', $tcspec, 3);
+    if (count($parts) >= 2) {
+        $ttime = $parts[0];
+        $twday_setting = $parts[1];
+        
+        $times = explode('-', $ttime, 2);
+        if (count($times) == 2) {
+            $stime_setting = $times[0];
+            $etime_setting = $times[1];
+        }
+    }
 }
 
-// 時間外迂回先の選択肢
-$tcovrext_selectors = AbspFunctions\create_target_list('group', $tcovrext_setting);
+// 時間外迂回先の選択肢取得 (Logic分離)
+// 元のコードは 'group' 指定でしたが、新しい仕組みでは全ターゲット(内線、グループ等)を取得して表示します
+$target_list = $ami->getTargetList();
 
 ?>
 <h2>時間外制御設定</h2>
@@ -223,10 +259,17 @@ $tcovrext_selectors = AbspFunctions\create_target_list('group', $tcovrext_settin
         <input type="text" id="tcpbrp" name="tcpbrp" value="<?= htmlspecialchars($tcpbrp_setting, ENT_QUOTES, 'UTF-8') ?>" class="input-xshort">
         <label for="tcovrpin" style="font-weight: normal;">PIN</label>
         <input type="text" id="tcovrpin" name="tcovrpin" value="<?= htmlspecialchars($tcovrpin_setting, ENT_QUOTES, 'UTF-8') ?>" class="input-short">
+        
         <label for="tcovrext" style="font-weight: normal;">着信先</label>
         <select id="tcovrext" name="tcovrext">
-            <?= $tcovrext_selectors ?>
+            <option value="">選択なし</option>
+            <?php foreach ($target_list as $target): ?>
+                <option value="<?= htmlspecialchars($target['value'], ENT_QUOTES, 'UTF-8') ?>" <?= ($target['value'] == $tcovrext_setting) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($target['label'], ENT_QUOTES, 'UTF-8') ?>
+                </option>
+            <?php endforeach; ?>
         </select>
+        
         <button type="submit" class="btn">設定</button>
     </div>
     <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0.5em;">

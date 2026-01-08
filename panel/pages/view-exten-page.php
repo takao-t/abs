@@ -3,15 +3,17 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // 内線リストの取得とフィルタリング
 $extension_list = [];
-$db_peers = AbspFunctions\get_db_family('ABS/EXT');
-if (is_array($db_peers)) {
-    foreach($db_peers as $peer_line) {
-        list($exten, $peer) = explode(':', $peer_line, 2);
+$db_endpoints = $ami->getDbFamily('ABS/EXT');
+if (is_array($db_endpoints)) {
+    foreach($db_endpoints as $endpoint_line) {
+        list($exten, $endpoint) = explode(':', $endpoint_line, 2);
         // スラッシュや特定のキーワードを含むエントリは除外
         if(strpos($exten, '/') === false && strpos($exten, 'RGPT') === false && strpos($exten, 'TMO') === false){
-            $extension_list[] = ['exten' => trim($exten), 'peer' => trim($peer)];
+            $extension_list[] = ['exten' => trim($exten), 'endpoint' => trim($endpoint)];
         }
     }
 }
@@ -51,7 +53,7 @@ if ($file_handle) {
                 <?php foreach($extension_list as $ext): ?>
                 <tr>
                     <td><?= htmlspecialchars($ext['exten'], ENT_QUOTES, 'UTF-8') ?></td>
-                    <td><?= htmlspecialchars($ext['peer'], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><?= htmlspecialchars($ext['endpoint'], ENT_QUOTES, 'UTF-8') ?></td>
                 </tr>
                 <?php endforeach; ?>
             <?php endif; ?>

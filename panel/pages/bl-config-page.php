@@ -3,6 +3,8 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // POST時処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
@@ -14,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (ctype_digit($p_blnumber)) {
                 $nowdt = new DateTime('NOW');
                 $tmpdt = $nowdt->format('Y-m-d/H:i:s');
-                AbspFunctions\put_db_item('ABS/blocklist', $p_blnumber, $tmpdt);
+                $ami->putDbItem('ABS/blocklist', $p_blnumber, $tmpdt);
                 $flash_message['text'] = "番号 {$p_blnumber} を着信拒否リストに追加しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '番号は数字のみで指定してください。'];
@@ -25,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($_POST['delcb'])) {
                 $deleted_count = 0;
                 foreach ($_POST['delcb'] as $entry) {
-                    AbspFunctions\del_db_item('ABS/blocklist', $entry);
+                    $ami->delDbItem('ABS/blocklist', $entry);
                     $deleted_count++;
                 }
                 $flash_message['text'] = "{$deleted_count}件の番号を削除しました。";
@@ -36,41 +38,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         case 'alcont': // 許可リストのみ着信
             if (isset($_POST['alist']) && $_POST['alist'] === 'on') {
-                AbspFunctions\put_db_item('ABS/BLC', 'ALIST', '1');
+                $ami->putDbItem('ABS/BLC', 'ALIST', '1');
             } else {
-                AbspFunctions\del_db_item('ABS/BLC', 'ALIST');
+                $ami->delDbItem('ABS/BLC', 'ALIST');
             }
             break;
 
         case 'anonupdate': // 匿名着信設定
             if (isset($_POST['anonopt']) && $_POST['anonopt'] === 'on') {
-                AbspFunctions\put_db_item('ABS', 'ANB', '1');
+                $ami->putDbItem('ABS', 'ANB', '1');
             } else {
-                AbspFunctions\del_db_item('ABS', 'ANB');
+                $ami->delDbItem('ABS', 'ANB');
             }
             break;
             
         case 'bhnumber': // ゴミ箱内線登録
             $p_bh_ext = trim($_POST['bhnum'] ?? '');
-            $c_bh_ext = AbspFunctions\get_db_item('ABS/ERV', 'trashbin');
+            $c_bh_ext = $ami->getDbItem('ABS/ERV', 'trashbin');
             
             if ($p_bh_ext === '') { // 入力が空なら削除
                 if ($c_bh_ext !== "") {
-                    AbspFunctions\del_db_item('ABS/EXT', $c_bh_ext);
-                    AbspFunctions\del_db_item('ABS/ERV', 'trashbin');
+                    $ami->delDbItem('ABS/EXT', $c_bh_ext);
+                    $ami->delDbItem('ABS/ERV', 'trashbin');
                 }
-            } elseif (AbspFunctions\get_db_item('ABS/EXT', $p_bh_ext) !== "") {
+            } elseif ($ami->getDbItem('ABS/EXT', $p_bh_ext) !== "") {
                 $flash_message = ['type' => 'error', 'text' => 'その内線番号は既に使用されています。'];
             } else {
-                if ($c_bh_ext !== "") AbspFunctions\del_db_item('ABS/EXT', $c_bh_ext);
-                AbspFunctions\put_db_item('ABS/LOCALTECH', 'trashbin', 'Local');
-                AbspFunctions\put_db_item('ABS/EXT', 'trashbin', $p_bh_ext);
-                AbspFunctions\put_db_item('ABS/ERV', 'trashbin', $p_bh_ext);
+                if ($c_bh_ext !== "") $ami->delDbItem('ABS/EXT', $c_bh_ext);
+                $ami->putDbItem('ABS/LOCALTECH', 'trashbin', 'Local');
+                $ami->putDbItem('ABS/EXT', 'trashbin', $p_bh_ext);
+                $ami->putDbItem('ABS/ERV', 'trashbin', $p_bh_ext);
             }
             break;
 
         case 'blccupdate': // 拒否時カスタムcontext
-            AbspFunctions\put_db_item('ABS', 'BLC', trim($_POST['blcc'] ?? ''));
+            $ami->putDbItem('ABS', 'BLC', trim($_POST['blcc'] ?? ''));
             break;
     }
 
@@ -86,14 +88,14 @@ $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
 // 各種設定値の取得
-$alist_setting = AbspFunctions\get_db_item('ABS/BLC', 'ALIST') === '1';
-$anon_setting = AbspFunctions\get_db_item('ABS', 'ANB') === '1';
-$bhnum_setting = AbspFunctions\get_db_item('ABS/ERV', 'trashbin') ?: '';
-$blcc_setting = AbspFunctions\get_db_item('ABS', 'BLC') ?: '';
+$alist_setting = $ami->getDbItem('ABS/BLC', 'ALIST') === '1';
+$anon_setting = $ami->getDbItem('ABS', 'ANB') === '1';
+$bhnum_setting = $ami->getDbItem('ABS/ERV', 'trashbin') ?: '';
+$blcc_setting = $ami->getDbItem('ABS', 'BLC') ?: '';
 
 // 拒否リスト全件取得
 $blocklist_all = [];
-$db_entries = AbspFunctions\get_db_family('ABS/blocklist');
+$db_entries = $ami->getFamilyDB('ABS/blocklist');
 if (is_array($db_entries)) {
     foreach ($db_entries as $line) {
         list($pnum, $pdate) = explode(' : ', $line, 2);

@@ -3,7 +3,57 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+/**
+ * ページ固有ロジック: 登録済みのキー着信設定リストを取得
+ * ViewとLogic分離のため、整形済みの配列を返す
+ * @param AbspFunctions\AbspManager $ami
+ * @return array [['did' => '0312345678', 'target' => '1'], ...]
+ */
+function fetch_keyin_list($ami) {
+    $list = [];
+    $db_entries = $ami->getFamilyDB('ABS/TRUNK');
+
+    if (is_array($db_entries)) {
+        foreach ($db_entries as $line) {
+            // AMIの出力形式 "Key : Value" をパース
+            $parts = explode(' : ', $line, 2);
+            if (count($parts) < 2) continue;
+
+            $key = trim($parts[0]);
+            $target = trim($parts[1]);
+            
+            // キー形式 "DidNumber/KEY" をチェック
+            // キーに '/' が含まれ、かつ末尾が 'KEY' であるものを対象とする
+            $key_parts = explode('/', $key);
+            if (count($key_parts) === 2 && $key_parts[1] === 'KEY') {
+                $did = $key_parts[0];
+                $list[$did] = ['did' => $did, 'target' => $target];
+            }
+        }
+    }
+    
+    // 着信番号順にソート
+    ksort($list, SORT_NATURAL);
+    return array_values($list);
+}
+
+/**
+ * ページ固有ロジック: プレフィクス種別の選択肢定義
+ * @return array
+ */
+function get_opf57_options() {
+    return [
+        '0' => '*56',
+        '1' => '*571',
+        '2' => '*572',
+        '3' => '*573',
+        '4' => '*574',
+    ];
+}
+
+// =========================================================
 // POST時処理
+// =========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $flash_message = ['type' => 'success', 'text' => '設定を保存しました。'];
     $function = $_POST['function'] ?? '';
@@ -25,10 +75,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if ($is_valid) {
-                AbspFunctions\put_db_item("ABS/TRUNK/$p_didnumber", "KEY", $p_target);
-                $flash_message['text'] = ($function == 'newadd') ? "キー着信設定 {$p_didnumber} を追加しました。" : "キー着信設定 {$p_didnumber} を更新しました。";
+                $ami->putDbItem("ABS/TRUNK/$p_didnumber", "KEY", $p_target);
+                $action_text = ($function === 'newadd') ? "追加" : "更新";
+                $flash_message['text'] = "キー着信設定 {$p_didnumber} を{$action_text}しました。";
             } else {
-                // バリデーションエラーがあった場合、入力値をセッションに保存
                 $_SESSION['form_data'] = $_POST;
             }
             break;
@@ -37,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         case 'entdel':
             if (isset($_POST['delcb']) && $_POST['delcb'] === 'yes') {
                 $p_d_didnumber = $_POST['d_didnumber'];
-                AbspFunctions\del_db_item("ABS/TRUNK/$p_d_didnumber", 'KEY');
+                $ami->delDbItem("ABS/TRUNK/$p_d_didnumber", 'KEY');
                 $flash_message['text'] = "キー着信設定 {$p_d_didnumber} を削除しました。";
             } else {
                 $flash_message = ['type' => 'error', 'text' => '削除するにはチェックボックスをオンにしてください。'];
@@ -50,18 +100,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'didnumber' => $_POST['e_didnumber'],
                 'target' => $_POST['e_target']
             ];
-            $flash_message = null; // 編集モードに入るだけなのでメッセージは不要
+            $flash_message = null; 
             break;
 
         // 着信時プレフィクス付加設定
         case 'pfxadd':
-            AbspFunctions\put_db_item('ABS', 'APF', $_POST['apfx'] ?? '0');
-            AbspFunctions\put_db_item('ABS', 'OPF57', $_POST['opf57'] ?? '0');
+            $ami->putDbItem('ABS', 'APF', $_POST['apfx'] ?? '0');
+            $ami->putDbItem('ABS', 'OPF57', $_POST['opf57'] ?? '0');
 
             if (isset($_POST['d56opt']) && $_POST['d56opt'] === 'on') {
-                AbspFunctions\put_db_item('ABS', 'D56', '1');
+                $ami->putDbItem('ABS', 'D56', '1');
             } else {
-                AbspFunctions\del_db_item('ABS', 'D56');
+                $ami->delDbItem('ABS', 'D56');
             }
             $flash_message['text'] = '着信時外線捕捉プレフィクス設定を更新しました。';
             break;
@@ -75,11 +125,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// GET時処理
+
+// =========================================================
+// GET時処理 (View用データの準備)
+// =========================================================
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
 
-// フォームの初期値と設定
+// フォームの初期値
 $form_defaults = ['didnumber' => '', 'target' => ''];
 $form_values = $_SESSION['form_data'] ?? $form_defaults;
 unset($_SESSION['form_data']);
@@ -91,26 +144,19 @@ if (isset($_SESSION['edit_keyin_data'])) {
     unset($_SESSION['edit_keyin_data']);
 }
 
-// 登録済キー着信番号一覧を取得
-$keyin_list = [];
-$db_entries = AbspFunctions\get_db_family('ABS/TRUNK');
-if (is_array($db_entries)) {
-    foreach ($db_entries as $line) {
-        list($key, $target) = explode(' : ', $line, 2);
-        $key_parts = explode('/', trim($key));
-        if (isset($key_parts[1]) && trim($key_parts[1]) === 'KEY') {
-            $did = $key_parts[0];
-            $keyin_list[] = ['did' => $did, 'target' => trim($target)];
-        }
-    }
-}
+// 1. キー着信リストの取得 (ロジック分離)
+$keyin_list = fetch_keyin_list($ami);
 
-// 各種設定値を取得
-$apfx_setting = AbspFunctions\get_db_item('ABS', 'APF') ?: '0';
-$opf57_setting = AbspFunctions\get_db_item('ABS', 'OPF57') ?: '0';
-$d56_setting = AbspFunctions\get_db_item('ABS', 'D56');
+// 2. プレフィクス種別オプションの取得
+$opf57_opts = get_opf57_options();
+
+// 3. 各種設定値の取得
+$apfx_setting = $ami->getDbItem('ABS', 'APF') ?: '0';
+$opf57_setting = $ami->getDbItem('ABS', 'OPF57') ?: '0';
+$d56_setting = $ami->getDbItem('ABS', 'D56');
 
 ?>
+
 <h2>キー着信設定</h2>
 
 <?php if ($flash_message): ?>
@@ -199,11 +245,11 @@ $d56_setting = AbspFunctions\get_db_item('ABS', 'D56');
         
         <label for="opf57">プレフィクス種別:</label>
         <select name="opf57" id="opf57" class="input-xmiddle">
-            <option value="0" <?= ($opf57_setting === '0') ? 'selected' : '' ?>>*56</option>
-            <option value="1" <?= ($opf57_setting === '1') ? 'selected' : '' ?>>*571</option>
-            <option value="2" <?= ($opf57_setting === '2') ? 'selected' : '' ?>>*572</option>
-            <option value="3" <?= ($opf57_setting === '3') ? 'selected' : '' ?>>*573</option>
-            <option value="4" <?= ($opf57_setting === '4') ? 'selected' : '' ?>>*574</option>
+            <?php foreach ($opf57_opts as $val => $label): ?>
+                <option value="<?= $val ?>" <?= ((string)$opf57_setting === (string)$val) ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>
+                </option>
+            <?php endforeach; ?>
         </select>
     </div>
     <div class="form-inline-group" style="margin-top: 1em;">

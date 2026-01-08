@@ -3,11 +3,13 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+global $ami;
+
 // --- POST処理 ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['generate_hints'])) {
     
     // 指定されたコマンドを実行
-    AbspFunctions\exec_cli_command(' channel originate Local/s@sub-exthintgen application NoOp');
+    $ami->execCliCommand('channel originate Local/s@sub-exthintgen application NoOp');
     
     // ユーザーへの通知メッセージをセッションに保存
     $_SESSION['flash_message'] = [

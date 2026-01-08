@@ -8,14 +8,21 @@ define('ABS_PANEL_INCLUDED', true);
 
 // 最初に設定ファイルと関数ライブラリを読み込む
 require_once 'php/config.php';
-require_once 'php/astman.php';
-require_once 'php/functions.php';
+
 require_once 'php/abscache.php';
+require_once 'php/AbspManager.php';
+
+// require_once 'php/actionlogger.php';
 
 $mycache = new absCache();
 
-// AstDBからセッションタイムアウト値を取得
-$session_timeout_minutes = AbspFunctions\get_db_item('ABS/PANEL', 'SESSION_TIMEOUT');
+// --- AbspManagerのインスタンス化 (グローバル変数として利用) ---
+// config.php で定義済みの定数を使用
+$ami = new \AbspFunctions\AbspManager(AMI_HOST, AMI_USER, AMI_PASS, AMI_PORT);
+
+//セッションタイムアウト値
+$session_timeout_minutes = $ami->getDbItem('ABS/PANEL', 'SESSION_TIMEOUT');
+
 if (empty($session_timeout_minutes) || !ctype_digit((string)$session_timeout_minutes)) {
     $session_timeout_minutes = 30;
 }
@@ -56,7 +63,8 @@ function ip_in_cidr(string $ip, string $cidr): bool {
     return (@ip2long($ip) & ~((1 << (32 - $mask)) - 1)) == @ip2long($subnet);
 }
 
-$acl_string = AbspFunctions\get_db_item('ABS/PANEL', 'ACL');
+$acl_string = $ami->getDbItem('ABS/PANEL', 'ACL');
+
 $is_access_allowed = empty($acl_string) ? true : false; // ACLに何も設定されていない場合は許可
 
 if (!$is_access_allowed) { // ACLの設定がある場合には許可アドレスをチェック
@@ -120,8 +128,8 @@ if (isset($menuConfig['restricted_pages'][$currentPage])) {
     $db_key = $menuConfig['restricted_pages'][$currentPage];
     list($family, $key) = explode('/', $db_key, 2);
     
-    // AstDBをチェックし、値が'YES'ならアクセスを拒否
-    if (AbspFunctions\get_db_item($family, $key) === 'YES') {
+    //ページ制限チェック
+    if ($ami->getDbItem($family, $key) === 'YES') {
         $_SESSION['flash_message'] = ['type' => 'error', 'text' => '要求されたページの機能は現在無効になっています。'];
         header('Location: index.php?page=top');
         exit;
@@ -155,3 +163,4 @@ if (isset($menuConfig['restricted_pages'][$currentPage])) {
         <span class="arrow"></span>
     </div>
 </body>
+</html>

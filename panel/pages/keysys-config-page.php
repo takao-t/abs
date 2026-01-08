@@ -3,19 +3,41 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+// =========================================================
+// 設定・定義
+// =========================================================
+$max_keys = isset($max_keys) ? $max_keys : 32;
 $notice_msg = [];
 
+// キー種別定義
+$key_type_opts = [
+    ''      => 'なし',
+    'NTTE'  => 'NTT東',
+    'NTTW'  => 'NTT西',
+    'BASIX' => 'BASIX',
+    'UAREA' => 'ユーザ定義',
+];
+
+// モニターモード定義
+$monitor_opts = [
+    'B' => 'Bin',
+    'S' => 'Spy',
+];
+
+// =========================================================
+// POST時処理
+// =========================================================
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = '';
 
-    //  個別キー保存の処理
+    // 個別キー保存
     if (isset($_POST['update_key'])) {
         $p_key = key($_POST['update_key']);
         
         $key_info_set = [
             'key'   => $p_key,
             'label' => $_POST['label'][$p_key] ?? '',
-            'tech'  => $_POST['tech'][$p_key] ?? 'PJSIP',
+            'tech'  => 'PJSIP', // 固定
             'trunk' => $_POST['trunk'][$p_key] ?? '',
             'type'  => $_POST['key_type'][$p_key] ?? '',
             'ogcid' => $_POST['ogcid'][$p_key] ?? '',
@@ -24,32 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'bpin'  => $_POST['bpin'][$p_key] ?? '',
             'mmd'   => $_POST['mmd'][$p_key] ?? 'B',
         ];
-        $notice_msg[$p_key] = AbspFunctions\set_key_info($key_info_set);
+        $notice_msg[$p_key] = $ami->setKeyInfo($key_info_set);
     }
-    // 全キー一括保存の処理
-    elseif (isset($_POST['update_all_keys'])) {
-        $labels = $_POST['label'] ?? [];
-        foreach ($labels as $p_key => $p_label) {
-            $key_info_set = [
-                'key'   => $p_key,
-                'label' => $p_label,
-                'tech'  => $_POST['tech'][$p_key] ?? 'PJSIP',
-                'trunk' => $_POST['trunk'][$p_key] ?? '',
-                'type'  => $_POST['key_type'][$p_key] ?? '',
-                'ogcid' => $_POST['ogcid'][$p_key] ?? '',
-                'rgrp'  => $_POST['rgrp'][$p_key] ?? '',
-                'rgpt'  => $_POST['rgpt'][$p_key] ?? '0',
-                'bpin'  => $_POST['bpin'][$p_key] ?? '',
-                'mmd'   => $_POST['mmd'][$p_key] ?? 'B',
-            ];
-            $notice_msg[$p_key] = AbspFunctions\set_key_info($key_info_set);
-        }
-    }
-    //  手動トランク設定の処理
+    // 手動トランク設定
     elseif (isset($_POST['function']) && $_POST['function'] == 'trunkadd') {
         $p_trunk = trim($_POST['trunk']);
         $p_key = $_POST['keynum'];
-        AbspFunctions\put_db_item("KEYTEL/KEYSYS$p_key", 'TRUNK', $p_trunk);
+        // $ami->putDbItem を使用
+        $ami->putDbItem("KEYTEL/KEYSYS$p_key", 'TRUNK', $p_trunk);
         $notice_msg[$p_key] = "手動設定しました";
     }
 
@@ -59,8 +63,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $flash_message = $_SESSION['flash_message'] ?? '';
-unset($_SESSION['flash_message'])
+unset($_SESSION['flash_message']);
+
+// =========================================================
+// データ取得 (View用データの準備)
+// =========================================================
+
+// 1. リストの取得
+// ■■ 変更点: 新しい共通メソッドを使用 ■■
+$target_list = $ami->getExtAndGroupList();
+$trunk_list  = $ami->getTrunkList();
+
+// 2. 表示用データの構築 (LogicとViewの分離)
+$keys_display_data = [];
+
+for ($i = 1; $i <= $max_keys; $i++) {
+    // DBから情報取得
+    $info = $ami->getKeyInfo($i);
+    
+    $trunk_val = $info['trunk'] ?? '';
+    
+    // トランクの手動入力判定 (DBには値があるが、現在の登録トランク一覧にない場合)
+    $is_manual_trunk = ($trunk_val !== '' && !in_array($trunk_val, $trunk_list));
+
+    $keys_display_data[$i] = [
+        'id'        => $i,
+        'label'     => $info['label'] ?? '',
+        'trunk'     => $trunk_val,
+        'is_manual' => $is_manual_trunk,
+        'type'      => $info['type'] ?? '',
+        'ogcid'     => $info['ogcid'] ?? '',
+        'rgrp'      => $info['rgrp'] ?? '',
+        'rgpt'      => $info['rgpt'] ?? '0',
+        'bpin'      => $info['bpin'] ?? '',
+        'mmd'       => $info['mmd'] ?? 'B',
+        'msg'       => $notice_msg[$i] ?? ''
+    ];
+}
 ?>
+
 <h2>キーシステム設定</h2>
 
 <div class="table-container">
@@ -70,7 +111,6 @@ unset($_SESSION['flash_message'])
             <tr>
                 <th>番号</th>
                 <th>ラベル</th>
-                <th>TECH</th>
                 <th>トランク</th>
                 <th>種別</th>
                 <th>発信CID</th>
@@ -83,84 +123,82 @@ unset($_SESSION['flash_message'])
             </tr>
         </thead>
         <tbody>
-            <?php for($i=1; $i<=$max_keys; $i++): ?>
-                <?php
-                $key_info = AbspFunctions\get_key_info($i);
-                $label = $key_info['label'] ?? '';
-                $tech = $key_info['tech'] ?? 'PJSIP';
-                $trunk = $key_info['trunk'] ?? '';
-                $ktype = $key_info['type'] ?? '';
-                $ogcid = $key_info['ogcid'] ?? '';
-                $rgrp = $key_info['rgrp'] ?? '';
-                $rgpt = $key_info['rgpt'] ?? '0';
-                $bpin = $key_info['bpin'] ?? '';
-                $mmd = $key_info['mmd'] ?? 'B';
-                $msg = $notice_msg[$i] ?? '';
-                
-                $selectors = AbspFunctions\create_target_list('group', $rgrp);
-                $trunk_options = AbspFunctions\create_trunk_list('', $trunk);
-                ?>
+            <?php foreach ($keys_display_data as $key_data): ?>
+                <?php $i = $key_data['id']; ?>
                 <tr>
                     <td style="text-align: right;">KEY<?= $i ?></td>
-                    <td><input type="text" name="label[<?= $i ?>]" value="<?= htmlspecialchars($label, ENT_QUOTES, 'UTF-8') ?>" class="input-short"></td>
+                    
+                    <td><input type="text" name="label[<?= $i ?>]" value="<?= htmlspecialchars($key_data['label'], ENT_QUOTES, 'UTF-8') ?>" class="input-short"></td>
+                    
                     <td>
-                        <select name="tech[<?= $i ?>]" class="input-em6">
-                            <option value="PJSIP" <?= ($tech == 'PJSIP') ? 'selected' : '' ?>>PJSIP</option>
-                            <option value="SIP" <?= ($tech == 'SIP') ? 'selected' : '' ?>>SIP</option>
-                        </select>
-                    </td>
-                    <td>
-                        <?php if($trunk == '' || strpos($trunk_options, $trunk) !== false): ?>
+                        <?php if (!$key_data['is_manual']): ?>
                             <select name="trunk[<?= $i ?>]" class="input-short2">
-                                <?= $trunk_options ?>
+                                <option value="">未設定</option>
+                                <?php foreach ($trunk_list as $trunk_item): ?>
+                                    <option value="<?= htmlspecialchars($trunk_item, ENT_QUOTES, 'UTF-8') ?>" <?= ($key_data['trunk'] === $trunk_item) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($trunk_item, ENT_QUOTES, 'UTF-8') ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                         <?php else: ?>
-                            <input type="text" name="trunk[<?= $i ?>]" value="<?= htmlspecialchars($trunk, ENT_QUOTES, 'UTF-8') ?>" class="input-short2">
+                            <input type="text" name="trunk[<?= $i ?>]" value="<?= htmlspecialchars($key_data['trunk'], ENT_QUOTES, 'UTF-8') ?>" class="input-short2">
                         <?php endif; ?>
                     </td>
+
                     <td>
                         <select name="key_type[<?= $i ?>]" class="input-em6">
-                            <option value="" <?= ($ktype == '') ? 'selected' : '' ?>>なし</option>
-                            <option value="NTTE" <?= ($ktype == 'NTTE') ? 'selected' : '' ?>>NTT東</option>
-                            <option value="NTTW" <?= ($ktype == 'NTTW') ? 'selected' : '' ?>>NTT西</option>
-                            <option value="BASIX" <?= ($ktype == 'BASIX') ? 'selected' : '' ?>>BASIX</option>
-                            <option value="UAREA" <?= ($ktype == 'UAREA') ? 'selected' : '' ?>>ユーザ定義</option>
+                            <?php foreach ($key_type_opts as $val => $text): ?>
+                                <option value="<?= $val ?>" <?= ($key_data['type'] === $val) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($text, ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </td>
-                    <td><input type="text" class="input-middle2" name="ogcid[<?= $i ?>]" value="<?= htmlspecialchars($ogcid, ENT_QUOTES, 'UTF-8') ?>"></td>
+
+                    <td><input type="text" class="input-middle2" name="ogcid[<?= $i ?>]" value="<?= htmlspecialchars($key_data['ogcid'], ENT_QUOTES, 'UTF-8') ?>"></td>
+
                     <td>
                         <select name="rgrp[<?= $i ?>]" class="input-short">
-                            <?= $selectors ?>
+                            <option value="">なし</option>
+                            <?php foreach ($target_list as $target): ?>
+                                <option value="<?= htmlspecialchars($target['value'], ENT_QUOTES, 'UTF-8') ?>" <?= ($key_data['rgrp'] === $target['value']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($target['label'], ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </td>
+
                     <td>
                         <select name="rgpt[<?= $i ?>]" class="input-short">
                             <?php for($r = 0; $r <= 5; $r++): ?>
-                            <option value="<?= $r ?>" <?= ($rgpt == $r) ? 'selected' : '' ?>><?= $r ?></option>
+                                <option value="<?= $r ?>" <?= ((string)$key_data['rgpt'] === (string)$r) ? 'selected' : '' ?>><?= $r ?></option>
                             <?php endfor; ?>
                         </select>
                     </td>
-                    <td><input type="text" name="bpin[<?= $i ?>]" value="<?= htmlspecialchars($bpin, ENT_QUOTES, 'UTF-8') ?>" class="input-xshort"></td>
+
+                    <td><input type="text" name="bpin[<?= $i ?>]" value="<?= htmlspecialchars($key_data['bpin'], ENT_QUOTES, 'UTF-8') ?>" class="input-xshort"></td>
+
                     <td>
                         <select name="mmd[<?= $i ?>]" class="input-xshort">
-                            <option value="B" <?= ($mmd == 'B') ? 'selected' : '' ?>>Bin</option>
-                            <option value="S" <?= ($mmd == 'S') ? 'selected' : '' ?>>Spy</option>
+                            <?php foreach ($monitor_opts as $val => $text): ?>
+                                <option value="<?= $val ?>" <?= ($key_data['mmd'] === $val) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($text, ENT_QUOTES, 'UTF-8') ?>
+                                </option>
+                            <?php endforeach; ?>
                         </select>
                     </td>
+
                     <td>
                         <button type="submit" name="update_key[<?= $i ?>]" value="save" class="btn btn-row">設定</button>
                     </td>
+
                     <td class="notice-message">
-                        <?= htmlspecialchars($msg, ENT_QUOTES, 'UTF-8') ?>
+                        <?= htmlspecialchars($key_data['msg'], ENT_QUOTES, 'UTF-8') ?>
                     </td>
                 </tr>
-            <?php endfor; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
-    
-<?php //    <div style="text-align: right; margin-top: 10px;"> ?>
-<?php //        <button type="submit" name="update_all_keys" value="save_all" class="btn btn-primary">キーシステム設定をすべて保存</button> ?>
-<?php //   </div> ?>
 </form>
 </div>
 
@@ -171,7 +209,7 @@ unset($_SESSION['flash_message'])
     <div class="form-inline-group">
         <label for="keynum_select">キー:</label>
         <select id="keynum_select" name="keynum">
-            <?php for($i=1;$i<=32;$i++): ?>
+            <?php for($i=1; $i<=$max_keys; $i++): ?>
                 <option value="<?= $i ?>">KEY<?= $i ?></option>
             <?php endfor; ?>
         </select>
