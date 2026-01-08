@@ -1,4 +1,0 @@
-<Files ~ (upload.php|download.php)>
-  Allow from 192.168.0.0/16
-</Files>
-deny from all
