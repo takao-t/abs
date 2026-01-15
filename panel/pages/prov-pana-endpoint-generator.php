@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['function']) && $_POST
                 $p_exten = $_POST["exten_{$i}"];
                 $p_ohans = $_POST["ohans_{$i}"] ?? 'yes';
                 $line_prefer = ($p_ohans === 'no') ? "LINE_PREFERENCE_INCOMING=\"NOLN\"\n" : '';
+                $line_prefer = ($p_ohans === 'yes') ? "LINE_PREFERENCE_INCOMING=\"RING\"\n" : '';
                 $content .= "## SIP Settings(LINE1)\n";
                 $content .= "PHONE_NUMBER_1=\"{$p_exten}\"\n";
                 $content .= "SIP_URI_1=\"{$p_endpoint}\"\n";
