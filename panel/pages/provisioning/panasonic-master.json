@@ -3,41 +3,57 @@
     "filename": "Config-Master.cfg",
     "settings": [
         {
-            "key": "NTP_SERVER_NAME_1",
+            "key": "PROV_SERVER_IP",
+            "label": "プロビジョニングサーバーIP",
+            "type": "text",
+            "default": "server_ip",
+            "description": "設定ファイルのURL生成に使用されます"
+        },
+        {
+            "key": "NTP_ADDR",
             "label": "NTPサーバー",
             "type": "text",
             "default": "server_ip"
         },
         {
             "key": "TIME_ZONE",
-            "label": "タイムゾーン",
+            "label": "タイムゾーン(分)",
             "type": "select",
-            "default": "JST-9",
+            "default": "540",
             "options": {
-                "JST-9": "JST-9 (日本標準時)"
+                "540": "540 (JST +09:00)"
             }
         },
         {
-            "key": "MASTER_CONFIG_SERVER_ADDRESS",
-            "label": "プロビジョニングサーバー",
-            "type": "text",
-            "default": "server_ip/pana"
-        },
-        {
-            "key": "VOIP_SIP_REGISTRAR_ADDRESS_1",
+            "key": "SIP_RGSTR_ADDR_1",
             "label": "レジストラサーバー",
             "type": "text",
-            "default": "server_ip"
+            "default": "server_ip",
+            "has_port": true,
+            "port_key": "SIP_RGSTR_PORT_1",
+            "port_default": "5070"
         },
         {
-            "key": "VOIP_SIP_PROXY_ADDRESS_1",
+            "key": "SIP_PRXY_ADDR_1",
             "label": "プロキシサーバー",
             "type": "text",
-            "default": "server_ip"
+            "default": "server_ip",
+            "has_port": true,
+            "port_key": "SIP_PRXY_PORT_1",
+            "port_default": "5070"
         },
         {
-            "key": "VOIP_SIP_PRESENCE_SERVER_ADDRESS_1",
-            "label": "プレゼンスサーバー",
+            "key": "SIP_OUTPROXY_ADDR_1",
+            "label": "アウトバウンドプロキシ",
+            "type": "text",
+            "default": "server_ip",
+            "has_port": true,
+            "port_key": "SIP_OUTPROXY_PORT_1",
+            "port_default": "5070"
+        },
+        {
+            "key": "SIP_SVCDOMAIN_1",
+            "label": "サービスドメイン",
             "type": "text",
             "default": "server_ip"
         }
