@@ -264,14 +264,10 @@ if (!$dir_error) {
 
 <h4>手動で行う設定</h4>
 <p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
-    ファイルを保存後、以下の設定を手動で行ってください。
+    ファイルを保存後、以下の設定を手動で行ってください(参考)。
 </p>
 <ol style="font-size: 0.9em; padding-left: 2em;">
-    <li>`pjsip.conf`の最下行に以下を追記:
-        <input type="text" readonly value="#include <?= htmlspecialchars($result['target_filename'], ENT_QUOTES, 'UTF-8') ?>" class="input-middle" style="margin-left: 1em;">
-    </li>
-    <li style="margin-top: 0.5em;">`pjsip.conf`の`[acl]`セクションに以下を追記:
+    `pjsip_base_acl.conf`の`[acl]`セクションに以下を追記:
         <textarea readonly style="width: 100%; height: 80px; font-family: monospace; background-color: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius:4px;"><?= htmlspecialchars($result['acl'], ENT_QUOTES, 'UTF-8') ?></textarea>
-    </li>
 </ol>
 <?php endif; ?>
