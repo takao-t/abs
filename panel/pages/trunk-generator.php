@@ -3,10 +3,29 @@ if (!defined('ABS_PANEL_INCLUDED')) {
     die("Direct access is not permitted.");
 }
 
+// ディレクトリがない、または書き込めない場合のステータス確認
+$dir_error = null;
+if (!file_exists(ABSTRUNKS)) {
+    // 作成を試みる
+    if (!@mkdir(ABSTRUNKS, 0750, true)) {
+        $dir_error = 'directory_missing';
+    }
+} elseif (!is_writable(ABSTRUNKS)) {
+    $dir_error = 'not_writable';
+}
+
+// エラーがある場合、管理者へのガイドを作成
+$setup_command = "";
+if ($dir_error) {
+    // www-data(Web)が書き込めて、asterisk(PBX)が読める権限設定を案内
+    $setup_command = "sudo mkdir -p " . ABSTRUNKS . "\n";
+    $setup_command .= "sudo chown www-data:asterisk " . ABSTRUNKS . "\n";
+    $setup_command .= "sudo chmod 750 " . ABSTRUNKS;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'clear_generator') {
     unset($_SESSION['generator_result']);
     unset($_SESSION['form_inputs']);
-    // URLからパラメータを消してリダイレクト
     header('Location: index.php?page=trunk-generator');
     exit;
 }
@@ -17,6 +36,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $function = $_POST['function'] ?? '';
 
     switch ($function) {
+        case 'delete_file':
+            $target_file = $_POST['filename'] ?? '';
+            // セキュリティ対策: パス区切り除去 & プレフィックス確認
+            $target_file = basename($target_file);
+            
+            // 意図しないファイルの削除を防ぐため、命名規則を厳密にチェック
+            if (strpos($target_file, 'pjsip_trunk_') === 0 && preg_match('/\.conf$/', $target_file)) {
+                $full_path = ABSTRUNKS . '/' . $target_file;
+                if (file_exists($full_path)) {
+                    if (unlink($full_path)) {
+                        $flash_message = ['type' => 'success', 'text' => "設定ファイル {$target_file} を削除しました。"];
+                    } else {
+                        $flash_message = ['type' => 'error', 'text' => 'ファイルの削除に失敗しました。権限を確認してください。'];
+                    }
+                } else {
+                    $flash_message = ['type' => 'error', 'text' => 'ファイルが見つかりません。'];
+                }
+            } else {
+                $flash_message = ['type' => 'error', 'text' => '不正なファイル名です。削除できません。'];
+            }
+            break;
+
         case 'generate':
             $inputs = [
                 'template' => trim($_POST['template'] ?? 'hgw'),
@@ -33,11 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $trunkname = ($trunkdef[$inputs['template']] ?? 'unknown') . $inputs['num'];
             $target_filename = 'pjsip_trunk_' . $inputs['template'] . $inputs['num'] . '.conf';
 
-            // テンプレートファイルのパスを解決 (index.phpからの相対パス)
             $template_path = 'pages/templates/pjsip_trunk_' . $inputs['template'] . '.tmpl';
             if (!is_readable($template_path)) {
                 $flash_message = ['type' => 'error', 'text' => 'テンプレートファイルが見つかりません。'];
-                $_SESSION['form_inputs'] = $inputs; // 入力内容を維持
+                $_SESSION['form_inputs'] = $inputs;
                 break;
             }
             $content = file_get_contents($template_path);
@@ -49,15 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $content = str_replace('##EXTEN##', $inputs['exten'], $content);
             $content = str_replace('##TRUNKNAME##', $trunkname, $content);
 
-            // ACL情報の取得
-            $acl = 'permit=' . $inputs['ipaddr'] . '/32'; // デフォルト
+            $acl = 'permit=' . $inputs['ipaddr'] . '/32';
             $acl_templates = ['basix', 'smart', 'opengate', 'rtx'];
             if (in_array($inputs['template'], $acl_templates)) {
-                $acl_path = 'pages/templates/' . $inputs['template'] . '.acl'; // index.phpからの相対パス
+                $acl_path = 'pages/templates/' . $inputs['template'] . '.acl';
                 $acl = is_readable($acl_path) ? file_get_contents($acl_path) : 'ACLファイルが見つかりません。';
             }
             
-            // 生成結果をセッションに保存
             $_SESSION['generator_result'] = [
                 'content' => $content, 'acl' => $acl, 'trunkname' => $trunkname,
                 'target_filename' => $target_filename, 'form_inputs' => $inputs
@@ -68,11 +106,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (isset($_POST['savechecked']) && $_POST['savechecked'] === 'yes') {
                 $result = $_SESSION['generator_result'] ?? null;
                 if ($result) {
-                    $save_path = ASTDIR . '/' . $result['target_filename'];
+                    // --- 追加: 保存前の最終書き込み権限チェック ---
+                    if (!is_writable(ABSTRUNKS)) {
+                         $flash_message = ['type' => 'error', 'text' => '保存先ディレクトリに書き込み権限がありません。上部の案内を確認してください。'];
+                         break;
+                    }
+
+                    $save_path = ABSTRUNKS . '/' . $result['target_filename'];
                     $content_to_save = str_replace("\r", '', $result['content']);
                     if (file_put_contents($save_path, $content_to_save) !== false) {
                         $flash_message['text'] = "ファイル {$result['target_filename']} に保存しました。";
-                        unset($_SESSION['generator_result']); // 成功したら生成結果をクリア
+                        unset($_SESSION['generator_result']);
                     } else {
                         $flash_message = ['type' => 'error', 'text' => 'ファイルの保存に失敗しました。パーミッションを確認してください。'];
                     }
@@ -92,27 +136,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// GET時
 $flash_message = $_SESSION['flash_message'] ?? null;
 unset($_SESSION['flash_message']);
-
-// セッションから生成結果とフォーム入力を取得
 $result = $_SESSION['generator_result'] ?? null;
 $form_values = $result['form_inputs'] ?? ($_SESSION['form_inputs'] ?? []);
 unset($_SESSION['form_inputs']);
 
+$existing_files = [];
+if (!$dir_error) {
+    // globでパターンマッチするファイルのみ取得
+    $files = glob(ABSTRUNKS . '/pjsip_trunk_*.conf');
+    if ($files) {
+        foreach ($files as $f) {
+            // タイムゾーンをJSTに指定して日時オブジェクトを作成
+            $dt = new DateTime();
+            $dt->setTimestamp(filemtime($f));
+            $dt->setTimezone(new DateTimeZone('Asia/Tokyo'));
+            
+            $existing_files[] = [
+                'name' => basename($f),
+                'date' => $dt->format('Y-m-d H:i'), // JSTでフォーマット
+                'size' => filesize($f)
+            ];
+        }
+    }
+}
+
 ?>
 <h2>トランク設定ファイル生成</h2>
-<p style="font-size: 0.9em; color: var(--secondary-text-color); margin-top: 0;">
-    PJSIP用のトランク設定ファイルをテンプレートから生成します。
-</p>
 
+<?php if ($dir_error): ?>
+<div style="background-color: #fff3cd; color: #856404; padding: 15px; border: 1px solid #ffeeba; border-radius: 4px; margin-bottom: 20px;">
+    <strong><i class="fas fa-exclamation-triangle"></i> 設定保存ディレクトリの準備が必要です</strong>
+    <p style="margin: 5px 0;">
+        現在、設定ファイルの保存先ディレクトリ (<code><?= ABSTRUNKS ?></code>) が存在しないか、Webサーバからの書き込み権限がありません。<br>
+        SSH等でサーバにログインし、以下のコマンドを実行してください。
+    </p>
+    <pre style="background: #333; color: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;"><?= htmlspecialchars($setup_command) ?></pre>
+</div>
+<?php endif; ?>
 <?php if ($flash_message): ?>
 <div class="notice-message" style="color: <?= $flash_message['type'] === 'error' ? '#f44336' : '#4CAF50' ?>; margin-bottom: 1.5em; font-weight: bold;">
     <?= htmlspecialchars($flash_message['text'], ENT_QUOTES, 'UTF-8') ?>
 </div>
 <?php endif; ?>
 
+<?php if (!empty($existing_files)): ?>
+<h3>稼働中のトランク設定ファイル</h3>
+<div class="table-container">
+    <table class="absp-table" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>ファイル名</th>
+                <th>更新日時</th>
+                <th>サイズ</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($existing_files as $file): ?>
+            <tr>
+                <td><?= htmlspecialchars($file['name'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= $file['date'] ?></td>
+                <td><?= $file['size'] ?> bytes</td>
+                <td>
+                    <form action="" method="post" onsubmit="return confirm('本当に削除しますか？\nAsteriskの設定リロード後に反映されます。');" style="margin:0;">
+                        <input type="hidden" name="function" value="delete_file">
+                        <input type="hidden" name="filename" value="<?= htmlspecialchars($file['name'], ENT_QUOTES, 'UTF-8') ?>">
+                        <button type="submit" class="btn btn-small" style="background-color: #f44336; color: white; padding: 2px 10px; font-size: 0.8em;">削除</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<hr style="margin: 2em 0; border: 0; border-top: 1px solid var(--border-color);">
+<?php endif; ?>
 <h3>ステップ1：トランク情報の入力</h3>
 <form action="" method="post">
     <input type="hidden" name="function" value="generate">
@@ -157,7 +257,7 @@ unset($_SESSION['form_inputs']);
 <form action="" method="post" class="form-inline-group" style="margin-top: 1em;">
     <input type="hidden" name="function" value="savetofile">
     <input type="checkbox" id="savechecked" name="savechecked" value="yes">
-    <label for="savechecked">内容を確認しました。「<?= htmlspecialchars(ASTDIR . '/' . $result['target_filename'], ENT_QUOTES, 'UTF-8') ?>」として保存します。</label>
+    <label for="savechecked">内容を確認しました。「<?= htmlspecialchars(ABSTRUNKS . '/' . $result['target_filename'], ENT_QUOTES, 'UTF-8') ?>」として保存します。</label>
     <button type="submit" class="btn">保存する</button>
 </form>
 <p style="font-size: 0.9em; color: #f44336;">注意: 同じ名前のファイルが存在すると上書きされます。</p>
