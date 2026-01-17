@@ -1,0 +1,38 @@
+{
+    "hgw": {
+        "label": "ひかり電話(ホームゲートウェイ)",
+        "prefix": "hikari-hgw",
+        "template": "pjsip_trunk_hgw.tmpl",
+        "acl_template": null
+    },
+    "ogw": {
+        "label": "ひかり電話(オフィスゲートウェイ)",
+        "prefix": "hikari-ogw",
+        "template": "pjsip_trunk_ogw.tmpl",
+        "acl_template": null
+    },
+    "rtx": {
+        "label": "ひかり電話(RTX/NVR直収)",
+        "prefix": "hikari-rtx",
+        "template": "pjsip_trunk_rtx.tmpl",
+        "acl_template": "rtx.acl"
+    },
+    "smart": {
+        "label": "FUSION IP-Phone SMART",
+        "prefix": "fsmart",
+        "template": "pjsip_trunk_smart.tmpl",
+        "acl_template": "smart.acl"
+    },
+    "opengate": {
+        "label": "楽天Com (Open Gate)",
+        "prefix": "opengate",
+        "template": "pjsip_trunk_opengate.tmpl",
+        "acl_template": "opengate.acl"
+    },
+    "basix": {
+        "label": "Brastel (BASIX)",
+        "prefix": "basix",
+        "template": "pjsip_trunk_basix.tmpl",
+        "acl_template": "basix.acl"
+    }
+}

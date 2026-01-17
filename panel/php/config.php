@@ -31,7 +31,7 @@ define('PROV_GS', 'prov/gs');
 //Asterisk設定ファイルロケーション
 define('ASTDIR', '/etc/asterisk');
 //ABSが生成するトランクファイルのロケーション(注:Webサーバがアクセスできない位置に)
-define('ABSTRUNKS', '/var/www/abs/trunks');
+define('ABSTRUNKS', '/var/www/abs');
 //ログファイルの作成箇所
 define('LOGDIR', '/var/log/asterisk');
 //着信履歴(着信,拒否)DBのファイル
