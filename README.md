@@ -1,5 +1,7 @@
 ABS Conpyright 2016-2026 Takao Takahashi.
 
+いつの間にやら10年も経ってた！
+
 ABS(Asterisk Business phone Schema)はAsteriskを小型PBX(ビジホン)として使用するためのAsterisk用設定ファイル一式と操作用のWeb UIです。
 
 Apache Web Server,php,php-mbstring,php-sqlite3が必要です。
